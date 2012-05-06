@@ -2,13 +2,8 @@ package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.commands.engine.Command;
 import com.thevoxelbox.voxelguest.commands.engine.CommandPermission;
+import com.thevoxelbox.voxelguest.modules.*;
 import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
-import com.thevoxelbox.voxelguest.modules.BukkitEventWrapper;
-import com.thevoxelbox.voxelguest.modules.MetaData;
-import com.thevoxelbox.voxelguest.modules.Module;
-import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
-import com.thevoxelbox.voxelguest.modules.ModuleEvent;
-import com.thevoxelbox.voxelguest.modules.Setting;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,15 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFormEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -90,19 +78,28 @@ public class WorldProtectionModule extends Module{
         bannedblocks.clear();
         banneditems.clear();
         
-        String[] st1 = getConfiguration().getString("unplacable-blocks").split(",");
-        String[] st2 = getConfiguration().getString("unusable-items").split(",");
         try{
-            for(String str : st1) {
-                bannedblocks.add(Integer.parseInt(str));
-            }
+            String[] st1 = getConfiguration().getString("unplacable-blocks").split(",");
             
-            for(String str : st2) {
-                banneditems.add(Integer.parseInt(str));
+            if (st1 != null) {
+                for(String str : st1) {
+                    bannedblocks.add(Integer.parseInt(str));
+                }
             }
+        } catch (Exception ex) {
+            VoxelGuest.log("Ignoring block blacklist");
         }
-        catch(Exception e) {
-            VoxelGuest.log("Corrupted or invalid configuration file. Cannot parse unsuable blocks/items", 1);
+        
+        try {
+            String[] st2 = getConfiguration().getString("unusable-items").split(",");
+            
+            if (st2 != null) {
+                for(String str : st2) {
+                    banneditems.add(Integer.parseInt(str));
+                }
+            }
+        } catch (Exception ex) {
+            VoxelGuest.log("Ignoring item blacklist");
         }
     }
 
@@ -169,7 +166,7 @@ public class WorldProtectionModule extends Module{
         int onlinecount = Bukkit.getOnlinePlayers().length;
         Block b = event.getBlock();
         
-        if (bannedblocks.contains(b.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.bannedblocks")) {
+        if (!bannedblocks.isEmpty() && bannedblocks.contains(b.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.bannedblocks")) {
             event.setCancelled(true);
             
             for(int i = 0; i < onlinecount; i++) {
@@ -194,11 +191,11 @@ public class WorldProtectionModule extends Module{
         int onlinecount = Bukkit.getOnlinePlayers().length;
         ItemStack is = event.getItem();
         
-        if (is != null && banneditems.contains(is.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.banneditems")) {
+        if (is != null && !banneditems.isEmpty() && banneditems.contains(is.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.banneditems")) {
             event.setCancelled(true);
             
             for (int i = 0; i < onlinecount; i++) {
-                if(PermissionsManager.getHandler().hasPermission(p[i].getName(), "voxelguest.protection.banneditems.warning")) {
+                if (PermissionsManager.getHandler().hasPermission(p[i].getName(), "voxelguest.protection.banneditems.warning")) {
                     p[i].sendMessage("§9[VG] §8Player &c" + event.getPlayer().getName() + " §8tried to §buse §9" + is.getType().toString() + "§8(§9" + is.getTypeId() + "§8)");
                 }
             }
@@ -217,9 +214,8 @@ public class WorldProtectionModule extends Module{
     public void onLeavesDecay(BukkitEventWrapper wrapper) {
         LeavesDecayEvent event = (LeavesDecayEvent) wrapper.getEvent();
         
-        if(getConfiguration().getBoolean("disable-leaf-decay")) {
+        if (getConfiguration().getBoolean("disable-leaf-decay")) {
             event.setCancelled(true);
-            return;
         }
     }
     
@@ -241,7 +237,6 @@ public class WorldProtectionModule extends Module{
         
         if(b.getType().equals(Material.SNOW) && getConfiguration().getBoolean("disable-snow-melting")) {
             event.setCancelled(true);
-            return;
         }
     }
     
@@ -263,7 +258,6 @@ public class WorldProtectionModule extends Module{
         
         if (b.getType().equals(Material.SNOW) && getConfiguration().getBoolean("disable-snow-formation")) {
             event.setCancelled(true);
-            return;
         }
     }
     
@@ -279,7 +273,6 @@ public class WorldProtectionModule extends Module{
         
         if(getConfiguration().getBoolean("disable-block-burning")) {
             event.setCancelled(true);
-            return;
         }
     }
     
@@ -299,7 +292,6 @@ public class WorldProtectionModule extends Module{
         
         if (fireSpread && getConfiguration().getBoolean("disable-block-ignite")) {
             event.setCancelled(true);
-            return;
         }
     }
     
@@ -316,7 +308,6 @@ public class WorldProtectionModule extends Module{
         
         if (fireSpread && getConfiguration().getBoolean("disable-fire-spread")) {
             event.setCancelled(true);
-            return;
         }
     }
     
@@ -332,7 +323,6 @@ public class WorldProtectionModule extends Module{
         
         if(getConfiguration().getBoolean("disable-enchanting")) {
             event.setCancelled(true);
-            return;
         }
     }
     

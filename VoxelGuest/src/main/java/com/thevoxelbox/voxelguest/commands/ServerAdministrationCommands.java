@@ -244,6 +244,7 @@ public class ServerAdministrationCommands {
                 p.sendMessage("§7Set §a" + toChange.getName() + "§7's group to: §a" + newGroup);
             } else {
                 p.sendMessage("§cYou do not have permission to perform this group change.");
+                VoxelGuest.log(p.getName() + " tried to change " + toChange.getName() + "'s group.", 1);
             }
         }
     }
