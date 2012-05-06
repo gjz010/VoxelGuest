@@ -1,8 +1,10 @@
 name: VoxelGuest
 main: com.thevoxelbox.voxelguest.VoxelGuest
 author: VoxelPlugineering
-version: 4.0.8b
+version: 4.0.9
 website: http://voxelwiki.com/minecraft/VoxelGuest
+
+# Stop using "version: X.X.X[a-z]" Piotr. It throws off VoxelUpdate. Just advance to the next version.
 
 commands:
   afk:
