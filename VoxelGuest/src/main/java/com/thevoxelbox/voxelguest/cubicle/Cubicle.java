@@ -1,0 +1,195 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.thevoxelbox.voxelguest.cubicle;
+
+import com.thevoxelbox.voxelguest.CubicleModule;
+import com.thevoxelbox.voxelguest.permissions.PermissionsHandler;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+
+/**
+ *
+ * @author Piotr <przerwap@gmail.com>
+ */
+public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
+
+    private int id;
+    private boolean locked = true;
+    private String owner = "system.cube";
+    private String name = null;
+    private int x;
+    private int z;
+    private Loc tpLoc = null;
+    private String tpMessage = ChatColor.GOLD + "Woosh!";
+    private String[] owners = null;
+
+    public Cubicle() {
+    }
+
+    public Cubicle(Player player, int cubeX, int cubeZ) {
+        this.owner = player.getName();
+        this.x = cubeX;
+        this.z = cubeZ;
+    }
+
+    public void setID(int i) {
+        id = i;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void lock() {
+        locked = true;
+    }
+
+    public void unLock() {
+        locked = false;
+    }
+
+    public boolean hasName() {
+        return name != null && !name.equals("");
+    }
+
+    public void setName(String alias) {
+        name = alias;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setOwner(String oname) {
+        owner = oname;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void addOwner(String oname) {
+        if (owners == null || owners.length == 0) {
+            owners = new String[]{oname};
+        } else {
+            if(!hasOwner(oname)) {
+                String[] temp = new String[owners.length+1];
+                System.arraycopy(owners, 0, temp, 0, owners.length);
+                temp[owners.length] = oname;
+                owners = temp;
+            }
+        }
+    }
+    
+    public void removeOwner(String oname) {
+        if(hasOwner(oname)) {
+            String[] temp = new String[owners.length-1];
+            for(int i = 0; i < owners.length; i++) {
+                if(owners[i].equals(oname)) {
+                    for(int j = i+1; j < owners.length; j++) {
+                        temp[j-1] = owners[j];
+                    }
+                    break;
+                } else {
+                    temp[i] = owners[i];
+                }
+            }
+        }
+    }
+    
+    public void flushOwners() {
+        if(owners == null || owners.length == 0) {
+            return;
+        }
+        PermissionsHandler ph = PermissionsManager.getHandler();
+        for(String str : owners) {
+            ph.removePermission(str, getPermissionString());
+        }
+        owners = null;
+    }
+
+    public boolean hasOwner(String oname) {
+        if (owners == null) {
+            return false;
+        } else {
+            for(String str : owners) {
+                if(str.equals(oname)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public boolean isOwnedBy(Player user) {
+        return user.getName().equals(owner);
+    }
+
+    public String getKey() {
+        return x + "_" + z;
+    }
+
+    public String getPermissionString() {
+        return "voxelguest.cubicle.interact." + id;
+    }
+
+    public void teleport(Player p, World cubeWorld) {
+        if (tpLoc == null) {
+            tpLoc = new Loc();
+            tpLoc.x = (x*CubicleModule.CUBICLE_SIZE) + (Math.signum(x) * (CubicleModule.CUBICLE_SIZE / 2));
+            tpLoc.y = 256;
+            tpLoc.x = (z*CubicleModule.CUBICLE_SIZE) + (Math.signum(z) * (CubicleModule.CUBICLE_SIZE / 2));
+        }
+        tpLoc.teleport(p, cubeWorld);
+        p.sendMessage(tpMessage);
+    }
+
+    public void setTpLoc(Location loc) {
+        tpLoc.x = loc.getX();
+        tpLoc.y = loc.getY();
+        tpLoc.z = loc.getZ();
+    }
+
+    public void setTpMessage(String message) {
+        if (message != null && !message.equals("")) {
+            tpMessage = ChatColor.BLUE + message;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ChatColor.AQUA + "(" + ChatColor.DARK_GREEN + "#" + ChatColor.RED + id + ChatColor.DARK_GREEN + " owner:" + ChatColor.RED + owner + ChatColor.AQUA + ")";
+    }
+
+    public static class Loc {
+
+        public double x;
+        public double y;
+        public double z;
+
+        public void teleport(Player p, World w) {
+            p.teleport(new Location(w, x, y, z));
+        }
+    }
+}
