@@ -176,6 +176,26 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
             tpMessage = ChatColor.BLUE + message;
         }
     }
+    
+    public void info(Player user) {
+        user.sendMessage(ChatColor.GOLD + "Cubicle #" + ChatColor.GREEN + id + ChatColor.GOLD + " x:" + ChatColor.RED + x + ChatColor.GOLD + " z:" + ChatColor.RED + z);
+        user.sendMessage(ChatColor.GOLD + "Owned by " + ChatColor.AQUA + owner + ChatColor.GOLD + " and is " + ((locked) ? (ChatColor.RED + "locked") : (ChatColor.GREEN + "unlocked")));
+        if(hasName()) {
+            user.sendMessage(ChatColor.GOLD + "Alias name set to \"" + ChatColor.AQUA + name + ChatColor.GOLD + "\"");
+        } else {
+            user.sendMessage(ChatColor.GOLD + "No alias name is set");
+        }
+        user.sendMessage(ChatColor.GOLD + "Warp message is " + ChatColor.AQUA + "\"" + tpMessage + ChatColor.AQUA + "\"");
+        if(owners == null || owners.length == 0) {
+            user.sendMessage(ChatColor.GOLD + "No co-owners are assigned");
+        } else {
+            String omsg = ChatColor.AQUA + owners[0];
+            for(int i = 1; i < owners.length; i++) {
+                omsg += ChatColor.RED + ", " + ChatColor.AQUA + owners[i];
+            }
+            user.sendMessage(ChatColor.GOLD + "Co-owners are: " + omsg);
+        }
+    } 
 
     @Override
     public String toString() {

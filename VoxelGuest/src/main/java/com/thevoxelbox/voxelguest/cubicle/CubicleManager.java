@@ -274,6 +274,7 @@ public class CubicleManager {
             for (Cubicle cb : cubicles.values()) {
                 pw.println(gson.toJson(cb, Cubicle.class));
             }
+            pw.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CubicleManager.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -133,7 +133,7 @@ public class CubicleModule extends Module {
     @Override
     public String getLoadMessage() {
         return "Cubicle Module enabled -- cubicle world is "
-                + (Bukkit.getServer().getWorld(getConfiguration().getString("world-name")) == null ? "not loaded" : "loaded");
+                + (Bukkit.getServer().getWorld(worldUID) == null ? "not loaded" : "loaded");
     }
 
     @Override
@@ -147,7 +147,8 @@ public class CubicleModule extends Module {
     }
 
     @ModuleEvent(event = PlayerInteractEvent.class, ignoreCancelledEvents = true)
-    public void playerInteract(PlayerInteractEvent e) {
+    public void playerInteract(BukkitEventWrapper wrap) {
+        PlayerInteractEvent e = (PlayerInteractEvent)wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             Cubicle cb = manager.getCubicle(e.getClickedBlock().getLocation());
             if (cb != null) {
@@ -163,7 +164,8 @@ public class CubicleModule extends Module {
     }
 
     @ModuleEvent(event = PlayerMoveEvent.class, ignoreCancelledEvents = true)
-    public void playerMove(PlayerMoveEvent e) {
+    public void playerMove(BukkitEventWrapper wrap) {
+        PlayerMoveEvent e = (PlayerMoveEvent)wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (!manager.hasCubicle(e.getTo())) {
                 e.setCancelled(true);
@@ -171,7 +173,9 @@ public class CubicleModule extends Module {
         }
     }
 
-    public void playerVelocity(PlayerVelocityEvent e) {
+    @ModuleEvent(event = PlayerVelocityEvent.class, ignoreCancelledEvents = true)
+    public void playerVelocity(BukkitEventWrapper wrap) {
+        PlayerVelocityEvent e = (PlayerVelocityEvent)wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (!manager.hasCubicle(e.getPlayer().getLocation().toVector().add(e.getVelocity()).toLocation(e.getPlayer().getWorld()))) {
                 e.setCancelled(true);
@@ -192,6 +196,7 @@ public class CubicleModule extends Module {
                         ChatColor.GREEN + "/cubicle create (-s) -- allows you to create your personal cubicle (or system)",
                         ChatColor.GOLD + "All the following will accept these parameters: (if ommited will use the cubicle you own)",
                         ChatColor.GOLD + "\"-p name\", \"-a alias\", \"-xz # #\", \"-n #\", \"-l\"",
+                        ChatColor.GREEN + "/cubicle info [param] - print out information about the cubicle",
                         ChatColor.GRAY + "/cubicle warp [param] - warps you to specified cubicle",
                         ChatColor.GREEN + "/cubicle setwarp [param] - allows you to set the cubicles warp location",
                         ChatColor.GRAY + "/cubicle setwarpmsg [param] MESSAGE - allows you to set the cubicles warp message",
@@ -360,6 +365,8 @@ public class CubicleModule extends Module {
                         } else {
                             noPerm(p);
                         }
+                    } else if (args[0].equalsIgnoreCase("info")) {
+                        cb.info(p);
                     }
                 }
             }
