@@ -116,6 +116,7 @@ public class CubicleManager {
         }
 
         Cubicle cb = getFirstSpiral();
+        cubicles.put(cb.getKey(), cb);
         if (!system) {
             cb.setOwner(user.getName());
             playerCubes.put(cb.getOwner(), cb);
@@ -126,7 +127,6 @@ public class CubicleManager {
             cb.teleport(user, cubeWorld);
             user.sendMessage(ChatColor.GOLD + "System cubicle created!");
         }
-        cubicles.put(cb.getKey(), cb);
         saveCubicles();
     }
     

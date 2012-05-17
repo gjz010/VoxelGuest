@@ -93,22 +93,22 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
         if (owners == null || owners.length == 0) {
             owners = new String[]{oname};
         } else {
-            if(!hasOwner(oname)) {
-                String[] temp = new String[owners.length+1];
+            if (!hasOwner(oname)) {
+                String[] temp = new String[owners.length + 1];
                 System.arraycopy(owners, 0, temp, 0, owners.length);
                 temp[owners.length] = oname;
                 owners = temp;
             }
         }
     }
-    
+
     public void removeOwner(String oname) {
-        if(hasOwner(oname)) {
-            String[] temp = new String[owners.length-1];
-            for(int i = 0; i < owners.length; i++) {
-                if(owners[i].equals(oname)) {
-                    for(int j = i+1; j < owners.length; j++) {
-                        temp[j-1] = owners[j];
+        if (hasOwner(oname)) {
+            String[] temp = new String[owners.length - 1];
+            for (int i = 0; i < owners.length; i++) {
+                if (owners[i].equals(oname)) {
+                    for (int j = i + 1; j < owners.length; j++) {
+                        temp[j - 1] = owners[j];
                     }
                     break;
                 } else {
@@ -117,13 +117,13 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
             }
         }
     }
-    
+
     public void flushOwners() {
-        if(owners == null || owners.length == 0) {
+        if (owners == null || owners.length == 0) {
             return;
         }
         PermissionsHandler ph = PermissionsManager.getHandler();
-        for(String str : owners) {
+        for (String str : owners) {
             ph.removePermission(str, getPermissionString());
         }
         owners = null;
@@ -133,8 +133,8 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
         if (owners == null) {
             return false;
         } else {
-            for(String str : owners) {
-                if(str.equals(oname)) {
+            for (String str : owners) {
+                if (str.equals(oname)) {
                     return true;
                 }
             }
@@ -157,9 +157,9 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
     public void teleport(Player p, World cubeWorld) {
         if (tpLoc == null) {
             tpLoc = new Loc();
-            tpLoc.x = (x*CubicleModule.CUBICLE_SIZE) + ((Math.signum(x) == 0 ? 1 : Math.signum(x)) * (CubicleModule.CUBICLE_SIZE / 2));
+            tpLoc.x = ((x < 0 ? (x + 1) : x) * CubicleModule.CUBICLE_SIZE) + ((Math.signum(x) == 0 ? 1 : Math.signum(x)) * (CubicleModule.CUBICLE_SIZE / 2));
             tpLoc.y = 256;
-            tpLoc.z = (z*CubicleModule.CUBICLE_SIZE) + ((Math.signum(z) == 0 ? 1 : Math.signum(z)) * (CubicleModule.CUBICLE_SIZE / 2));
+            tpLoc.z = ((z < 0 ? (z + 1) : z) * CubicleModule.CUBICLE_SIZE) + ((Math.signum(z) == 0 ? 1 : Math.signum(z)) * (CubicleModule.CUBICLE_SIZE / 2));
         }
         tpLoc.teleport(p, cubeWorld);
         p.sendMessage(tpMessage);
@@ -176,26 +176,26 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
             tpMessage = ChatColor.BLUE + message;
         }
     }
-    
+
     public void info(Player user) {
         user.sendMessage(ChatColor.GOLD + "Cubicle #" + ChatColor.GREEN + id + ChatColor.GOLD + " x:" + ChatColor.RED + x + ChatColor.GOLD + " z:" + ChatColor.RED + z);
         user.sendMessage(ChatColor.GOLD + "Owned by " + ChatColor.AQUA + owner + ChatColor.GOLD + " and is " + ((locked) ? (ChatColor.RED + "locked") : (ChatColor.GREEN + "unlocked")));
-        if(hasName()) {
+        if (hasName()) {
             user.sendMessage(ChatColor.GOLD + "Alias name set to \"" + ChatColor.AQUA + name + ChatColor.GOLD + "\"");
         } else {
             user.sendMessage(ChatColor.GOLD + "No alias name is set");
         }
         user.sendMessage(ChatColor.GOLD + "Warp message is " + ChatColor.AQUA + "\"" + tpMessage + ChatColor.AQUA + "\"");
-        if(owners == null || owners.length == 0) {
+        if (owners == null || owners.length == 0) {
             user.sendMessage(ChatColor.GOLD + "No co-owners are assigned");
         } else {
             String omsg = ChatColor.AQUA + owners[0];
-            for(int i = 1; i < owners.length; i++) {
+            for (int i = 1; i < owners.length; i++) {
                 omsg += ChatColor.RED + ", " + ChatColor.AQUA + owners[i];
             }
             user.sendMessage(ChatColor.GOLD + "Co-owners are: " + omsg);
         }
-    } 
+    }
 
     @Override
     public String toString() {
