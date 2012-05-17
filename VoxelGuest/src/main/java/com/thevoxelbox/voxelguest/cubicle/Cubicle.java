@@ -157,9 +157,9 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
     public void teleport(Player p, World cubeWorld) {
         if (tpLoc == null) {
             tpLoc = new Loc();
-            tpLoc.x = (x*CubicleModule.CUBICLE_SIZE) + (Math.signum(x) * (CubicleModule.CUBICLE_SIZE / 2));
+            tpLoc.x = (x*CubicleModule.CUBICLE_SIZE) + ((Math.signum(x) == 0 ? 1 : Math.signum(x)) * (CubicleModule.CUBICLE_SIZE / 2));
             tpLoc.y = 256;
-            tpLoc.x = (z*CubicleModule.CUBICLE_SIZE) + (Math.signum(z) * (CubicleModule.CUBICLE_SIZE / 2));
+            tpLoc.x = (z*CubicleModule.CUBICLE_SIZE) + ((Math.signum(z) == 0 ? 1 : Math.signum(z)) * (CubicleModule.CUBICLE_SIZE / 2));
         }
         tpLoc.teleport(p, cubeWorld);
         p.sendMessage(tpMessage);
