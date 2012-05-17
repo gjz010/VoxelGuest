@@ -184,6 +184,7 @@ public class CubicleManager {
                     dir = dir.next();
                 } else {
                     secondTurn = true;
+                    dir = dir.next();
                 }
             }
         }
@@ -231,6 +232,7 @@ public class CubicleManager {
                     dir = dir.next();
                 } else {
                     secondTurn = true;
+                    dir = dir.next();
                 }
             }
         }
