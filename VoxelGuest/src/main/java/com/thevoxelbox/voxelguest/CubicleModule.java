@@ -148,8 +148,11 @@ public class CubicleModule extends Module {
 
     @ModuleEvent(event = PlayerInteractEvent.class, ignoreCancelledEvents = true)
     public void playerInteract(BukkitEventWrapper wrap) {
-        PlayerInteractEvent e = (PlayerInteractEvent)wrap.getEvent();
+        PlayerInteractEvent e = (PlayerInteractEvent) wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
+            if (e.getClickedBlock() == null) {
+                return;
+            }
             Cubicle cb = manager.getCubicle(e.getClickedBlock().getLocation());
             if (cb != null) {
                 if (cb.isLocked()) {
@@ -165,17 +168,21 @@ public class CubicleModule extends Module {
 
     @ModuleEvent(event = PlayerMoveEvent.class, ignoreCancelledEvents = true)
     public void playerMove(BukkitEventWrapper wrap) {
-        PlayerMoveEvent e = (PlayerMoveEvent)wrap.getEvent();
+        PlayerMoveEvent e = (PlayerMoveEvent) wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (!manager.hasCubicle(e.getTo())) {
-                e.setCancelled(true);
+                if (!manager.hasCubicle(e.getFrom())) {
+                    e.getPlayer().teleport(new Location(Bukkit.getWorld(worldUID), 0, 256, 0));
+                } else {
+                    e.setCancelled(true);
+                }
             }
         }
     }
 
     @ModuleEvent(event = PlayerVelocityEvent.class, ignoreCancelledEvents = true)
     public void playerVelocity(BukkitEventWrapper wrap) {
-        PlayerVelocityEvent e = (PlayerVelocityEvent)wrap.getEvent();
+        PlayerVelocityEvent e = (PlayerVelocityEvent) wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (!manager.hasCubicle(e.getPlayer().getLocation().toVector().add(e.getVelocity()).toLocation(e.getPlayer().getWorld()))) {
                 e.setCancelled(true);
