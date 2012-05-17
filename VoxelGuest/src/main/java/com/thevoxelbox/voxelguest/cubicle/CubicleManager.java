@@ -283,6 +283,8 @@ public class CubicleManager {
     private Cubicle createNew(int x, int z, int id) {
         Cubicle cube = new Cubicle();
         cube.setID(id);
+        cube.setX(x);
+        cube.setZ(z);
         cubicles.put(getKey(x, z), cube);
         return cube;
     }

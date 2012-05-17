@@ -193,7 +193,7 @@ public class CubicleModule extends Module {
         if (args == null || args.length == 0) {
             p.sendMessage(ChatColor.AQUA + "The available subcommands are as follows:");
             p.sendMessage(new String[]{
-                        ChatColor.GREEN + "/cubicle create (-s) -- allows you to create your personal cubicle (or system)",
+                        ChatColor.GREEN + "/cubicle create (system) -- allows you to create your personal cubicle (or system)",
                         ChatColor.GOLD + "All the following will accept these parameters: (if ommited will use the cubicle you own)",
                         ChatColor.GOLD + "\"-p name\", \"-a alias\", \"-xz # #\", \"-n #\", \"-l\"",
                         ChatColor.GREEN + "/cubicle info [param] - print out information about the cubicle",
