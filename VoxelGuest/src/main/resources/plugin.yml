@@ -1,7 +1,7 @@
 name: VoxelGuest
 main: com.thevoxelbox.voxelguest.VoxelGuest
 author: VoxelPlugineering
-version: 4.0.21
+version: 4.0.22
 website: http://voxelwiki.com/minecraft/VoxelGuest
 
 # Stop using "version: X.X.X[a-z]" Piotr. It throws off VoxelUpdate. Just advance to the next version.
@@ -66,5 +66,7 @@ commands:
     description: Sets the spawn location
   cubicle:
     aliases: [cube]
+  cwarp:
+    description: Matches the partial name to take you to the users' cubicle
   vmptg:
     aliases: [vpg]

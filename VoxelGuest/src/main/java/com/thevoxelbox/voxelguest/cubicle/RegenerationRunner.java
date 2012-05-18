@@ -35,10 +35,13 @@ public class RegenerationRunner implements Runnable {
         cubeWorld = cWorld;
         user = cmdSender;
         cube = cb;
-        int otherx = (cb.getX() * CubicleModule.CUBICLE_SIZE) + (int) (Math.signum(cb.getX()) * (CubicleModule.CUBICLE_SIZE));
-        int otherz = (cb.getZ() * CubicleModule.CUBICLE_SIZE) + (int) (Math.signum(cb.getZ()) * (CubicleModule.CUBICLE_SIZE));
+        int otherx = ((cb.getX() < 0 ? (cb.getX() + 1) : cb.getX()) * CubicleModule.CUBICLE_SIZE) + (int) ((Math.signum(cb.getX()) == 0 ? 1 : Math.signum(cb.getX())) * (CubicleModule.CUBICLE_SIZE - (Math.signum(cb.getX()) >= 0 ? 16 : 0)));
+        int otherz = ((cb.getZ() < 0 ? (cb.getZ() + 1) : cb.getZ()) * CubicleModule.CUBICLE_SIZE) + (int) ((Math.signum(cb.getZ()) == 0 ? 1 : Math.signum(cb.getZ())) * (CubicleModule.CUBICLE_SIZE - (Math.signum(cb.getZ()) >= 0 ? 16 : 0)));
         Chunk ch1 = cubeWorld.getChunkAt(cubeWorld.getBlockAt(otherx, 64, otherz));
-        Chunk ch2 = cubeWorld.getChunkAt(cubeWorld.getBlockAt((cb.getX() * CubicleModule.CUBICLE_SIZE), 64, (cb.getZ() * CubicleModule.CUBICLE_SIZE)));
+        Chunk ch2 = cubeWorld.getChunkAt(cubeWorld.getBlockAt(
+                ((cb.getX() < 0 ? (cb.getX() + 1) : cb.getX()) * CubicleModule.CUBICLE_SIZE) + (Math.signum(cb.getX()) < 0 ? -16 : 0),
+                64,
+                ((cb.getZ() < 0 ? (cb.getZ() + 1) : cb.getZ()) * CubicleModule.CUBICLE_SIZE) + (Math.signum(cb.getZ()) < 0 ? -16 : 0)));
         lowx = ch1.getX() < ch2.getX() ? ch1.getX() : ch2.getX();
         lowz = ch1.getZ() < ch2.getZ() ? ch1.getZ() : ch2.getZ();
         highx = ch1.getX() > ch2.getX() ? ch1.getX() : ch2.getX();
@@ -47,6 +50,8 @@ public class RegenerationRunner implements Runnable {
         regenZ = lowz;
         maxChunk = (CubicleModule.CUBICLE_SIZE / 16) * (CubicleModule.CUBICLE_SIZE / 16);
         user.sendMessage(ChatColor.GOLD + "Regeneration of Cubicle " + cube + ChatColor.GOLD + " has begun!");
+        cubeWorld.regenerateChunk(regenX, regenZ);
+        cubeWorld.refreshChunk(regenX, regenZ);
     }
 
     public void setID(int myId) {
@@ -55,7 +60,7 @@ public class RegenerationRunner implements Runnable {
 
     @Override
     public void run() {
-        if (regenX < highx && regenZ < highz) {
+        if (regenX < highx || regenZ < highz) {
             if (layerDone) {
                 regenX = lowx;
                 regenZ++;
@@ -70,6 +75,7 @@ public class RegenerationRunner implements Runnable {
 
             regenCount++;
             cubeWorld.regenerateChunk(regenX, regenZ);
+            cubeWorld.refreshChunk(regenX, regenZ);
 
             if (regenCount % (maxChunk / 4) == 0) {
                 switch ((int) regenCount / (maxChunk / 4)) {

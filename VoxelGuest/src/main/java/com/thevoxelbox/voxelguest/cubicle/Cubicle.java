@@ -13,7 +13,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 /**
- * 
+ *
  * @author Piotr <przerwap@gmail.com>
  */
 public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
@@ -91,7 +91,7 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
 
     public void addOwner(String oname) {
         if (owners == null || owners.length == 0) {
-            owners = new String[] { oname };
+            owners = new String[]{oname};
         } else {
             if (!hasOwner(oname)) {
                 String[] temp = new String[owners.length + 1];
@@ -171,6 +171,10 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
         tpLoc.y = loc.getY();
         tpLoc.z = loc.getZ();
     }
+    
+    public Loc getTpLoc() {
+        return tpLoc;
+    }
 
     public void setTpMessage(String message) {
         if (message != null && !message.equals("")) {
@@ -179,10 +183,8 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
     }
 
     public void info(Player user) {
-        user.sendMessage(ChatColor.GOLD + "Cubicle #" + ChatColor.GREEN + id + ChatColor.GOLD + " x:" + ChatColor.RED + x + ChatColor.GOLD + " z:"
-                + ChatColor.RED + z);
-        user.sendMessage(ChatColor.GOLD + "Owned by " + ChatColor.AQUA + owner + ChatColor.GOLD + " and is "
-                + ((locked) ? (ChatColor.RED + "locked") : (ChatColor.GREEN + "unlocked")));
+        user.sendMessage(ChatColor.GOLD + "Cubicle #" + ChatColor.GREEN + id + ChatColor.GOLD + " x:" + ChatColor.RED + x + ChatColor.GOLD + " z:" + ChatColor.RED + z);
+        user.sendMessage(ChatColor.GOLD + "Owned by " + ChatColor.AQUA + owner + ChatColor.GOLD + " and is " + ((locked) ? (ChatColor.RED + "locked") : (ChatColor.GREEN + "unlocked")));
         if (hasName()) {
             user.sendMessage(ChatColor.GOLD + "Alias name set to \"" + ChatColor.AQUA + name + ChatColor.GOLD + "\"");
         } else {
@@ -202,8 +204,7 @@ public class Cubicle {// {"id":0,"locked"="true","owner"="system.cube"}
 
     @Override
     public String toString() {
-        return ChatColor.AQUA + "(" + ChatColor.DARK_GREEN + "#" + ChatColor.RED + id + ChatColor.DARK_GREEN + " owner:" + ChatColor.RED + owner
-                + ChatColor.AQUA + ")";
+        return ChatColor.AQUA + "(" + ChatColor.DARK_GREEN + "#" + ChatColor.RED + id + ChatColor.DARK_GREEN + " owner:" + ChatColor.RED + owner + ChatColor.AQUA + ")";
     }
 
     public static class Loc {

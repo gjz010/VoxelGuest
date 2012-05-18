@@ -189,6 +189,16 @@ public class CubicleModule extends Module {
             }
         }
     }
+    
+    @Command(aliases = {"cwarp"},
+    bounds = {2, 2},
+    playerOnly = true,
+    help = "/cwarp allows you to warp to a players' cubicle.")
+    @CommandPermission(permission = "voxelguest.cubicle.command.warp")
+    public void cubicleWarp(CommandSender cs, String[] args) {
+        Player p = (Player) cs;
+        String fullName = getFullName(p, args[1]);
+    }
 
     @Command(aliases = {"cubicle", "cube"},
     bounds = {0, -1},
@@ -306,13 +316,7 @@ public class CubicleModule extends Module {
                             } else {
                                 String fullName = getFullName(p, args[1]);
                                 if (fullName != null) {
-                                    cb.flushOwners();
-                                    if (cb.isOwnedBy(p)) {
-                                        ph.removePermission(p.getName(), cb.getPermissionString());
-                                    }
-                                    cb.setOwner(fullName);
-                                    ph.givePermission(fullName, cb.getPermissionString());
-                                    p.sendMessage(ChatColor.GOLD + "The owner of the Cubicle " + cb + ChatColor.GOLD + " has been updated.");
+                                    manager.setOwner(cb, p, fullName);
                                 }
                             }
                         } else {

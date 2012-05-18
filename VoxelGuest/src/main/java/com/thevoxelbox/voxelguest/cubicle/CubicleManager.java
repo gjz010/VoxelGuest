@@ -7,6 +7,7 @@ package com.thevoxelbox.voxelguest.cubicle;
 import com.google.gson.Gson;
 import com.thevoxelbox.voxelguest.CubicleModule;
 import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.permissions.PermissionsHandler;
 import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -129,17 +130,17 @@ public class CubicleManager {
         }
         saveCubicles();
     }
-    
+
     public void removeCubicle(Player user, Cubicle cb) {
         cb.flushOwners();
-        if(cb.isOwnedBy(user)) {
+        if (cb.isOwnedBy(user)) {
             PermissionsManager.getHandler().removePermission(user.getName(), cb.getPermissionString());
         }
-        
-        if(cb.hasName()) {
+
+        if (cb.hasName()) {
             aliasNames.remove(cb.getName());
         }
-        
+
         playerCubes.remove(cb.getOwner());
         cubicles.remove(cb.getKey());
         saveCubicles();
@@ -252,7 +253,18 @@ public class CubicleManager {
                         ChatColor.GREEN + "Cubicle " + ChatColor.GOLD + cb.getKey() + ChatColor.GREEN + " owned by: " + ChatColor.BLUE + cb.getOwner()});
         }
     }
-    
+
+    public void setOwner(Cubicle cb, Player user, String owner) {
+        PermissionsHandler ph = PermissionsManager.getHandler();
+        cb.flushOwners();
+        playerCubes.remove(cb.getOwner());
+        ph.removePermission(cb.getOwner(), cb.getPermissionString());
+        cb.setOwner(owner);
+        ph.givePermission(owner, cb.getPermissionString());
+        playerCubes.put(owner, cb);
+        user.sendMessage(ChatColor.GOLD + "The owner of the Cubicle " + cb + ChatColor.GOLD + " has been updated.");
+    }
+
     public void regenerateCubicle(Cubicle cb, World cubeWorld, Player user) {
         RegenerationRunner rr = new RegenerationRunner(cb, user, cubeWorld);
         rr.setID(Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getInstance(), rr, CubicleModule.CUBICLE_REGEN_TIME, CubicleModule.CUBICLE_REGEN_TIME));
