@@ -50,6 +50,7 @@ public class RegenerationRunner implements Runnable {
         regenZ = lowz;
         maxChunk = (CubicleModule.CUBICLE_SIZE / 16) * (CubicleModule.CUBICLE_SIZE / 16);
         user.sendMessage(ChatColor.GOLD + "Regeneration of Cubicle " + cube + ChatColor.GOLD + " has begun!");
+        cubeWorld.loadChunk(regenX, regenZ, true);
         cubeWorld.regenerateChunk(regenX, regenZ);
         cubeWorld.refreshChunk(regenX, regenZ);
     }
@@ -74,6 +75,7 @@ public class RegenerationRunner implements Runnable {
             }
 
             regenCount++;
+            cubeWorld.loadChunk(regenX, regenZ, true);
             cubeWorld.regenerateChunk(regenX, regenZ);
             cubeWorld.refreshChunk(regenX, regenZ);
 
