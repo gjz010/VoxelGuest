@@ -106,7 +106,7 @@ public class WorldProtectionModule extends Module{
             VoxelGuest.log("Ignoring item blacklist");
         }
 
-		if (!getConfiguration().getBoolean("enable-multi-worlds")) {
+		if (getConfiguration().getBoolean("enable-multi-worlds")) {
 			String[] worlds = getConfiguration().getString("protected-worlds").split(",");
 			for (String world : worlds) {
 				protectedWorlds.add(world);
