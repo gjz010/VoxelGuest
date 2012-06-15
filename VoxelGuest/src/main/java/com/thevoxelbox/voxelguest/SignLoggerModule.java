@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
@@ -66,7 +65,38 @@ public class SignLoggerModule extends Module {
     }
 
     @Override
-    public void disable() throws ModuleException {
+    public void disable() throws ModuleException {}
+    
+    @ModuleEvent(event=BlockPlaceEvent.class)
+    public void onBlockPlace(BukkitEventWrapper wrapper) {
+        
+        BlockPlaceEvent event = (BlockPlaceEvent) wrapper.getEvent();
+        
+        if(event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN){
+            
+            Sign placedSign = (Sign)event.getBlock().getState();
+            
+            String pname = event.getPlayer().getName();
+            String line1 = placedSign.getLine(0);
+            String line2 = placedSign.getLine(1);
+            String line3 = placedSign.getLine(2);
+            String line4 = placedSign.getLine(3);
+            int xCord = event.getBlock().getX();
+            int yCord = event.getBlock().getY();
+            int zCord = event.getBlock().getZ();
+            World world = event.getBlock().getWorld();
+            
+            String logString = getLogString(pname, line1, line2, line3, line4, xCord, yCord, zCord, world);
+            addSignLog(logString);
+            
+        }    
+        
+    }
+    
+    
+    public void addSignLog(String logString){
+        signLog.add(logString);
+        
         try {
             
             File f = new File("plugins/VoxelGuest/signs/log.txt");
@@ -79,52 +109,14 @@ public class SignLoggerModule extends Module {
                 }
                 
                 pw = new PrintWriter(new FileWriter(f, true));
-                
-                for(String line : signLog){
-                    pw.append(line);
-                }
+                pw.append(logString);
                 pw.close();
 
                 
         } catch (IOException ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
         
-    }
-    
-    @ModuleEvent(event=BlockPlaceEvent.class)
-    public void onBlockPlace(BukkitEventWrapper wrapper) {
-        
-        for(int c = 0; c < 10; c++)
-        Bukkit.getServer().broadcastMessage("PENIS");
-        
-        BlockPlaceEvent event = (BlockPlaceEvent) wrapper.getEvent();
-        
-        if(event.getBlockPlaced().getType() == Material.SIGN){
-            String pname = event.getPlayer().getName();
-            Sign placedSign = (Sign) event.getBlockPlaced();
-            String line1 = placedSign.getLine(0);
-            String line2 = placedSign.getLine(1);
-            String line3 = placedSign.getLine(2);
-            String line4 = placedSign.getLine(3);
-            int xCord = event.getBlock().getX();
-            int yCord = event.getBlock().getY();
-            int zCord = event.getBlock().getZ();
-            World world = event.getBlock().getWorld();
-            
-            for(int c = 0; c < 10; c++)
-             Bukkit.getServer().broadcastMessage("BIG PENIS");
-            
-            String logString = getLogString(pname, line1, line2, line3, line4, xCord, yCord, zCord, world);
-            addSignLog(logString);
-        }
-        
-        
-    }
-    
-    
-    public void addSignLog(String logString){
-        signLog.add(logString);
     }
     
     private String getLogString(String pname, String line1, String line2, String line3, String line4, int xCord, int yCord, int zCord, World world){
