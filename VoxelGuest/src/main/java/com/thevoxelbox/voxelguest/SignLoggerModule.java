@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 
 /**
  *
@@ -67,29 +69,26 @@ public class SignLoggerModule extends Module {
     @Override
     public void disable() throws ModuleException {}
     
-    @ModuleEvent(event=BlockPlaceEvent.class)
-    public void onBlockPlace(BukkitEventWrapper wrapper) {
+    
+    @ModuleEvent(event=SignChangeEvent.class)
+    public void signChangeEvent(BukkitEventWrapper wrapper) {
         
-        BlockPlaceEvent event = (BlockPlaceEvent) wrapper.getEvent();
+        Bukkit.getServer().broadcastMessage("Event called");
         
-        if(event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN){
-            
-            Sign placedSign = (Sign)event.getBlock().getState();
-            
-            String pname = event.getPlayer().getName();
-            String line1 = placedSign.getLine(0);
-            String line2 = placedSign.getLine(1);
-            String line3 = placedSign.getLine(2);
-            String line4 = placedSign.getLine(3);
-            int xCord = event.getBlock().getX();
-            int yCord = event.getBlock().getY();
-            int zCord = event.getBlock().getZ();
-            World world = event.getBlock().getWorld();
-            
-            String logString = getLogString(pname, line1, line2, line3, line4, xCord, yCord, zCord, world);
-            addSignLog(logString);
-            
-        }    
+        SignChangeEvent event = (SignChangeEvent) wrapper.getEvent();
+        
+        String pname = event.getPlayer().getName();
+        String lines[] = event.getLines();
+        int xCord = event.getBlock().getX();
+        int yCord = event.getBlock().getY();
+        int zCord = event.getBlock().getZ();
+        World world = event.getBlock().getWorld();
+        
+        String logString = getLogString(pname, lines, xCord, yCord, zCord, world);
+        
+        Bukkit.getServer().broadcastMessage(logString);
+        
+        addSignLog(logString);
         
     }
     
@@ -100,7 +99,7 @@ public class SignLoggerModule extends Module {
         try {
             
             File f = new File("plugins/VoxelGuest/signs/log.txt");
-            PrintWriter pw = null;
+            PrintWriter pw;
 
             
                 if (!f.exists()) {
@@ -119,14 +118,14 @@ public class SignLoggerModule extends Module {
         
     }
     
-    private String getLogString(String pname, String line1, String line2, String line3, String line4, int xCord, int yCord, int zCord, World world){
+    private String getLogString(String pname, String lines[], int xCord, int yCord, int zCord, World world){
         Calendar Current = Calendar.getInstance();
                 int MO = Current.get(Calendar.MONTH);
                 int D = Current.get(Calendar.DAY_OF_MONTH);
                 int H = Current.get(Calendar.HOUR_OF_DAY);
                 int M = Current.get(Calendar.MINUTE);
                 int S = Current.get(Calendar.SECOND);
-        return "[" + MO + "/" + D + "/" + H + ":" + M + ":" + S + "]" + " | " + pname + " | " + "'" + line1 + "' " + "'" + line2 + "' " + line3 + "'" + line4 + "'" + " | " + "X:" + xCord + " Y:" + yCord + " Z:" + zCord + " @ " + world.getName();        
+        return "[" + MO + "/" + D + "/" + H + ":" + M + ":" + S + "]" + " | " + pname + " | " + "'" + lines[0] + "' " + "'" + lines[1] + "' " + lines[2] + "'" + lines[3] + "'" + " | " + "X:" + xCord + " Y:" + yCord + " Z:" + zCord + " @ " + world.getName();        
     }
     
     
