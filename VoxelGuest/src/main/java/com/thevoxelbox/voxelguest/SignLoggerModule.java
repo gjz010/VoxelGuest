@@ -108,7 +108,7 @@ public class SignLoggerModule extends Module {
                 }
                 
                 pw = new PrintWriter(new FileWriter(f, true));
-                pw.append(logString);
+                pw.append(logString + "\r\n");
                 pw.close();
 
                 
@@ -125,7 +125,7 @@ public class SignLoggerModule extends Module {
                 int H = Current.get(Calendar.HOUR_OF_DAY);
                 int M = Current.get(Calendar.MINUTE);
                 int S = Current.get(Calendar.SECOND);
-        return "[" + MO + "/" + D + "/" + H + ":" + M + ":" + S + "]" + " | " + pname + " | " + "'" + lines[0] + "' " + "'" + lines[1] + "' " + lines[2] + "'" + lines[3] + "'" + " | " + "X:" + xCord + " Y:" + yCord + " Z:" + zCord + " @ " + world.getName();        
+        return "[" + MO + "/" + D + "  " + H + ":" + M + ":" + S + "]" + " | " + pname + " | " + "' " + lines[0] + " ' " + lines[1] + " ' " + lines[2] + " ' " + lines[3] + " ' " + " | " + "X:" + xCord + " Y:" + yCord + " Z:" + zCord + " @ " + world.getName();        
     }
     
     
