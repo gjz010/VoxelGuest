@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -167,6 +168,8 @@ public class WorldProtectionModule extends Module{
         Block b = event.getBlock();
         
         if (!bannedblocks.isEmpty() && bannedblocks.contains(b.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.bannedblocks")) {
+            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT PLACE THIS."); //Why the hell wasnt this already here?
+            event.getPlayer().sendMessage(ChatColor.RED + "An Admin has been notified of your block placement.");
             event.setCancelled(true);
             
             for(int i = 0; i < onlinecount; i++) {
@@ -192,6 +195,8 @@ public class WorldProtectionModule extends Module{
         ItemStack is = event.getItem();
         
         if (is != null && !banneditems.isEmpty() && banneditems.contains(is.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.banneditems")) {
+            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT USE THIS."); //Why the hell wasnt this already here?
+            event.getPlayer().sendMessage(ChatColor.RED + "An Admin has been notified of your item use.");
             event.setCancelled(true);
             
             for (int i = 0; i < onlinecount; i++) {
