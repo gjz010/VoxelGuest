@@ -89,6 +89,7 @@ public class GreylistModule extends Module {
         @Setting("greylist-stream-password") public String streamPassword = "changeme";
         @Setting("greylist-stream-port") public int streamPort = 8080;
         @Setting("exploration-mode") public boolean explorationMode = false;
+        @Setting("announce-visitor-logins") public boolean announceVisitorLogins = false;
         @Setting("greylist-online-limit") public int onlineLimit = 10;
         @Setting("greylist-not-greylisted-kick-message") public String notGreylistedKickMessage = "You are not greylisted on this server.";
         @Setting("greylist-over-capacity-kick-message") public String overCapacityKickMessage = "The server is temporarily over guest capacity. Check back later.";
@@ -205,10 +206,8 @@ public class GreylistModule extends Module {
         
         if (l.isEmpty()) {
             cs.sendMessage("§cNo player found with that name.");
-            return;
         } else if (l.size() > 1) {
             cs.sendMessage("§cMultiple players found with that name.");
-            return;
         } else {
             Player p = l.get(0);
             
@@ -263,10 +262,8 @@ public class GreylistModule extends Module {
         
         if (l.isEmpty()) {
             cs.sendMessage("§cNo player found with that name.");
-            return;
         } else if (l.size() > 1) {
             cs.sendMessage("§cMultiple players found with that name.");
-            return;
         } else {
             Player p = l.get(0);
             
@@ -499,6 +496,10 @@ public class GreylistModule extends Module {
            if (!greylist.contains(next.toLowerCase()))
                greylist.add(next.toLowerCase());
        }
+    }
+    
+    public boolean hasGreylistee(String name) {
+        return greylist.contains(name);
     }
     
     private String interpretStreamInput(String input) {

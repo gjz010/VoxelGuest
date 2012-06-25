@@ -136,7 +136,6 @@ public class AFKModule extends Module {
         if (args.length == 0 && !isAFK(p)) {
             cycleAFK(p);
             broadcastAFKMessage(p);
-            return;
         } else if (!isAFK(p)) {
             String concat = "";
             
@@ -148,7 +147,6 @@ public class AFKModule extends Module {
             
             cycleAFK(p);
             broadcastAFKMessage(p, concat);
-            return;
         }
     }
     

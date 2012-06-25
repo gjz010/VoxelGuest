@@ -26,7 +26,10 @@
 
 package com.thevoxelbox.voxelguest;
 
+import com.thevoxelbox.voxelguest.modules.ModuleException;
+import com.thevoxelbox.voxelguest.modules.ModuleManager;
 import com.thevoxelbox.voxelguest.modules.ModuleSystemListener;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 import com.thevoxelbox.voxelguest.players.GuestPlayer;
 import com.thevoxelbox.voxelguest.util.Formatter;
 import org.bukkit.Bukkit;
@@ -67,6 +70,19 @@ public class SystemListener extends ModuleSystemListener {
         
         ++VoxelGuest.ONLINE_MEMBERS;
         
+        try {
+            GreylistModule module = (GreylistModule) ModuleManager.getManager().getModule(GreylistModule.class);
+            
+            if (!module.getConfiguration().getBoolean("announce-visitor-logins") && 
+                    module.getConfiguration().getBoolean("exploration-mode") && 
+                    (!module.hasGreylistee(gp.getPlayer().getName()) && !PermissionsManager.getHandler().hasPermission(gp.getPlayer().getName(), "voxelguest.greylist.bypass"))) {
+                
+                event.setJoinMessage("");
+            }
+        } catch (ModuleException ex) {
+            // Continue -- Greylist module not in use
+        }
+        
         if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length)
             VoxelGuest.ONLINE_MEMBERS = Bukkit.getOnlinePlayers().length;
         
@@ -85,6 +101,19 @@ public class SystemListener extends ModuleSystemListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         GuestPlayer gp = VoxelGuest.getGuestPlayer(event.getPlayer());
         --VoxelGuest.ONLINE_MEMBERS;
+        
+        try {
+            GreylistModule module = (GreylistModule) ModuleManager.getManager().getModule(GreylistModule.class);
+            
+            if (!module.getConfiguration().getBoolean("announce-visitor-logins") && 
+                    module.getConfiguration().getBoolean("exploration-mode") && 
+                    (!module.hasGreylistee(gp.getPlayer().getName()) && !PermissionsManager.getHandler().hasPermission(gp.getPlayer().getName(), "voxelguest.greylist.bypass"))) {
+                
+                event.setQuitMessage("");
+            }
+        } catch (ModuleException ex) {
+            // Continue -- Greylist module not in use
+        }
         
         try {
             String format = VoxelGuest.getConfigData().getString("leave-message-format");
@@ -108,6 +137,19 @@ public class SystemListener extends ModuleSystemListener {
     public void onPlayerKick(PlayerKickEvent event) {
         GuestPlayer gp = VoxelGuest.getGuestPlayer(event.getPlayer());
         --VoxelGuest.ONLINE_MEMBERS;
+        
+        try {
+            GreylistModule module = (GreylistModule) ModuleManager.getManager().getModule(GreylistModule.class);
+            
+            if (!module.getConfiguration().getBoolean("announce-visitor-logins") && 
+                    module.getConfiguration().getBoolean("exploration-mode") && 
+                    (!module.hasGreylistee(gp.getPlayer().getName()) && !PermissionsManager.getHandler().hasPermission(gp.getPlayer().getName(), "voxelguest.greylist.bypass"))) {
+                
+                event.setLeaveMessage("");
+            }
+        } catch (ModuleException ex) {
+            // Continue -- Greylist module not in use
+        }
         
         try {
             String format = VoxelGuest.getConfigData().getString("kick-message-format");
@@ -149,6 +191,11 @@ public class SystemListener extends ModuleSystemListener {
     
     @EventHandler
     public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+        
+        // Always allow admins to login (in case stuff happens)
+        if (PermissionsManager.getHandler().hasPermission(event.getName(), "system.admin"))
+            event.allow();
+        
         processModuleEvents(event);
     }
     
