@@ -34,6 +34,8 @@ public class AsshatMitigationModule extends Module {
     
     private final List<String> frozen = new ArrayList<String>();
     private boolean allFreeze = false;
+    
+    private boolean silenceMode = false;
 
     public AsshatMitigationModule()
     {
@@ -373,6 +375,12 @@ public class AsshatMitigationModule extends Module {
     {
         PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
         Player p = event.getPlayer();
+        
+        if (silenceMode) {
+            if (PermissionsManager.getHandler().hasPermission(event.getPlayer().getName(), "voxelguest.bypass.silence")) {
+                event.setCancelled(true);
+            }
+        }
 
         if (gagged.contains(p.getName())) {
             if (event.getMessage().equals(getConfiguration().getString("unrestrict-chat-message"))) {
@@ -413,5 +421,17 @@ public class AsshatMitigationModule extends Module {
             event.setTo(event.getFrom());
             event.setCancelled(true);
         }
+    }
+    
+    @Command(aliases = {"soapbox"},
+        bounds = {0, 0},
+        help = "Toggle the silence")
+    @CommandPermission(permission = "voxelguest.admin.silence")
+    public void silence(CommandSender cs, String[] args)
+    {
+        silenceMode = !silenceMode;
+        Player p = (Player) cs;
+        getConfiguration().setBoolean("silence-mode", silenceMode);
+        cs.sendMessage(ChatColor.GOLD + "Silent mode has been" + ((silenceMode) ? "enabled" : "disabled"));
     }
 }
