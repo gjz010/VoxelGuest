@@ -195,7 +195,7 @@ public class AsshatMitigationModule extends Module {
 	@Command(aliases={"soapbox"},
 			bounds={0,0},
 			help="Toggle the silence")
-	@CommandPermission(permission="voxelguest.greylist.admin.silence")
+	@CommandPermission(permission="voxelguest.admin.silence")
 	public void silence(CommandSender cs, String[] args) {
 		silenceMode = !silenceMode;
 		Player p = (Player) cs;
@@ -328,7 +328,7 @@ public class AsshatMitigationModule extends Module {
 		PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
 		Player p = event.getPlayer();
 		if (silenceMode) {
-			if (PermissionsManager.getHandler().hasPermission(event.getPlayer().getName(), "voxelguest.greylist.bypass.silence"))
+			if (PermissionsManager.getHandler().hasPermission(event.getPlayer().getName(), "voxelguest.bypass.silence"))
 				event.setCancelled(true);
 		}
 
