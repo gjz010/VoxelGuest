@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.modules.ModuleException;
@@ -33,66 +32,64 @@ import com.thevoxelbox.voxelguest.players.GuestPlayer;
 import com.thevoxelbox.voxelguest.util.Configuration;
 
 public class SimpleFormatter extends Formatter {
-    
+
     /*
-     * --------------
-     * FORMAT HANDLES
-     * --------------
-     * $n = name of the player
-     * $name = long form of $n
-     * $g = group (INDEX 0) of the player
-     * $group = long form of $g
-     * $gc = code for that group (if desired)
-     * $nonline = number of people online
-     * 
-     * Would be best to extend from this implementation
-     * so you don't have to rewrite the group crap again
-     * 
+     * -------------- FORMAT HANDLES -------------- $n = name of the player
+     * $name = long form of $n $g = group (INDEX 0) of the player $group = long
+     * form of $g $gc = code for that group (if desired) $nonline = number of
+     * people online
+     *
+     * Would be best to extend from this implementation so you don't have to
+     * rewrite the group crap again
+     *
      */
-    
     @Override
-    public String[] format(String input, GuestPlayer gp, Object... others) {
+    public String[] format(String input, GuestPlayer gp, Object... others)
+    {
         String copy = input;
         boolean guestPlayerParcing;
-        
+
         guestPlayerParcing = (gp == null) ? false : true;
-        
+
         if (guestPlayerParcing) {
-            
+
             if (gp.getGroups() != null && gp.getGroups().length >= 1) {
                 String group = gp.getGroups()[0];
                 Configuration config = VoxelGuest.getGroupManager().getGroupConfiguration(group);
                 String groupID = config.getString("group-id");
 
                 copy = copy.replace("$group", group);
-                if (groupID != null) {copy = copy.replace("$gc", groupID);}
+                if (groupID != null) {
+                    copy = copy.replace("$gc", groupID);
+                }
                 copy = copy.replace("$g", group);
             }
-            
+
             try {
                 VanishModule module = (VanishModule) ModuleManager.getManager().getModule(VanishModule.class);
                 int fakequitNum = module.getFakequitSize();
-                if (fakequitNum > 0)
+                if (fakequitNum > 0) {
                     copy = copy.replace("$nonline", String.valueOf(VoxelGuest.ONLINE_MEMBERS - fakequitNum));
-                else
+                } else {
                     copy = copy.replace("$nonline", String.valueOf(VoxelGuest.ONLINE_MEMBERS));
+                }
             } catch (ModuleException ex) {
                 copy = copy.replace("$nonline", String.valueOf(VoxelGuest.ONLINE_MEMBERS));
             } catch (NullPointerException ex) {
                 copy = copy.replace("$nonline", String.valueOf(VoxelGuest.ONLINE_MEMBERS));
             }
-            
+
             copy = copy.replace("$name", gp.getPlayer().getName());
             copy = copy.replace("$n", gp.getPlayer().getName());
         }
-        
+
         copy = encodeColors(copy);
-        
+
         if (copy.contains("\n")) {
             String[] copies = copy.split("\n");
             return copies;
         } else {
-            return new String[] {copy};
+            return new String[]{copy};
         }
     }
 }

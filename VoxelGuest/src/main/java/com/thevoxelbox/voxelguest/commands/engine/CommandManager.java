@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.commands.engine;
 
 import com.thevoxelbox.voxelguest.permissions.InsufficientPermissionsException;
@@ -49,12 +48,14 @@ public class CommandManager {
     private String[] helpArgs = {"help", "h", "?"};
     protected Map<String, Method> aliases = new HashMap<String, Method>();
     protected Map<Method, Object> instances = new HashMap<Method, Object>();
-    
-    public CommandManager(String pluginPrefix) {
+
+    public CommandManager(String pluginPrefix)
+    {
         tag = pluginPrefix;
     }
 
-    public void registerCommands(Class<?> cls) {
+    public void registerCommands(Class<?> cls)
+    {
         Object obj = null;
 
         try {
@@ -90,10 +91,11 @@ public class CommandManager {
             }
         }
     }
-    
-    public void registerCommands(Object obj) {
+
+    public void registerCommands(Object obj)
+    {
         Class<?> cls = obj.getClass();
-        
+
         for (Method method : cls.getMethods()) {
             if (!method.isAnnotationPresent(Command.class)) {
                 continue; // Improper command registration, helper method, or other method type
@@ -120,12 +122,14 @@ public class CommandManager {
         }
     }
 
-    private boolean isRegistered(String command) {
+    private boolean isRegistered(String command)
+    {
         return aliases.containsKey(command.toLowerCase());
     }
 
     public void executeCommand(org.bukkit.command.Command command, CommandSender cs, String[] args) throws CommandException,
-            InsufficientPermissionsException {
+            InsufficientPermissionsException
+    {
         // Search if command is registered
         if (!this.isRegistered(command.getName())) {
             throw new UnhandledCommandException("Unhandled command: " + command.getName());
@@ -163,22 +167,22 @@ public class CommandManager {
             // -- Check if cs is player or not
             if (cs instanceof Player) {
                 Player p = (Player) cs;
-                
+
                 if (!PermissionsManager.getHandler().hasPermission(p.getName(), "system.admin")) {
                     if (!PermissionsManager.getHandler().hasPermission(p.getName(), perm.permission())) {
                         throw new InsufficientPermissionsException("You do not have sufficient privileges to access this command.");
-                    } 
-                }     
+                    }
+                }
             }
         }
-        
+
         if (method.isAnnotationPresent(Subcommands.class)) {
             Subcommands subs = method.getAnnotation(Subcommands.class);
-            
+
             if (cs instanceof Player) {
                 Player p = (Player) cs;
-                
-                
+
+
                 if (!PermissionsManager.getHandler().hasPermission(p.getName(), "system.admin")) {
                     try {
                         if (Arrays.asList(subs.arguments()).contains(args[0])) {
@@ -200,7 +204,8 @@ public class CommandManager {
         invokeMethod(method, cs, args, instance);
     }
 
-    private void invokeMethod(Method method, CommandSender cs, String[] args, Object instance) throws CommandMethodInvocationException {
+    private void invokeMethod(Method method, CommandSender cs, String[] args, Object instance) throws CommandMethodInvocationException
+    {
         Object[] commandMethodArgs = {cs, args};
 
         try {
@@ -210,30 +215,32 @@ public class CommandManager {
             throw new CommandMethodInvocationException("Internal error. Could not execute command.");
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
-           throw new CommandMethodInvocationException("Internal error. Could not execute command.");
+            throw new CommandMethodInvocationException("Internal error. Could not execute command.");
         } catch (InvocationTargetException ex) {
             ex.printStackTrace();
             throw new CommandMethodInvocationException("Internal error. Could not execute command.");
         }
     }
-    
-    public void sendHelp(CommandSender cs, org.bukkit.command.Command command) throws MalformattedCommandException {
+
+    public void sendHelp(CommandSender cs, org.bukkit.command.Command command) throws MalformattedCommandException
+    {
         Method method = aliases.get(command.getName());
-        
+
         if (!method.isAnnotationPresent(Command.class)) {
             throw new MalformattedCommandException("Malformatted command: " + command.getName());
         }
 
         Command cmd = method.getAnnotation(Command.class);
-        
+
         String help = "§6===Help: " + command.getName() + "===\n" + cmd.help() + "\n" + "§6=========================";
-        
+
         for (String str : getMessageLines(help)) {
             cs.sendMessage(str);
         }
     }
-    
-    private static void log(String str, int importance) {
+
+    private static void log(String str, int importance)
+    {
         switch (importance) {
             case 0:
                 Logger.getLogger("Mincraft").info(tag + " " + str);
@@ -249,8 +256,9 @@ public class CommandManager {
                 return;
         }
     }
-    
-    private static String[] getMessageLines(String message) {
+
+    private static String[] getMessageLines(String message)
+    {
         String[] split = message.split("\n");
         return split;
     }

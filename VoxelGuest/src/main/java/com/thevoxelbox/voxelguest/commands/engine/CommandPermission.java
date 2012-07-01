@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.commands.engine;
 
 import java.lang.annotation.Retention;
@@ -33,9 +32,9 @@ import java.lang.annotation.RetentionPolicy;
 public @interface CommandPermission {
 
     /**
-     * 
+     *
      * The permission needed
-     * 
+     *
      */
     String permission() default "";
 }

@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.commands;
 
 import com.thevoxelbox.voxelguest.commands.engine.Command;
@@ -48,36 +47,37 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class MiscellaneousCommands {
+
     private final String AFK = "§8[§9AFK§8]";
     private final String FAKEQUIT = "§8[§cFQ§8]";
     private final String COMMA = "§6,";
-    
     private HashMap<String, Location> teleportHistory = new HashMap<String, Location>();
-    
-    
-    @Command(aliases={"who", "online", "list", "readlist", "playerlist"},
-            bounds={0,1},
-            help="To list all online players, type §c/who")
-    @Subcommands(arguments={"-f"},
-            permission={"voxelguest.miscellaneous.list.admin"})
-    @CommandPermission(permission="voxelguest.miscellaneous.list.list")
-    public void who(CommandSender cs, String[] args) {
+
+    @Command(aliases = {"who", "online", "list", "readlist", "playerlist"},
+    bounds = {0, 1},
+    help = "To list all online players, type §c/who")
+    @Subcommands(arguments = {"-f"},
+    permission = {"voxelguest.miscellaneous.list.admin"})
+    @CommandPermission(permission = "voxelguest.miscellaneous.list.list")
+    public void who(CommandSender cs, String[] args)
+    {
         if (args != null && args.length > 0 && args[0].equalsIgnoreCase("-f")) {
             adminWho(cs);
             return;
         }
-        
+
         normalWho(cs);
     }
-    
-    @Command(aliases={"vteleport", "vtp"},
-            bounds={1, 2},
-            help="Teleport to other people with /vtp [player]\n"
-            + "Teleport to other people at an offset with /vtp [player] [x#,y#,z#][num]\n"
-            + "Teleport others to you with /vtp [player] me",
-            playerOnly=true)
-    @CommandPermission(permission="voxelguest.miscellaneous.vtp")
-    public void vteleport(CommandSender cs, String[] args) {
+
+    @Command(aliases = {"vteleport", "vtp"},
+    bounds = {1, 2},
+    help = "Teleport to other people with /vtp [player]\n"
+    + "Teleport to other people at an offset with /vtp [player] [x#,y#,z#][num]\n"
+    + "Teleport others to you with /vtp [player] me",
+    playerOnly = true)
+    @CommandPermission(permission = "voxelguest.miscellaneous.vtp")
+    public void vteleport(CommandSender cs, String[] args)
+    {
         if (args != null && args.length > 0) {
             Player p = (Player) cs;
 
@@ -124,21 +124,20 @@ public class MiscellaneousCommands {
                     p.teleport(loc);
                 }
             }
-            return;
         } else {
             cs.sendMessage(ChatColor.RED + "Please specify the target player.");
-            return;
         }
     }
-    
-    @Command(aliases={"vback"},
-            bounds={0, 0},
-            help="Go back to your previous location with §c/vback",
-            playerOnly=true)
-    @CommandPermission(permission="voxelguest.miscellaneous.vback")
-    public void vback(CommandSender cs, String[] args) {
+
+    @Command(aliases = {"vback"},
+    bounds = {0, 0},
+    help = "Go back to your previous location with §c/vback",
+    playerOnly = true)
+    @CommandPermission(permission = "voxelguest.miscellaneous.vback")
+    public void vback(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
-        
+
         Location back = getHistoryEntry(p);
         if (back == null) {
             p.sendMessage("§cYou have no previous location.");
@@ -147,12 +146,14 @@ public class MiscellaneousCommands {
             p.teleport(back);
         }
     }
-    
-    private void insertHistoryEntry(Player p, Location last) {
+
+    private void insertHistoryEntry(Player p, Location last)
+    {
         teleportHistory.put(p.getName(), last);
     }
-    
-    private Location getHistoryEntry(Player p) {
+
+    private Location getHistoryEntry(Player p)
+    {
         if (!teleportHistory.containsKey(p.getName())) {
             return null;
         } else {
@@ -161,31 +162,32 @@ public class MiscellaneousCommands {
             return back;
         }
     }
-    
-    private void adminWho(CommandSender sender) {
+
+    private void adminWho(CommandSender sender)
+    {
         HashMap<String, List<String>> storage = new HashMap<String, List<String>>();
         String defaultGroupId = VoxelGuest.getGroupManager().getDefaultConfiguration().getString("group-id");
         boolean colorSwitch = false;
-        
+
         String header = "";
-        
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             String groupId;
-            
+
             String[] groups = PermissionsManager.getHandler().getGroups(p.getName());
-            
+
             if (groups == null || groups.length == 0) {
                 groupId = defaultGroupId;
             } else {
                 groupId = VoxelGuest.getGroupManager().getGroupConfiguration(groups[0]).getString("group-id");
             }
-            
+
             boolean afk = isAFK(p);
-            boolean fq  = isInFakeQuit(p);
-            
+            boolean fq = isInFakeQuit(p);
+
             String user = ((fq) ? FAKEQUIT : "") + ((afk) ? AFK : "") + ((colorSwitch) ? "§7" : "§f") + p.getName();
             groupId = "§8[" + groupId + "§8]";
-            
+
             if (!storage.containsKey(groupId)) {
                 List<String> l = new ArrayList<String>();
                 l.add(user);
@@ -195,48 +197,50 @@ public class MiscellaneousCommands {
                 l.add(user);
                 storage.put(groupId, l);
             }
-            
+
             colorSwitch = !colorSwitch;
         }
-        
+
         header = writeHeader(storage, Bukkit.getOnlinePlayers().length);
-        
+
         sender.sendMessage("§8------------------------------");
         sender.sendMessage(header.trim());
-        
+
         for (Map.Entry<String, List<String>> entry : storage.entrySet()) {
             sendGroupStrings(sender, entry.getValue(), entry.getKey());
         }
-        
+
         sender.sendMessage("§8------------------------------");
     }
-    
-    private void normalWho(CommandSender sender) {
+
+    private void normalWho(CommandSender sender)
+    {
         HashMap<String, List<String>> storage = new HashMap<String, List<String>>();
         String defaultGroupId = VoxelGuest.getGroupManager().getDefaultConfiguration().getString("group-id");
         boolean colorSwitch = false;
-        
+
         String header = "";
-        
+
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if (isInFakeQuit(p))
+            if (isInFakeQuit(p)) {
                 continue;
-            
+            }
+
             String groupId;
-            
+
             String[] groups = PermissionsManager.getHandler().getGroups(p.getName());
-            
+
             if (groups == null || groups.length == 0) {
                 groupId = defaultGroupId;
             } else {
                 groupId = VoxelGuest.getGroupManager().getGroupConfiguration(groups[0]).getString("group-id");
             }
-            
+
             boolean afk = isAFK(p);
-            
+
             String user = ((afk) ? AFK : "") + ((colorSwitch) ? "§7" : "§f") + p.getName();
             groupId = "§8[" + groupId + "§8]";
-            
+
             if (!storage.containsKey(groupId)) {
                 List<String> l = new ArrayList<String>();
                 l.add(user);
@@ -246,57 +250,60 @@ public class MiscellaneousCommands {
                 l.add(user);
                 storage.put(groupId, l);
             }
-            
+
             colorSwitch = !colorSwitch;
         }
-        
-        
+
+
         header = writeHeader(storage, Bukkit.getOnlinePlayers().length - getFakequitSize());
-        
+
         sender.sendMessage("§8------------------------------");
         sender.sendMessage(header.trim());
-        
-      for (Map.Entry<String, List<String>> entry : storage.entrySet()) {
-          sendGroupStrings(sender, entry.getValue(), entry.getKey());
-      }
-        
+
+        for (Map.Entry<String, List<String>> entry : storage.entrySet()) {
+            sendGroupStrings(sender, entry.getValue(), entry.getKey());
+        }
+
         sender.sendMessage("§8------------------------------");
     }
-    
-    private String writeHeader(HashMap<String, List<String>> storage, int onlineNumber) {
+
+    private String writeHeader(HashMap<String, List<String>> storage, int onlineNumber)
+    {
         String header = "";
         String defaultGroupId = VoxelGuest.getGroupManager().getDefaultConfiguration().getString("group-id");
-        
+
         for (String group : VoxelGuest.getGroupManager().getRegisteredGroups()) {
             String groupId = VoxelGuest.getGroupManager().getGroupConfiguration(group).getString("group-id");
-            
-            if (groupId == null)
+
+            if (groupId == null) {
                 groupId = defaultGroupId;
-            
+            }
+
             String groupTest = "§8[" + groupId + "§8]";
-            
+
             if (storage.containsKey(groupTest)) {
                 header = header + "§8[" + groupId + ":" + storage.get(groupTest).size() + "§8] ";
             } else {
                 header = header + "§8[" + groupId + ":0§8] ";
             }
         }
-        
+
         return (header.trim() + (" §8(§fO:" + onlineNumber + "§8)"));
     }
-    
-    private void sendGroupStrings(CommandSender cs, List<String> list, String groupHeader) {
+
+    private void sendGroupStrings(CommandSender cs, List<String> list, String groupHeader)
+    {
         if (list == null || list.isEmpty()) {
-            return;
+            // Continue
         } else {
             boolean groupStart = false;
             String line = " ";
             Iterator<String> it = list.listIterator();
             Collections.sort(list);
-            
+
             while (it.hasNext()) {
                 String str = it.next();
-                
+
                 if (line.length() + (str.length() + COMMA.length() + 1) > 70) {
                     if (!groupStart) {
                         groupStart = true;
@@ -307,10 +314,10 @@ public class MiscellaneousCommands {
                         line = " ";
                     }
                 }
-                
+
                 line += (str + COMMA + " ");
             }
-            
+
             if (!line.isEmpty()) {
                 if (!groupStart) {
                     cs.sendMessage(groupHeader + line.substring(0, line.length() - 2));
@@ -320,10 +327,9 @@ public class MiscellaneousCommands {
             }
         }
     }
-    
-    
-       
-    private boolean isAFK(Player p) {
+
+    private boolean isAFK(Player p)
+    {
         try {
             AFKModule module = (AFKModule) ModuleManager.getManager().getModule(AFKModule.class);
             return module.isAFK(p);
@@ -331,8 +337,9 @@ public class MiscellaneousCommands {
             return false;
         }
     }
-    
-    private boolean isInFakeQuit(Player p) {
+
+    private boolean isInFakeQuit(Player p)
+    {
         try {
             VanishModule module = (VanishModule) ModuleManager.getManager().getModule(VanishModule.class);
             return module.isInFakequit(p);
@@ -340,8 +347,9 @@ public class MiscellaneousCommands {
             return false;
         }
     }
-    
-    private int getFakequitSize() {
+
+    private int getFakequitSize()
+    {
         try {
             VanishModule module = (VanishModule) ModuleManager.getManager().getModule(VanishModule.class);
             return module.getFakequitSize();

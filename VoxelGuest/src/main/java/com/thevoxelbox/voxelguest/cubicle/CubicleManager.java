@@ -34,7 +34,8 @@ public class CubicleManager {
     private HashMap<String, Cubicle> aliasNames = new HashMap<String, Cubicle>();
     private HashMap<String, Cubicle> playerCubes = new HashMap<String, Cubicle>();
 
-    public CubicleManager() {
+    public CubicleManager()
+    {
         File f = new File("plugins/VoxelGuest/cubicles/data.json");
 
         if (!f.exists()) {
@@ -70,47 +71,58 @@ public class CubicleManager {
         }
     }
 
-    public boolean hasCubicle(Location loc) {
+    public boolean hasCubicle(Location loc)
+    {
         return cubicles.containsKey(getKey(loc));
     }
 
-    public Cubicle getCubicle(Location loc) {
+    public Cubicle getCubicle(Location loc)
+    {
         return cubicles.get(getKey(loc));
     }
 
-    public boolean hasCubicle(Player user) {
+    public boolean hasCubicle(Player user)
+    {
         return playerCubes.containsKey(user.getName());
     }
 
-    public Cubicle getCubicle(Player user) {
+    public Cubicle getCubicle(Player user)
+    {
         return playerCubes.get(user.getName());
     }
 
-    public boolean hasCubicle(String userName) {
+    public boolean hasCubicle(String userName)
+    {
         return playerCubes.containsKey(userName);
     }
 
-    public Cubicle getCubicle(String userName) {
+    public Cubicle getCubicle(String userName)
+    {
         return playerCubes.get(userName);
     }
 
-    public boolean hasAlias(String alias) {
+    public boolean hasAlias(String alias)
+    {
         return aliasNames.containsKey(alias);
     }
 
-    public Cubicle getAlias(String alias) {
+    public Cubicle getAlias(String alias)
+    {
         return aliasNames.get(alias);
     }
 
-    public boolean hasCubicle(int x, int z) {
+    public boolean hasCubicle(int x, int z)
+    {
         return cubicles.containsKey(getKey(x, z));
     }
 
-    public Cubicle getCubicle(int x, int z) {
+    public Cubicle getCubicle(int x, int z)
+    {
         return cubicles.get(getKey(x, z));
     }
 
-    public void createCubicle(Player user, World cubeWorld, boolean system) {
+    public void createCubicle(Player user, World cubeWorld, boolean system)
+    {
         if (hasCubicle(user) && !system) {
             user.sendMessage(ChatColor.RED + "You cannot own more than one cubicle!");
             return;
@@ -131,7 +143,8 @@ public class CubicleManager {
         saveCubicles();
     }
 
-    public void removeCubicle(Player user, Cubicle cb) {
+    public void removeCubicle(Player user, Cubicle cb)
+    {
         cb.flushOwners();
         if (cb.isOwnedBy(user)) {
             PermissionsManager.getHandler().removePermission(user.getName(), cb.getPermissionString());
@@ -147,7 +160,8 @@ public class CubicleManager {
         user.sendMessage(ChatColor.GOLD + "Cubicle " + cb + ChatColor.GOLD + " has been removed!");
     }
 
-    public Cubicle getFirstSpiral() {
+    public Cubicle getFirstSpiral()
+    {
         int x = 0;
         int z = 0;
 
@@ -192,7 +206,8 @@ public class CubicleManager {
         return createNew(x, z, num);
     }
 
-    public Cubicle getSpiralNumber(int number) {
+    public Cubicle getSpiralNumber(int number)
+    {
         if (number < 0) {
             return null;
         }
@@ -240,7 +255,8 @@ public class CubicleManager {
         return cubicles.get(getKey(x, z));
     }
 
-    public void addAlias(Cubicle cb, String alias, Player cmdSender) {
+    public void addAlias(Cubicle cb, String alias, Player cmdSender)
+    {
         if (aliasNames.containsKey(alias)) {
             cmdSender.sendMessage(ChatColor.RED + "A Cubicle with that alias already exists!");
         } else {
@@ -254,7 +270,8 @@ public class CubicleManager {
         }
     }
 
-    public void setOwner(Cubicle cb, Player user, String owner) {
+    public void setOwner(Cubicle cb, Player user, String owner)
+    {
         PermissionsHandler ph = PermissionsManager.getHandler();
         cb.flushOwners();
         playerCubes.remove(cb.getOwner());
@@ -265,12 +282,14 @@ public class CubicleManager {
         user.sendMessage(ChatColor.GOLD + "The owner of the Cubicle " + cb + ChatColor.GOLD + " has been updated.");
     }
 
-    public void regenerateCubicle(Cubicle cb, World cubeWorld, Player user) {
+    public void regenerateCubicle(Cubicle cb, World cubeWorld, Player user)
+    {
         RegenerationRunner rr = new RegenerationRunner(cb, user, cubeWorld);
         rr.setID(Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getInstance(), rr, CubicleModule.CUBICLE_REGEN_TIME, CubicleModule.CUBICLE_REGEN_TIME));
     }
 
-    public void saveCubicles() {
+    public void saveCubicles()
+    {
         File f = new File("plugins/VoxelGuest/cubicles/data.json");
 
         if (!f.exists()) {
@@ -294,7 +313,8 @@ public class CubicleManager {
         }
     }
 
-    private Cubicle createNew(int x, int z, int id) {
+    private Cubicle createNew(int x, int z, int id)
+    {
         Cubicle cube = new Cubicle();
         cube.setID(id);
         cube.setX(x);
@@ -303,11 +323,13 @@ public class CubicleManager {
         return cube;
     }
 
-    private String getKey(int x, int z) {
+    private String getKey(int x, int z)
+    {
         return x + "_" + z;
     }
 
-    private String getKey(Location loc) {
+    private String getKey(Location loc)
+    {
         return NumberConversions.floor(loc.getX() / CubicleModule.CUBICLE_SIZE)
                 + "_"
                 + NumberConversions.floor(loc.getZ() / CubicleModule.CUBICLE_SIZE);
@@ -322,12 +344,14 @@ public class CubicleManager {
         private byte dir;
         private byte nextDir;
 
-        private Direction(int d, int n) {
+        private Direction(int d, int n)
+        {
             dir = (byte) d;
             nextDir = (byte) n;
         }
 
-        public Direction next() {
+        public Direction next()
+        {
             return values()[nextDir];
         }
     }

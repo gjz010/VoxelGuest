@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.commands.engine.Command;
@@ -49,278 +48,310 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-@MetaData(name="Vanish", description="Vanish in front of your peers!")
+@MetaData(name = "Vanish", description = "Vanish in front of your peers!")
 public class VanishModule extends Module {
-    
+
     protected static List<String> vanished = new ArrayList<String>();
     protected static List<String> safeList = new ArrayList<String>();
-    
     protected static List<String> fakequit = new ArrayList<String>();
-    protected static List<String> ofakequit= new ArrayList<String>();
-    
+    protected static List<String> ofakequit = new ArrayList<String>();
     private String[] reloadVanishedList;
     private String[] reloadFakequitList;
     private String[] reloadOfflineFQList;
-    
-    public VanishModule() {
+
+    public VanishModule()
+    {
         super(VanishModule.class.getAnnotation(MetaData.class));
     }
-    
+
     class VanishConfiguration extends ModuleConfiguration {
-        
-        public VanishConfiguration(VanishModule parent) {
+
+        public VanishConfiguration(VanishModule parent)
+        {
             super(parent);
         }
     }
-    
+
     @Override
-    public void enable() {
+    public void enable()
+    {
         setConfiguration(new VanishConfiguration(this));
-        reloadVanishedList  = FlatFileManager.load("tmpvanished", "", true);
-        reloadFakequitList  = FlatFileManager.load("tmpfakequit", "", true);
+        reloadVanishedList = FlatFileManager.load("tmpvanished", "", true);
+        reloadFakequitList = FlatFileManager.load("tmpfakequit", "", true);
         reloadOfflineFQList = FlatFileManager.load("tmpofflinefakequit", "", true);
-        
-        
+
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.vanish.safelist")) {
                 addMemberToSafeList(p);
             }
         }
-        
+
         if (reloadVanishedList != null) {
             for (String str : reloadVanishedList) {
                 hidePlayer(Bukkit.getPlayer(str));
             }
         }
-        
+
         if (reloadFakequitList != null) {
             for (String str : reloadFakequitList) {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(str);
                 Player p = op.getPlayer();
-                
+
                 if (p != null) {
                     if (!fakequit.contains(str)) {
                         fakequit.add(str);
                     }
                 } else {
                     ofakequit.add(str);
-                }      
+                }
             }
         }
-        
+
         if (reloadOfflineFQList != null) {
-            for (String str : reloadOfflineFQList)
-                if (!ofakequit.contains(str) && !fakequit.contains(str))
+            for (String str : reloadOfflineFQList) {
+                if (!ofakequit.contains(str) && !fakequit.contains(str)) {
                     ofakequit.add(str);
+                }
+            }
         }
     }
-    
+
     @Override
-    public void disable() {
+    public void disable()
+    {
         String[] saveVanished = new String[vanished.size()];
         String[] saveFakequit = new String[fakequit.size()];
         String[] saveOfakequit = new String[ofakequit.size()];
-        
+
         saveVanished = vanished.toArray(saveVanished);
         saveFakequit = fakequit.toArray(saveFakequit);
         saveOfakequit = ofakequit.toArray(saveOfakequit);
-        
+
         FlatFileManager.save(saveVanished, "tmpvanished");
         FlatFileManager.save(saveFakequit, "tmpfakequit");
         FlatFileManager.save(saveOfakequit, "tmpofflinefakequit");
     }
 
     @Override
-    public String getLoadMessage() {
+    public String getLoadMessage()
+    {
         return "Vanish module loaded";
     }
-    
-    @Command(aliases="vanish",
-            bounds={0,0},
-            help="To toggle your vanish setting, type:\n"
-            + "§c/vanish",
-            playerOnly=true)
-    @CommandPermission(permission="voxelguest.vanish.vanish")
-    public void vanish(CommandSender cs, String[] args) {
+
+    @Command(aliases = "vanish",
+    bounds = {0, 0},
+    help = "To toggle your vanish setting, type:\n"
+    + "§c/vanish",
+    playerOnly = true)
+    @CommandPermission(permission = "voxelguest.vanish.vanish")
+    public void vanish(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
-        
-        if (!isVanished(p))
+
+        if (!isVanished(p)) {
             hidePlayer(p);
-        else
+        } else {
             revealPlayer(p);
+        }
     }
-    
-    @Command(aliases={"fakequit", "fq"},
-            bounds={0,0},
-            playerOnly=true)
-    @CommandPermission(permission="voxelguest.vanish.fakequit")
-    public void fakequit(CommandSender cs, String[] args) {
+
+    @Command(aliases = {"fakequit", "fq"},
+    bounds = {0, 0},
+    playerOnly = true)
+    @CommandPermission(permission = "voxelguest.vanish.fakequit")
+    public void fakequit(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
-        
-        if (!isInFakequit(p))
+
+        if (!isInFakequit(p)) {
             fakequitMember(p);
-        else
+        } else {
             unFakequitMember(p);
+        }
     }
-    
-    @ModuleEvent(event=PlayerJoinEvent.class, priority=ModuleEventPriority.LOW)
-    public void onPlayerJoin(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerJoinEvent.class, priority = ModuleEventPriority.LOW)
+    public void onPlayerJoin(BukkitEventWrapper wrapper)
+    {
         PlayerJoinEvent event = (PlayerJoinEvent) wrapper.getEvent();
-        
+
         if (PermissionsManager.getHandler().hasPermission(event.getPlayer().getName(), "voxelguest.vanish.safelist")) {
             addMemberToSafeList(event.getPlayer());
             revealVanishedToPlayer(event.getPlayer());
         }
-        
+
         if (ofakequit.contains(event.getPlayer().getName())) {
             ofakequit.remove(event.getPlayer().getName());
             hidePlayer(event.getPlayer());
-            
+
             event.setJoinMessage("");
         }
     }
-    
-    @ModuleEvent(event=PlayerQuitEvent.class, priority=ModuleEventPriority.LOW)
-    public void onPlayerQuit(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerQuitEvent.class, priority = ModuleEventPriority.LOW)
+    public void onPlayerQuit(BukkitEventWrapper wrapper)
+    {
         PlayerQuitEvent event = (PlayerQuitEvent) wrapper.getEvent();
-        
+
         if (fakequit.contains(event.getPlayer().getName())) {
             ofakequit.add(event.getPlayer().getName());
             fakequit.remove(event.getPlayer().getName());
             event.setQuitMessage("");
         }
     }
-    
-    @ModuleEvent(event=PlayerKickEvent.class, priority=ModuleEventPriority.LOW)
-    public void onPlayerKick(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerKickEvent.class, priority = ModuleEventPriority.LOW)
+    public void onPlayerKick(BukkitEventWrapper wrapper)
+    {
         PlayerKickEvent event = (PlayerKickEvent) wrapper.getEvent();
-        
+
         if (fakequit.contains(event.getPlayer().getName())) {
             ofakequit.add(event.getPlayer().getName());
             fakequit.remove(event.getPlayer().getName());
             event.setLeaveMessage("");
         }
     }
-    
-    @ModuleEvent(event=PlayerChatEvent.class)
-    public void onPlayerChat(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerChatEvent.class)
+    public void onPlayerChat(BukkitEventWrapper wrapper)
+    {
         PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
-        
+
         if (isInFakequit(event.getPlayer())) {
             event.getPlayer().sendMessage("§cYou cannot chat while in FakeQuit");
             event.setCancelled(true);
             return;
         }
     }
-    
-    public void hidePlayer(Player hidden) {
-        if (hidden == null)
+
+    public void hidePlayer(Player hidden)
+    {
+        if (hidden == null) {
             return;
-        
+        }
+
         if (!vanished.contains(hidden.getName())) {
             vanished.add(hidden.getName());
-            
+
             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-                if (!safeList.contains(p.getName()))
+                if (!safeList.contains(p.getName())) {
                     p.hidePlayer(hidden);
+                }
             }
-            
+
             hidden.sendMessage("§bYou have vanished.");
         }
     }
-    
-    public void revealPlayer(Player hidden) {
+
+    public void revealPlayer(Player hidden)
+    {
         if (vanished.contains(hidden.getName())) {
             vanished.remove(hidden.getName());
             VoxelGuest.log(Boolean.valueOf(isVanished(hidden)).toString());
-            
+
             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-                if (!safeList.contains(p.getName()))
+                if (!safeList.contains(p.getName())) {
                     p.showPlayer(hidden);
+                }
             }
-            
+
             hidden.sendMessage("§bYou have reappeared.");
         }
     }
-    
-    public void revealVanishedToPlayer(Player p) {
+
+    public void revealVanishedToPlayer(Player p)
+    {
         Iterator<String> it = vanished.listIterator();
-        
+
         while (it.hasNext()) {
             String vanishedName = it.next();
             Player vanishedPlayer = Bukkit.getPlayer(vanishedName);
-            
-            if (vanishedPlayer == null)
+
+            if (vanishedPlayer == null) {
                 continue;
-            
+            }
+
             p.showPlayer(vanishedPlayer);
         }
     }
-    
-    public void fakequitMember(Player p) {
-        if (!fakequit.contains(p.getName()))
+
+    public void fakequitMember(Player p)
+    {
+        if (!fakequit.contains(p.getName())) {
             fakequit.add(p.getName());
-        else
+        } else {
             return;
-        
+        }
+
         VoxelGuest.log(name, p.getName() + " has gone into FakeQuit.", 0);
         String leaveMessageFormat = VoxelGuest.getConfigData().getString("leave-message-format");
         String leaveMessage = "";
-        
+
         if (leaveMessageFormat == null) {
             leaveMessage = "§e" + p.getName() + " left";
-        } else { 
+        } else {
             String[] messages = Formatter.selectFormatter(SimpleFormatter.class).format(leaveMessageFormat, VoxelGuest.getGuestPlayer(p));
             leaveMessage = messages[0];
         }
-        
+
         Bukkit.broadcastMessage(leaveMessage);
-        
-        if (!isVanished(p))
+
+        if (!isVanished(p)) {
             hidePlayer(p);
+        }
     }
-    
-    public void unFakequitMember(Player p) {
-        if (fakequit.contains(p.getName()))
+
+    public void unFakequitMember(Player p)
+    {
+        if (fakequit.contains(p.getName())) {
             fakequit.remove(p.getName());
-        else
+        } else {
             return;
-        
+        }
+
         VoxelGuest.log(name, p.getName() + " has left FakeQuit.", 0);
         String leaveMessageFormat = VoxelGuest.getConfigData().getString("join-message-format");
         String leaveMessage = "";
-        
+
         if (leaveMessageFormat == null) {
             leaveMessage = "§e" + p.getName() + " joined";
-        } else { 
+        } else {
             String[] messages = Formatter.selectFormatter(SimpleFormatter.class).format(leaveMessageFormat, VoxelGuest.getGuestPlayer(p));
             leaveMessage = messages[0];
         }
-        
+
         Bukkit.broadcastMessage(leaveMessage);
-        
-        if (isVanished(p))
+
+        if (isVanished(p)) {
             revealPlayer(p);
+        }
     }
-    
-    public int getFakequitSize() {
+
+    public int getFakequitSize()
+    {
         return fakequit.size();
     }
-    
-    public void addMemberToSafeList(Player p) {
-        if (!safeList.contains(p.getName()))
+
+    public void addMemberToSafeList(Player p)
+    {
+        if (!safeList.contains(p.getName())) {
             safeList.add(p.getName());
+        }
     }
-    
-    public boolean isOnSafeList(Player p) {
+
+    public boolean isOnSafeList(Player p)
+    {
         return safeList.contains(p.getName());
     }
-    
-    public boolean isVanished(Player p) {
+
+    public boolean isVanished(Player p)
+    {
         return vanished.contains(p.getName());
     }
-    
-    public boolean isInFakequit(Player p) {
+
+    public boolean isInFakequit(Player p)
+    {
         return fakequit.contains(p.getName());
     }
 }

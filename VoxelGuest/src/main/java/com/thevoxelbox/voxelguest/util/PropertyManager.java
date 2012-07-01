@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.util;
 
 import java.io.File;
@@ -41,15 +40,18 @@ public class PropertyManager {
 
     public static String BASE = "plugins/VoxelGuest";
 
-    public PropertyManager(String dir) {
+    public PropertyManager(String dir)
+    {
         BASE = dir;
     }
 
-    public static Map<String, Object> load(String target) {
+    public static Map<String, Object> load(String target)
+    {
         return load(target, "");
     }
 
-    public static Map<String, Object> load(String target, String destination) {
+    public static Map<String, Object> load(String target, String destination)
+    {
         // Note: Destination is appended to plugins/VoxelGuest/data
         // For example, when destination is "/channels",
         // the target BASE will be "plugins/VoxelGuest/data/channels/"
@@ -76,7 +78,7 @@ public class PropertyManager {
                             map.put(key, d);
                             continue;
                         }
-                        
+
                         Integer i = Integer.parseInt(entry.getValue().toString());
                         map.put(key, i);
                     } catch (NumberFormatException ex) {
@@ -109,11 +111,13 @@ public class PropertyManager {
         return map;
     }
 
-    public static void save(String target, Map<String, Object> data) {
+    public static void save(String target, Map<String, Object> data)
+    {
         save(target, data, "");
     }
 
-    public static void save(String target, Map<String, Object> data, String destination) {
+    public static void save(String target, Map<String, Object> data, String destination)
+    {
         // Note: Destination is appended to plugins/VoxelGuest/data
         // For example, when destination is "/channels",
         // the target BASE will be "plugins/VoxelGuest/data/channels/"

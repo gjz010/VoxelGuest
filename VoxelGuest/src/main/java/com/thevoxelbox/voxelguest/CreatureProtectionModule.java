@@ -14,85 +14,112 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 /**
  * The Creature Protection Module was created to help maintain various creature
- * aspects, such as mob spawning. The Creature Protection Module offers
- * extreme amounts of customization based on config variables.
- * 
- * Handles:
- *      Mob Spawning
- *      Mob Events
+ * aspects, such as mob spawning. The Creature Protection Module offers extreme
+ * amounts of customization based on config variables.
+ *
+ * Handles: Mob Spawning Mob Events
  */
-@MetaData(name="Creature Protection", description="Various creature protection methods.")
-public class CreatureProtectionModule extends Module{
+@MetaData(name = "Creature Protection", description = "Various creature protection methods.")
+public class CreatureProtectionModule extends Module {
+
     Server s = Bukkit.getServer();
 
-    public CreatureProtectionModule() {
+    public CreatureProtectionModule()
+    {
         super(CreatureProtectionModule.class.getAnnotation(MetaData.class));
     }
-    
+
     class CreatureProtectionConfiguration extends ModuleConfiguration {
-        
-        @Setting("disable-blaze-spawning") public boolean blaze = false;
-        @Setting("disable-cavespider-spawning") public boolean cavespider = false;
-        @Setting("disable-chicken-spawning") public boolean chicken = false;
-        @Setting("disable-cow-spawning") public boolean cow = false;
-        @Setting("disable-creeper-spawning") public boolean creeper = false;
-        @Setting("disable-enderman-spawning") public boolean enderman = false;
-        @Setting("disable-enderdragon-spawning") public boolean enderdragon = false;
-        @Setting("disable-ghast-spawning") public boolean ghast = false;
-        @Setting("disable-irongolem-spawning") public boolean irongolem = false;
-        @Setting("disable-magmacube-spawning") public boolean magmacube = false;
-        @Setting("disable-mushroomcow-spawning") public boolean mushroomcow = false;
-        @Setting("disable-ocelot-spawning") public boolean ocelot = false;
-        @Setting("disable-pig-spawning") public boolean pig = false;
-        @Setting("disable-pigzombie-spawning") public boolean pigzombie = false;
-        @Setting("disable-sheep-spawning") public boolean sheep = false;
-        @Setting("disable-silverfish-spawning") public boolean silverfish = false;
-        @Setting("disable-skeleton-spawning") public boolean skeleton = false;
-        @Setting("disable-slime-spawning") public boolean slime = false;
-        @Setting("disable-snowman-spawning") public boolean snowman = false;
-        @Setting("disable-spider-spawning") public boolean spider = false;
-        @Setting("disable-squid-spawning") public boolean squid = false;
-        @Setting("disable-villager-spawning") public boolean villager = false;
-        @Setting("disable-wolf-spawning") public boolean wolf = false;
-        @Setting("disable-zombie-spawning") public boolean zombie = false;
-        
-        public CreatureProtectionConfiguration(CreatureProtectionModule parent) {
-        
+
+        @Setting("disable-blaze-spawning")
+        public boolean blaze = false;
+        @Setting("disable-cavespider-spawning")
+        public boolean cavespider = false;
+        @Setting("disable-chicken-spawning")
+        public boolean chicken = false;
+        @Setting("disable-cow-spawning")
+        public boolean cow = false;
+        @Setting("disable-creeper-spawning")
+        public boolean creeper = false;
+        @Setting("disable-enderman-spawning")
+        public boolean enderman = false;
+        @Setting("disable-enderdragon-spawning")
+        public boolean enderdragon = false;
+        @Setting("disable-ghast-spawning")
+        public boolean ghast = false;
+        @Setting("disable-irongolem-spawning")
+        public boolean irongolem = false;
+        @Setting("disable-magmacube-spawning")
+        public boolean magmacube = false;
+        @Setting("disable-mushroomcow-spawning")
+        public boolean mushroomcow = false;
+        @Setting("disable-ocelot-spawning")
+        public boolean ocelot = false;
+        @Setting("disable-pig-spawning")
+        public boolean pig = false;
+        @Setting("disable-pigzombie-spawning")
+        public boolean pigzombie = false;
+        @Setting("disable-sheep-spawning")
+        public boolean sheep = false;
+        @Setting("disable-silverfish-spawning")
+        public boolean silverfish = false;
+        @Setting("disable-skeleton-spawning")
+        public boolean skeleton = false;
+        @Setting("disable-slime-spawning")
+        public boolean slime = false;
+        @Setting("disable-snowman-spawning")
+        public boolean snowman = false;
+        @Setting("disable-spider-spawning")
+        public boolean spider = false;
+        @Setting("disable-squid-spawning")
+        public boolean squid = false;
+        @Setting("disable-villager-spawning")
+        public boolean villager = false;
+        @Setting("disable-wolf-spawning")
+        public boolean wolf = false;
+        @Setting("disable-zombie-spawning")
+        public boolean zombie = false;
+
+        public CreatureProtectionConfiguration(CreatureProtectionModule parent)
+        {
+
             super(parent);
         }
     }
 
     @Override
-    public void enable() {
+    public void enable()
+    {
         setConfiguration(new CreatureProtectionConfiguration(this));
         return;
     }
 
     @Override
-    public String getLoadMessage() {
+    public String getLoadMessage()
+    {
         return "Creature Protection has been loaded.";
     }
-    
+
     @Override
-    public void disable() {
+    public void disable()
+    {
         return;
     }
-    
-        
+
     /*
-     * Creature Protection - CreatureSpawn Event
-     * Written by: Razorcane
-     * 
+     * Creature Protection - CreatureSpawn Event Written by: Razorcane
+     *
      * Handles creature spawning event.
      */
-    @ModuleEvent(event=CreatureSpawnEvent.class)
-    public void onCreatureSpawn(BukkitEventWrapper wrapper) {
+    @ModuleEvent(event = CreatureSpawnEvent.class)
+    public void onCreatureSpawn(BukkitEventWrapper wrapper)
+    {
         CreatureSpawnEvent event = (CreatureSpawnEvent) wrapper.getEvent();
         EntityType mob = event.getEntityType();
         SpawnReason reason = event.getSpawnReason();
-        
+
         if (reason != SpawnReason.CUSTOM) {
-            switch(mob) {
+            switch (mob) {
                 case BLAZE:
                     if (getConfiguration().getBoolean("disable-blaze-spawning")) {
                         event.setCancelled(true);
@@ -122,7 +149,7 @@ public class CreatureProtectionModule extends Module{
                         event.setCancelled(true);
                     }
                 case IRON_GOLEM:
-                    if(getConfiguration().getBoolean("disable-irongolem-spawning")) {
+                    if (getConfiguration().getBoolean("disable-irongolem-spawning")) {
                         event.setCancelled(true);
                     }
                 case GHAST:
@@ -138,7 +165,7 @@ public class CreatureProtectionModule extends Module{
                         event.setCancelled(true);
                     }
                 case OCELOT:
-                    if(getConfiguration().getBoolean("disable-ocelot-spawning")) {
+                    if (getConfiguration().getBoolean("disable-ocelot-spawning")) {
                         event.setCancelled(true);
                     }
                 case PIG:

@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.permissions;
 
 import com.thevoxelbox.voxelguest.util.Configuration;
@@ -39,49 +38,50 @@ import org.bukkit.event.server.PluginEnableEvent;
 /**
  *
  * @author psanker
- * 
+ *
  * Inspired by WEPIF
- * 
+ *
  */
 public class PermissionsManager implements Listener {
+
     private final Server server;
     private static String tag;
     private final Configuration configuration;
     protected static PermissionsHandler handler;
-    
-    protected static boolean multigroup  = false;
-    protected static boolean multiworld  = false;
+    protected static boolean multigroup = false;
+    protected static boolean multiworld = false;
     protected static boolean defaultToOp = false;
-    
-    public PermissionsManager(Server s, String pluginPrefix, Configuration config) {
+
+    public PermissionsManager(Server s, String pluginPrefix, Configuration config)
+    {
         server = s;
         tag = pluginPrefix;
         configuration = config;
-        
-        multigroup  = configuration.getBoolean("permissions-multigroup");
-        multiworld  = configuration.getBoolean("permissions-multiworld");
+
+        multigroup = configuration.getBoolean("permissions-multigroup");
+        multiworld = configuration.getBoolean("permissions-multiworld");
         defaultToOp = configuration.getBoolean("permissions-default-op");
     }
-    
-    protected Class<? extends PermissionsHandler>[] availableHandlers = new Class[] {
+    protected Class<? extends PermissionsHandler>[] availableHandlers = new Class[]{
         PermissionsExHandler.class,
         BPermissionsHandler.class,
         DinnerpermsHandler.class
     };
-    
-    protected String[] plugins = new String[] {
+    protected String[] plugins = new String[]{
         "PermissionsEx",
         "bPermissions"
     };
-    
-    @EventHandler(priority=EventPriority.MONITOR)
-    public void onPluginEnable(PluginEnableEvent event) {
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPluginEnable(PluginEnableEvent event)
+    {
         if (Arrays.asList(plugins).contains(event.getPlugin().getDescription().getName())) {
             registerActiveHandler();
         }
     }
-    
-    public void registerActiveHandler() {
+
+    public void registerActiveHandler()
+    {
         for (Class<? extends PermissionsHandler> handlerClass : availableHandlers) {
             try {
                 Constructor<? extends PermissionsHandler> construct = handlerClass.getConstructor(Server.class);
@@ -94,12 +94,12 @@ public class PermissionsManager implements Listener {
                     log(handler.getDetectionMessage(), 0);
                     break;
                 }
-                
+
             } catch (Throwable t) {
                 continue;
             }
         }
-        
+
         if (handler == null && !defaultToOp) {
             handler = new GuestPermissionsHandler(server);
             log(handler.getDetectionMessage(), 0);
@@ -108,20 +108,24 @@ public class PermissionsManager implements Listener {
             log(handler.getDetectionMessage(), 0);
         }
     }
-    
-    public static PermissionsHandler getHandler() {
+
+    public static PermissionsHandler getHandler()
+    {
         return handler;
     }
-    
-    public static boolean hasMultiGroupSupport() {
+
+    public static boolean hasMultiGroupSupport()
+    {
         return multigroup;
     }
-    
-    public static boolean hasMultiWorldSupport() {
+
+    public static boolean hasMultiWorldSupport()
+    {
         return multiworld;
     }
-    
-    public static void log(String str, int importance) {
+
+    public static void log(String str, int importance)
+    {
         switch (importance) {
             case 0:
                 Logger.getLogger("Mincraft").info(tag + " " + str);

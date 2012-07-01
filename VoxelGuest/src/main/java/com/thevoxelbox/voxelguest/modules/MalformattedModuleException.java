@@ -23,13 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.modules;
 
 public class MalformattedModuleException extends ModuleException {
+
     private static final long serialVerionUID = -72012074443046020L;
 
-    public MalformattedModuleException(String reason) {
+    public MalformattedModuleException(String reason)
+    {
         super(reason);
     }
 }

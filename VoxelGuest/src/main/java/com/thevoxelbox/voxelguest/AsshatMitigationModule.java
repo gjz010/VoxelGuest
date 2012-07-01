@@ -423,7 +423,7 @@ public class AsshatMitigationModule extends Module {
         }
     }
     
-    @Command(aliases = {"soapbox"},
+    @Command(aliases = {"soapbox", "silence"},
         bounds = {0, 0},
         help = "Toggle the silence")
     @CommandPermission(permission = "voxelguest.admin.silence")
@@ -432,6 +432,6 @@ public class AsshatMitigationModule extends Module {
         silenceMode = !silenceMode;
         Player p = (Player) cs;
         getConfiguration().setBoolean("silence-mode", silenceMode);
-        cs.sendMessage(ChatColor.GOLD + "Silent mode has been" + ((silenceMode) ? "enabled" : "disabled"));
+        cs.sendMessage(ChatColor.GOLD + "Silent mode has been " + ((silenceMode) ? "enabled" : "disabled"));
     }
 }

@@ -66,25 +66,29 @@ public class OfflineModeModule extends Module {
     private static File f = new File("plugins/VoxelGuest/tempban.yml");
 
     class OfflineConfiguration extends ModuleConfiguration {
-        
-        public OfflineConfiguration(OfflineModeModule parent) {
+
+        public OfflineConfiguration(OfflineModeModule parent)
+        {
             super(parent);
         }
     }
-    
-    public OfflineModeModule() {
+
+    public OfflineModeModule()
+    {
         super(OfflineModeModule.class.getAnnotation(MetaData.class));
     }
 
     @Override
-    public String getLoadMessage() {
+    public String getLoadMessage()
+    {
         return "Offline mode manager loaded";
     }
 
     @Override
-    public void enable() {
+    public void enable()
+    {
         setConfiguration(new OfflineConfiguration(this));
-        
+
         if (!f.exists()) {
             try {
                 f.createNewFile();
@@ -107,9 +111,10 @@ public class OfflineModeModule extends Module {
 
         setEnabled(true);
     }
-    
+
     @Override
-    public void disable() {
+    public void disable()
+    {
         try {
             tempBan.save(f);
         } catch (IOException ex) {
@@ -123,7 +128,8 @@ public class OfflineModeModule extends Module {
     + "On the console, set another's password using §c/opass [player] [password]",
     playerOnly = false)
     @CommandPermission(permission = "voxelguest.offline.opass")
-    public void offlinePass(CommandSender cs, String[] args) {
+    public void offlinePass(CommandSender cs, String[] args)
+    {
         if (cs instanceof Player) {
             Player p = (Player) cs;
             GuestPlayer gp = VoxelGuest.getGuestPlayer(p);
@@ -147,7 +153,8 @@ public class OfflineModeModule extends Module {
     @Command(aliases = {"opardon", "offlinepardon"},
     bounds = {1, 1},
     help = "To pardon an offline mode ban on the console, use §/opardon [player]")
-    public void offlinePardon(CommandSender cs, String[] args) {
+    public void offlinePardon(CommandSender cs, String[] args)
+    {
         if (cs instanceof Player) {
             cs.sendMessage("§cConsole-only command");
             return;
@@ -158,7 +165,8 @@ public class OfflineModeModule extends Module {
     }
 
     @ModuleEvent(event = PlayerJoinEvent.class)
-    public void onPlayerJoin(BukkitEventWrapper wrapper) {
+    public void onPlayerJoin(BukkitEventWrapper wrapper)
+    {
         PlayerJoinEvent event = (PlayerJoinEvent) wrapper.getEvent();
 
         if (isActive() && !needsUnlock.contains(event.getPlayer().getName())) {
@@ -176,7 +184,8 @@ public class OfflineModeModule extends Module {
     }
 
     @ModuleEvent(event = PlayerQuitEvent.class)
-    public void onPlayerQuit(BukkitEventWrapper wrapper) {
+    public void onPlayerQuit(BukkitEventWrapper wrapper)
+    {
         PlayerQuitEvent event = (PlayerQuitEvent) wrapper.getEvent();
 
         if (isActive() && needsUnlock.contains(event.getPlayer().getName())) {
@@ -185,7 +194,8 @@ public class OfflineModeModule extends Module {
     }
 
     @ModuleEvent(event = PlayerKickEvent.class)
-    public void onPlayerKick(BukkitEventWrapper wrapper) {
+    public void onPlayerKick(BukkitEventWrapper wrapper)
+    {
         PlayerKickEvent event = (PlayerKickEvent) wrapper.getEvent();
 
         if (isActive() && needsUnlock.contains(event.getPlayer().getName())) {
@@ -194,7 +204,8 @@ public class OfflineModeModule extends Module {
     }
 
     @ModuleEvent(event = PlayerChatEvent.class)
-    public void onPlayerChat(BukkitEventWrapper wrapper) {
+    public void onPlayerChat(BukkitEventWrapper wrapper)
+    {
         PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
 
         if (isActive() && needsUnlock.contains(event.getPlayer().getName())) {
@@ -209,7 +220,8 @@ public class OfflineModeModule extends Module {
     }
 
     @ModuleEvent(event = PlayerMoveEvent.class)
-    public void onPlayerMove(BukkitEventWrapper wrapper) {
+    public void onPlayerMove(BukkitEventWrapper wrapper)
+    {
         PlayerMoveEvent event = (PlayerMoveEvent) wrapper.getEvent();
 
         if (isActive() && needsUnlock.contains(event.getPlayer().getName())) {
@@ -219,7 +231,8 @@ public class OfflineModeModule extends Module {
     }
 
     @ModuleEvent(event = PlayerCommandPreprocessEvent.class)
-    public void onPlayerCommandPreprocess(BukkitEventWrapper wrapper) {
+    public void onPlayerCommandPreprocess(BukkitEventWrapper wrapper)
+    {
         PlayerCommandPreprocessEvent event = (PlayerCommandPreprocessEvent) wrapper.getEvent();
 
         if (isActive() && needsUnlock.contains(event.getPlayer().getName())) {
@@ -228,11 +241,13 @@ public class OfflineModeModule extends Module {
         }
     }
 
-    public boolean isActive() {
+    public boolean isActive()
+    {
         return !Bukkit.getServer().getOnlineMode();
     }
 
-    public boolean isPassword(String name, String input) {
+    public boolean isPassword(String name, String input)
+    {
         String protectedPass = VoxelGuest.getGuestPlayer(Bukkit.getPlayer(name)).get(VoxelGuest.getPluginId(VoxelGuest.getInstance()), "offline-password").toString();
         String test = "";
         byte[] shhash = new byte[40];
@@ -255,7 +270,8 @@ public class OfflineModeModule extends Module {
         return false;
     }
 
-    private void setPassword(String name, String input) throws CouldNotStoreEncryptedPasswordException {
+    private void setPassword(String name, String input) throws CouldNotStoreEncryptedPasswordException
+    {
         byte[] shhash = new byte[40];
         String store = "";
 
@@ -273,7 +289,8 @@ public class OfflineModeModule extends Module {
         }
     }
 
-    public boolean isTempBanned(String player) {
+    public boolean isTempBanned(String player)
+    {
         int counts = tempBan.getInt(player + ".counts", 0);
 
         if (timemap.containsKey(player) && (System.currentTimeMillis() - timemap.get(player)) > 1800000) {
@@ -300,7 +317,8 @@ public class OfflineModeModule extends Module {
         }
     }
 
-    public void logTempBan(String player, String IP, Long time) {
+    public void logTempBan(String player, String IP, Long time)
+    {
         tempBan.set(player + ".IP", IP);
 
         int counts = tempBan.getInt(player + ".counts", 0);
@@ -326,7 +344,8 @@ public class OfflineModeModule extends Module {
         }
     }
 
-    public void removeTempBan(String player) {
+    public void removeTempBan(String player)
+    {
         tempBan.set(player + ".IP", null);
         tempBan.set(player + ".counts", null);
         tempBan.set(player + ".ban", null);
@@ -342,7 +361,8 @@ public class OfflineModeModule extends Module {
         }
     }
 
-    private static String convertToHex(byte[] data) {
+    private static String convertToHex(byte[] data)
+    {
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
             int halfbyte = (data[i] >>> 4) & 0x0F;

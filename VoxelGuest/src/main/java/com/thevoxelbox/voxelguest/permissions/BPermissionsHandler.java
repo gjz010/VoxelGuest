@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.permissions;
 
 import org.bukkit.Server;
@@ -37,30 +36,34 @@ import org.bukkit.entity.Player;
 public class BPermissionsHandler extends PermissionsHandler {
 
     @Override
-    public PermissionsHandler initialize(Server server) {
+    public PermissionsHandler initialize(Server server)
+    {
         try {
-           Class.forName("de.bananaco.bpermissions.api.ApiLayer"); 
+            Class.forName("de.bananaco.bpermissions.api.ApiLayer");
         } catch (ClassNotFoundException ex) {
             return null;
         }
-        
+
         return new BPermissionsHandler(server);
     }
-    
+
     @Override
-    public String getDetectionMessage() {
+    public String getDetectionMessage()
+    {
         return "Using bPermissions as permissions system";
     }
-    
-    public BPermissionsHandler(Server server) {
+
+    public BPermissionsHandler(Server server)
+    {
         super(server);
     }
 
     @Override
-    public boolean hasPermission(String name, String permission) {
+    public boolean hasPermission(String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             return ApiLayer.hasPermission(null, CalculableType.USER, op.getName(), permission);
         } else {
@@ -69,16 +72,18 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public boolean hasPermission(String world, String name, String permission) {
+    public boolean hasPermission(String world, String name, String permission)
+    {
         Player p = server.getPlayer(name);
         return ApiLayer.hasPermission(world, CalculableType.USER, p.getName(), permission);
     }
 
     @Override
-    public boolean inGroup(String name, String group) {
+    public boolean inGroup(String name, String group)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             return ApiLayer.hasGroupRecursive(null, CalculableType.USER, op.getName(), group);
         } else {
@@ -87,10 +92,11 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public String[] getGroups(String name) {
+    public String[] getGroups(String name)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             return ApiLayer.getGroups(null, CalculableType.USER, op.getName());
         } else {
@@ -99,11 +105,12 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void givePermission(String world, String name, String permission) {
+    public void givePermission(String world, String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
         Permission perm = Permission.loadFromString(permission);
-        
+
         if (p == null) {
             ApiLayer.addPermission(world, CalculableType.USER, name, perm);
         } else {
@@ -112,11 +119,12 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void givePermission(String name, String permission) {
+    public void givePermission(String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
         Permission perm = Permission.loadFromString(permission);
-        
+
         if (p == null) {
             ApiLayer.addPermission(null, CalculableType.USER, name, perm);
         } else {
@@ -125,10 +133,11 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void removePermission(String world, String name, String permission) {
+    public void removePermission(String world, String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             ApiLayer.removePermission(world, CalculableType.USER, name, permission);
         } else {
@@ -137,10 +146,11 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void removePermission(String name, String permission) {
+    public void removePermission(String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             ApiLayer.removePermission(null, CalculableType.USER, name, permission);
         } else {
@@ -149,10 +159,11 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void addGroup(String username, String groupname) {
+    public void addGroup(String username, String groupname)
+    {
         OfflinePlayer op = server.getOfflinePlayer(username);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             ApiLayer.addGroup(null, CalculableType.USER, username, groupname);
         } else {
@@ -161,10 +172,11 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void removeGroup(String username, String groupname) {
+    public void removeGroup(String username, String groupname)
+    {
         OfflinePlayer op = server.getOfflinePlayer(username);
         Player p = op.getPlayer();
-        
+
         if (p == null) {
             ApiLayer.removeGroup(null, CalculableType.USER, username, groupname);
         } else {
@@ -173,26 +185,30 @@ public class BPermissionsHandler extends PermissionsHandler {
     }
 
     @Override
-    public void giveGroupPermission(String world, String name, String permission) {
+    public void giveGroupPermission(String world, String name, String permission)
+    {
         Permission perm = Permission.loadFromString(permission);
-        
+
         ApiLayer.addPermission(world, CalculableType.GROUP, name, perm);
     }
 
     @Override
-    public void giveGroupPermission(String name, String permission) {
+    public void giveGroupPermission(String name, String permission)
+    {
         Permission perm = Permission.loadFromString(permission);
-        
+
         ApiLayer.addPermission(null, CalculableType.GROUP, name, perm);
     }
 
     @Override
-    public void removeGroupPermission(String world, String name, String permission) {
+    public void removeGroupPermission(String world, String name, String permission)
+    {
         ApiLayer.removePermission(world, CalculableType.GROUP, name, permission);
     }
 
     @Override
-    public void removeGroupPermission(String name, String permission) {
+    public void removeGroupPermission(String name, String permission)
+    {
         ApiLayer.removePermission(null, CalculableType.GROUP, name, permission);
     }
 }

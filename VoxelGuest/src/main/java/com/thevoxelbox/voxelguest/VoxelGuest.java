@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.commands.engine.ArgumentOutOfBoundsException;
@@ -72,12 +71,9 @@ public class VoxelGuest extends JavaPlugin {
     protected static GroupManager groupManager;
     protected static PermissionsManager perms;
     protected static ModuleManager moduleManager;
-    
     protected static final Configuration config = new Configuration("VoxelGuest");
-    
     public static int ONLINE_MEMBERS = 0;
-    
-    protected Class<? extends Module>[] availableModules = new Class[] {
+    protected Class<? extends Module>[] availableModules = new Class[]{
         AFKModule.class,
         SpawnModule.class,
         CubicleModule.class,
@@ -93,39 +89,41 @@ public class VoxelGuest extends JavaPlugin {
     };
 
     @Override
-    public void onDisable() {
+    public void onDisable()
+    {
         ListIterator<GuestPlayer> it = guestPlayers.listIterator();
-        
+
         while (it.hasNext()) {
             GuestPlayer gp = it.next();
             gp.saveData(getPluginId(this));
         }
-        
+
         guestPlayers.clear();
         groupManager.saveGroupConfigurations();
-        
+
         moduleManager.shutDownModules();
-        
+
         getConfigData().save();
     }
 
     @Override
-    public void onEnable() {
+    public void onEnable()
+    {
         instance = this;
-        
+
         perms = new PermissionsManager(this.getServer(), "[VoxelGuest]", config);
         groupManager = new GroupManager();
         moduleManager = new ModuleManager(this, commandsManager);
         registerPluginIds();
-        
+
         // Register system / miscellaneous commands
         commandsManager.registerCommands(MiscellaneousCommands.class);
         commandsManager.registerCommands(ServerAdministrationCommands.class);
-        
+
         // Load system event listeners
         Bukkit.getPluginManager().registerEvents(listener, this);
         Bukkit.getPluginManager().registerEvents(perms, this);
-        
+
         // Load permissions system
         perms.registerActiveHandler();
 
@@ -141,30 +139,32 @@ public class VoxelGuest extends JavaPlugin {
             guestPlayers.add(gp); // KEEP THIS LAST
             ONLINE_MEMBERS++;
         }
-        
+
         // Load modules
         ModuleManager.setActiveModuleManager(moduleManager);
         moduleManager.loadModules(availableModules);
-        
+
         // Load module events into the system listener
         listener.registerModuleEvents();
-        
-        if (getConfigData().getString("reset") == null || getConfigData().getString("reset").equalsIgnoreCase("yes"))
+
+        if (getConfigData().getString("reset") == null || getConfigData().getString("reset").equalsIgnoreCase("yes")) {
             loadFactorySettings();
+        }
     }
 
     @Override
-    public boolean onCommand(CommandSender cs, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender cs, Command command, String label, String[] args)
+    {
         try {
             commandsManager.executeCommand(command, cs, args);
             commandLog(command, cs, args, true);
         } catch (CommandException ex) {
             String report = "&c" + ex.getMessage();
-            
+
             for (String str : Formatter.selectFormatter(SimpleFormatter.class).format(report, null)) {
                 cs.sendMessage(str);
             }
-            
+
             if (ex instanceof CommandMethodInvocationException || ex instanceof MalformattedCommandException) {
                 log(ex.getMessage(), 2);
                 ex.printStackTrace();
@@ -174,36 +174,38 @@ public class VoxelGuest extends JavaPlugin {
                     commandsManager.sendHelp(cs, command);
                 } catch (MalformattedCommandException ex1) {
                     String _report = "&c" + ex1.getMessage();
-            
+
                     for (String str : Formatter.selectFormatter(SimpleFormatter.class).format(_report, null)) {
                         cs.sendMessage(str);
                     }
-                    
+
                     log(ex.getMessage(), 2);
                     ex.printStackTrace();
                     return true;
                 }
             }
-            
+
             commandLog(command, cs, args, false);
         } catch (InsufficientPermissionsException ex) {
             String report = "&c" + ex.getMessage();
-            
+
             for (String str : Formatter.selectFormatter(SimpleFormatter.class).format(report, null)) {
                 cs.sendMessage(str);
             }
-            
+
             commandLog(command, cs, args, false);
         }
-        
+
         return true;
     }
-    
-    public static Configuration getConfigData() {
+
+    public static Configuration getConfigData()
+    {
         return config;
     }
 
-    public static GuestPlayer getGuestPlayer(Player player) {
+    public static GuestPlayer getGuestPlayer(Player player)
+    {
         Iterator<GuestPlayer> it = guestPlayers.listIterator();
 
         while (it.hasNext()) {
@@ -216,31 +218,38 @@ public class VoxelGuest extends JavaPlugin {
 
         return new GuestPlayer(player);
     }
-    
-    public static GuestPlayer registerPlayer(Player player) {
+
+    public static GuestPlayer registerPlayer(Player player)
+    {
         GuestPlayer gp = new GuestPlayer(player);
-        
-        if (!isPlayerRegistered(gp))
+
+        if (!isPlayerRegistered(gp)) {
             guestPlayers.add(gp);
-        
+        }
+
         return gp;
     }
-    
-    public static void unregsiterPlayer(GuestPlayer gp) {
-        if (isPlayerRegistered(gp))
+
+    public static void unregsiterPlayer(GuestPlayer gp)
+    {
+        if (isPlayerRegistered(gp)) {
             guestPlayers.remove(gp);
+        }
     }
 
-    public static GuestPlayer[] getRegisteredPlayers() {
+    public static GuestPlayer[] getRegisteredPlayers()
+    {
         GuestPlayer[] gps = new GuestPlayer[guestPlayers.size()];
         return guestPlayers.toArray(gps);
     }
 
-    public static boolean isPlayerRegistered(GuestPlayer gp) {
+    public static boolean isPlayerRegistered(GuestPlayer gp)
+    {
         return guestPlayers.contains(gp);
     }
 
-    private void registerPluginIds() {
+    private void registerPluginIds()
+    {
         if (pluginIds.isEmpty()) {
             for (Plugin plugin : Bukkit.getServer().getPluginManager().getPlugins()) {
                 if (pluginIds.containsKey(plugin)) {
@@ -262,7 +271,8 @@ public class VoxelGuest extends JavaPlugin {
         }
     }
 
-    public static String getPluginId(Plugin plugin) {
+    public static String getPluginId(Plugin plugin)
+    {
         if (pluginIds.containsKey(plugin)) {
             return pluginIds.get(plugin);
         }
@@ -270,35 +280,40 @@ public class VoxelGuest extends JavaPlugin {
         return null;
     }
 
-    public static VoxelGuest getInstance() {
+    public static VoxelGuest getInstance()
+    {
         return instance;
     }
 
-    public static CommandManager getCommandsManager() {
+    public static CommandManager getCommandsManager()
+    {
         return commandsManager;
     }
-    
-    public static GroupManager getGroupManager() {
+
+    public static GroupManager getGroupManager()
+    {
         return groupManager;
     }
-    
-    public void loadFactorySettings() {
+
+    public void loadFactorySettings()
+    {
         getConfigData().setString("join-message-format", "&8(&6$nonline&8) &3$n &7joined");
         getConfigData().setString("leave-message-format", "&8(&6$nonline&8) &3$n &7left");
         getConfigData().setString("kick-message-format", "&8(&6$nonline&8) &3$n &4was kicked out");
-        
+
         getConfigData().setBoolean("permissions-multigroup", false);
         getConfigData().setBoolean("permissions-multiworld", false);
         getConfigData().setBoolean("permissions-default-op", false);
-        
+
         getConfigData().setBoolean("enable-ram-clear-cycle", false);
         getConfigData().setInt("ram-clear-cycle-time", 60);
-        
+
         for (Module module : ModuleManager.getManager().getModules()) {
-            if (module.getConfiguration() != null)
+            if (module.getConfiguration() != null) {
                 module.getConfiguration().reset();
+            }
         }
-        
+
         getConfigData().setString("reset", "no");
         log("| ========================================== |");
         log("| * VOXELGUEST 4                             |");
@@ -310,12 +325,14 @@ public class VoxelGuest extends JavaPlugin {
         log("| ========================================== |");
         log("Factory settings loaded");
     }
-    
-    public static void log(String str) {
+
+    public static void log(String str)
+    {
         log(str, 0);
     }
 
-    public static void log(String str, int importance) {
+    public static void log(String str, int importance)
+    {
         switch (importance) {
             case 0:
                 Logger.getLogger("Mincraft").info("[VoxelGuest] " + str);
@@ -331,8 +348,9 @@ public class VoxelGuest extends JavaPlugin {
                 return;
         }
     }
-    
-    public static void log(String module, String str, int importance) {
+
+    public static void log(String module, String str, int importance)
+    {
         switch (importance) {
             case 0:
                 Logger.getLogger("Mincraft").info("[VoxelGuest:" + module + "] " + str);
@@ -348,8 +366,9 @@ public class VoxelGuest extends JavaPlugin {
                 return;
         }
     }
-    
-    public void commandLog(org.bukkit.command.Command command, CommandSender cs, String[] args, boolean status) {
+
+    public void commandLog(org.bukkit.command.Command command, CommandSender cs, String[] args, boolean status)
+    {
         File f = new File("plugins/VoxelGuest/logs/commands.txt");
         PrintWriter pw = null;
 

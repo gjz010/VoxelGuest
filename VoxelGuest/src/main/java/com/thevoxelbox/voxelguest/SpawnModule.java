@@ -45,7 +45,8 @@ public class SpawnModule extends Module {
     protected Location spawnLocation = Bukkit.getWorlds().get(0).getSpawnLocation();
     protected String[] spawnMessages = {"Woosh!", "Weeee!"};
 
-    public SpawnModule() {
+    public SpawnModule()
+    {
         super(SpawnModule.class.getAnnotation(MetaData.class));
     }
 
@@ -72,13 +73,15 @@ public class SpawnModule extends Module {
         @Setting("random-spawn-messages")
         public String messages = "Your butt hurts,Woosh!,Weeee!,Buy Now! Ganz Ganz!,Huzzah!,*Blip*,*Pop*,Eat your veggies,Shake-Shake-Shake";
 
-        public SpawnConfiguration(SpawnModule parent) {
+        public SpawnConfiguration(SpawnModule parent)
+        {
             super(parent);
         }
     }
 
     @Override
-    public void enable() throws ModuleException {
+    public void enable() throws ModuleException
+    {
         setConfiguration(new SpawnConfiguration(this));
 
         if (getConfiguration().getBoolean("use-configuration-location")) {
@@ -98,12 +101,14 @@ public class SpawnModule extends Module {
     }
 
     @Override
-    public String getLoadMessage() {
+    public String getLoadMessage()
+    {
         return "Spawn module enabled - using " + (getConfiguration().getBoolean("use-configuration-location") ? "configuration spawn" : "default spawn");
     }
 
     @Override
-    public void disable() {
+    public void disable()
+    {
     }
 
     @Command(aliases = {"setspawn"},
@@ -111,7 +116,8 @@ public class SpawnModule extends Module {
     help = "To set the spawn location type §c/setspawn",
     playerOnly = true)
     @CommandPermission(permission = "voxelguest.spawn.setspawn")
-    public void setSpawn(CommandSender cs, String[] args) {
+    public void setSpawn(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
 
         spawnLocation = p.getLocation();
@@ -132,7 +138,8 @@ public class SpawnModule extends Module {
     help = "To travel to spawn type §c/spawn",
     playerOnly = true)
     @CommandPermission(permission = "voxelguest.spawn.spawn")
-    public void spawn(CommandSender cs, String[] args) {
+    public void spawn(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
         p.teleport(spawnLocation,
                 getConfiguration().getBoolean("use-ender-pearl-teleportation-cause")

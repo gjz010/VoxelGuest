@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.util;
 
 import java.io.File;
@@ -33,181 +32,217 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Configuration {
+
     private final static Pattern COLOR = Pattern.compile("(?i)&([0-F])");
     private HashMap<String, Object> map = new HashMap<String, Object>();
     private String target;
     private String destination;
-    
-    public Configuration (String target) {
+
+    public Configuration(String target)
+    {
         HashMap<String, Object> data = (HashMap<String, Object>) PropertyManager.load(target);
-        
-        if (data == null)
+
+        if (data == null) {
             map.clear();
-        else
+        } else {
             map = data;
-        
+        }
+
         this.target = target;
         this.destination = "";
     }
-    
-    public Configuration(String target, String destination) {
+
+    public Configuration(String target, String destination)
+    {
         HashMap<String, Object> data = (HashMap<String, Object>) PropertyManager.load(target, destination);
-        
-        if (data == null)
+
+        if (data == null) {
             map.clear();
-        else
+        } else {
             map = data;
-        
+        }
+
         this.target = target;
         this.destination = destination;
     }
-    
-    public void load() {
+
+    public void load()
+    {
         HashMap<String, Object> data = (HashMap<String, Object>) PropertyManager.load(target, destination);
-        
-        if (data == null)
+
+        if (data == null) {
             return;
-        else {
+        } else {
             // Populate map
-            
+
             for (Map.Entry<String, Object> entry : data.entrySet()) {
-                if (entry.getValue() != null)
+                if (entry.getValue() != null) {
                     setEntry(entry.getKey(), entry.getValue());
+                }
             }
         }
     }
-    
-    public void assignTarget(String target) {
+
+    public void assignTarget(String target)
+    {
         this.target = target;
     }
-    
-    public void assignDestination(String dest) {
+
+    public void assignDestination(String dest)
+    {
         this.destination = dest;
     }
-    
-    public void save() {
+
+    public void save()
+    {
         if (map == null || map.isEmpty()) {
             clear();
         }
-        
+
         PropertyManager.save(target, map, destination);
     }
-    
-    public void clear() {
-        if (!map.isEmpty())
+
+    public void clear()
+    {
+        if (!map.isEmpty()) {
             map.clear();
-        
+        }
+
         File f = new File(PropertyManager.BASE + destination + "/" + target + ".properties");
         f.delete();
-        
+
         try {
             f.createNewFile();
         } catch (IOException ex) {
             // Oh well.
         }
     }
-    
-    public HashMap<String, Object> getAllEntries() {
+
+    public HashMap<String, Object> getAllEntries()
+    {
         return map;
     }
-    
-    public void removeEntry(String key) {
+
+    public void removeEntry(String key)
+    {
         map.remove(key);
     }
-    
-    public boolean hasEntry(String key) {
+
+    public boolean hasEntry(String key)
+    {
         return map.containsKey(key);
     }
-    
-    public Object getEntry(String key) {
-        if (map == null)
+
+    public Object getEntry(String key)
+    {
+        if (map == null) {
             return null;
-        else if (!map.containsKey(key))
+        } else if (!map.containsKey(key)) {
             return null;
-        else
+        } else {
             return map.get(key);
+        }
     }
-    
-    public String getString(String key) {
-        if (map == null)
+
+    public String getString(String key)
+    {
+        if (map == null) {
             return null;
-        else if (!map.containsKey(key))
+        } else if (!map.containsKey(key)) {
             return null;
-        else if (!(map.get(key) instanceof String))
+        } else if (!(map.get(key) instanceof String)) {
             return null;
-        else
+        } else {
             return format(map.get(key).toString());
+        }
     }
-    
-    public boolean getBoolean(String key) {
-        if (map == null)
+
+    public boolean getBoolean(String key)
+    {
+        if (map == null) {
             return false;
-        else if (!map.containsKey(key))
+        } else if (!map.containsKey(key)) {
             return false;
-        else if (!(map.get(key) instanceof Boolean))
+        } else if (!(map.get(key) instanceof Boolean)) {
             return false;
-        else
+        } else {
             return ((Boolean) map.get(key)).booleanValue();
+        }
     }
-    
-    public int getInt(String key) {
-        if (map == null)
+
+    public int getInt(String key)
+    {
+        if (map == null) {
             return -1;
-        else if (!map.containsKey(key))
+        } else if (!map.containsKey(key)) {
             return -1;
-        else if (!(map.get(key) instanceof Integer))
+        } else if (!(map.get(key) instanceof Integer)) {
             return -1;
-        else
+        } else {
             return ((Integer) map.get(key)).intValue();
+        }
     }
-    
-    public double getDouble(String key) {
-        if (map == null)
+
+    public double getDouble(String key)
+    {
+        if (map == null) {
             return -1;
-        else if (!map.containsKey(key))
+        } else if (!map.containsKey(key)) {
             return -1;
-        else if (!(map.get(key) instanceof Double))
+        } else if (!(map.get(key) instanceof Double)) {
             return -1;
-        else
+        } else {
             return ((Double) map.get(key)).doubleValue();
+        }
     }
-    
-    public void setEntry(String key, Object value) {
-        if (map == null)
+
+    public void setEntry(String key, Object value)
+    {
+        if (map == null) {
             return;
-        
+        }
+
         map.put(key, value);
     }
-    
-    public void setString(String key, String value) {
-        if (map == null)
+
+    public void setString(String key, String value)
+    {
+        if (map == null) {
             return;
-        
+        }
+
         map.put(key, value);
     }
-    
-    public void setBoolean(String key, boolean value) {
-        if (map == null)
+
+    public void setBoolean(String key, boolean value)
+    {
+        if (map == null) {
             return;
-        
+        }
+
         map.put(key, Boolean.valueOf(value));
     }
-    
-    public void setInt(String key, int value) {
-        if (map == null)
+
+    public void setInt(String key, int value)
+    {
+        if (map == null) {
             return;
-        
+        }
+
         map.put(key, Integer.valueOf(value));
     }
-    
-    public void setDouble(String key, double value) {
-        if (map == null)
+
+    public void setDouble(String key, double value)
+    {
+        if (map == null) {
             return;
-        
+        }
+
         map.put(key, Double.valueOf(value));
     }
-    
-    public static String format(String line) {
+
+    public static String format(String line)
+    {
         return COLOR.matcher(line).replaceAll("\u00A7$1");
     }
 }

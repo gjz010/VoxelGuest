@@ -32,24 +32,28 @@ import org.bukkit.entity.Player;
 public class OpPermissionsHandler extends PermissionsHandler { // BARE BONES AT ITS FINEST :D
 
     @Override
-    public PermissionsHandler initialize(Server server) {
+    public PermissionsHandler initialize(Server server)
+    {
         return new OpPermissionsHandler(server);
     }
-    
-    public OpPermissionsHandler(Server srv) {
+
+    public OpPermissionsHandler(Server srv)
+    {
         super(srv);
     }
 
     @Override
-    public String getDetectionMessage() {
+    public String getDetectionMessage()
+    {
         return "Using default OP permissions";
     }
 
     @Override
-    public boolean hasPermission(String name, String permission) {
+    public boolean hasPermission(String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p != null) {
             return p.isOp();
         } else {
@@ -58,10 +62,11 @@ public class OpPermissionsHandler extends PermissionsHandler { // BARE BONES AT 
     }
 
     @Override
-    public boolean hasPermission(String world, String name, String permission) {
+    public boolean hasPermission(String world, String name, String permission)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p != null) {
             return p.isOp();
         } else {
@@ -70,88 +75,104 @@ public class OpPermissionsHandler extends PermissionsHandler { // BARE BONES AT 
     }
 
     @Override
-    public void givePermission(String world, String name, String permission) {
+    public void givePermission(String world, String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public void givePermission(String name, String permission) {
+    public void givePermission(String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public void removePermission(String world, String name, String permission) {
+    public void removePermission(String world, String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public void removePermission(String name, String permission) {
+    public void removePermission(String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public boolean inGroup(String name, String group) {
+    public boolean inGroup(String name, String group)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p != null) {
-            if (p.isOp())
+            if (p.isOp()) {
                 return group.equalsIgnoreCase("op");
-            else
+            } else {
                 return !group.equalsIgnoreCase("op");
+            }
         } else {
-            if (op.isOp())
+            if (op.isOp()) {
                 return group.equalsIgnoreCase("op");
-            else
+            } else {
                 return !group.equalsIgnoreCase("op");
+            }
         }
     }
 
     @Override
-    public String[] getGroups(String name) {
+    public String[] getGroups(String name)
+    {
         OfflinePlayer op = server.getOfflinePlayer(name);
         Player p = op.getPlayer();
-        
+
         if (p != null) {
-            if (p.isOp())
-                return new String[] {"op"};
-            else
+            if (p.isOp()) {
+                return new String[]{"op"};
+            } else {
                 return null;
+            }
         } else {
-            if (op.isOp())
-                return new String[] {"op"};
-            else
+            if (op.isOp()) {
+                return new String[]{"op"};
+            } else {
                 return null;
+            }
         }
     }
 
     @Override
-    public void addGroup(String username, String groupname) {
+    public void addGroup(String username, String groupname)
+    {
         // Not supported
     }
 
     @Override
-    public void removeGroup(String username, String groupname) {
+    public void removeGroup(String username, String groupname)
+    {
         // Not supported
     }
 
     @Override
-    public void giveGroupPermission(String world, String name, String permission) {
+    public void giveGroupPermission(String world, String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public void giveGroupPermission(String name, String permission) {
+    public void giveGroupPermission(String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public void removeGroupPermission(String world, String name, String permission) {
+    public void removeGroupPermission(String world, String name, String permission)
+    {
         // Not supported
     }
 
     @Override
-    public void removeGroupPermission(String name, String permission) {
+    public void removeGroupPermission(String name, String permission)
+    {
         // Not supported
-    }   
+    }
 }

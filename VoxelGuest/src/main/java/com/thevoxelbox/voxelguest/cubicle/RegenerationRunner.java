@@ -31,7 +31,8 @@ public class RegenerationRunner implements Runnable {
     private int id;
     private boolean layerDone = false;
 
-    public RegenerationRunner(Cubicle cb, Player cmdSender, World cWorld) {
+    public RegenerationRunner(Cubicle cb, Player cmdSender, World cWorld)
+    {
         cubeWorld = cWorld;
         user = cmdSender;
         cube = cb;
@@ -55,12 +56,14 @@ public class RegenerationRunner implements Runnable {
         cubeWorld.refreshChunk(regenX, regenZ);
     }
 
-    public void setID(int myId) {
+    public void setID(int myId)
+    {
         id = myId;
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         if (regenX < highx || regenZ < highz) {
             if (layerDone) {
                 regenX = lowx;
@@ -104,7 +107,8 @@ public class RegenerationRunner implements Runnable {
         }
     }
 
-    private void percent(int percent) {
+    private void percent(int percent)
+    {
         user.sendMessage(ChatColor.GREEN + "Regeneration in progress ... " + ChatColor.GOLD + percent + ChatColor.GREEN + "% complete.");
     }
 }

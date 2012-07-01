@@ -23,11 +23,8 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest;
 
-import com.thevoxelbox.voxelguest.modules.ModuleException;
-import com.thevoxelbox.voxelguest.modules.ModuleManager;
 import com.thevoxelbox.voxelguest.modules.ModuleSystemListener;
 import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 import com.thevoxelbox.voxelguest.players.GuestPlayer;
@@ -62,30 +59,19 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class SystemListener extends ModuleSystemListener {
-    
-    @EventHandler(priority = EventPriority.HIGH) 
-    public void onPlayerJoin(PlayerJoinEvent event) {
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
         GuestPlayer gp = VoxelGuest.registerPlayer(event.getPlayer());
         VoxelGuest.getGroupManager().verifyPlayerGroupExistence(event.getPlayer());
-        
+
         ++VoxelGuest.ONLINE_MEMBERS;
-        
-        try {
-            GreylistModule module = (GreylistModule) ModuleManager.getManager().getModule(GreylistModule.class);
-            
-            if (!module.getConfiguration().getBoolean("announce-visitor-logins") && 
-                    module.getConfiguration().getBoolean("exploration-mode") && 
-                    (!module.hasGreylistee(gp.getPlayer().getName()) && !PermissionsManager.getHandler().hasPermission(gp.getPlayer().getName(), "voxelguest.greylist.bypass"))) {
-                
-                event.setJoinMessage("");
-            }
-        } catch (ModuleException ex) {
-            // Continue -- Greylist module not in use
-        }
-        
-        if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length)
+
+        if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length) {
             VoxelGuest.ONLINE_MEMBERS = Bukkit.getOnlinePlayers().length;
-        
+        }
+
         try {
             String format = VoxelGuest.getConfigData().getString("join-message-format");
             event.setJoinMessage(formatJoinQuitKickMessage(format, gp));
@@ -93,193 +79,192 @@ public class SystemListener extends ModuleSystemListener {
             event.setJoinMessage(ChatColor.YELLOW + gp.getPlayer().getName() + " joined");
             ex.printStackTrace();
         }
-        
+
         processModuleEvents(event);
     }
-    
+
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event)
+    {
         GuestPlayer gp = VoxelGuest.getGuestPlayer(event.getPlayer());
         --VoxelGuest.ONLINE_MEMBERS;
-        
-        try {
-            GreylistModule module = (GreylistModule) ModuleManager.getManager().getModule(GreylistModule.class);
-            
-            if (!module.getConfiguration().getBoolean("announce-visitor-logins") && 
-                    module.getConfiguration().getBoolean("exploration-mode") && 
-                    (!module.hasGreylistee(gp.getPlayer().getName()) && !PermissionsManager.getHandler().hasPermission(gp.getPlayer().getName(), "voxelguest.greylist.bypass"))) {
-                
-                event.setQuitMessage("");
-            }
-        } catch (ModuleException ex) {
-            // Continue -- Greylist module not in use
-        }
-        
+
         try {
             String format = VoxelGuest.getConfigData().getString("leave-message-format");
             event.setQuitMessage(formatJoinQuitKickMessage(format, gp));
         } catch (NullPointerException ex) {
             event.setQuitMessage(ChatColor.YELLOW + gp.getPlayer().getName() + " left");
         }
-        
+
         processModuleEvents(event);
-        
+
         if (!event.getPlayer().isOnline()) {
             VoxelGuest.unregsiterPlayer(gp);
             gp.saveData(VoxelGuest.getPluginId(VoxelGuest.getInstance()));
         }
-        
-        if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length)
+
+        if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length) {
             VoxelGuest.ONLINE_MEMBERS = Bukkit.getOnlinePlayers().length;
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerKick(PlayerKickEvent event) {
+    public void onPlayerKick(PlayerKickEvent event)
+    {
         GuestPlayer gp = VoxelGuest.getGuestPlayer(event.getPlayer());
         --VoxelGuest.ONLINE_MEMBERS;
-        
-        try {
-            GreylistModule module = (GreylistModule) ModuleManager.getManager().getModule(GreylistModule.class);
-            
-            if (!module.getConfiguration().getBoolean("announce-visitor-logins") && 
-                    module.getConfiguration().getBoolean("exploration-mode") && 
-                    (!module.hasGreylistee(gp.getPlayer().getName()) && !PermissionsManager.getHandler().hasPermission(gp.getPlayer().getName(), "voxelguest.greylist.bypass"))) {
-                
-                event.setLeaveMessage("");
-            }
-        } catch (ModuleException ex) {
-            // Continue -- Greylist module not in use
-        }
-        
+
         try {
             String format = VoxelGuest.getConfigData().getString("kick-message-format");
             event.setLeaveMessage(formatJoinQuitKickMessage(format, gp));
         } catch (NullPointerException ex) {
             event.setLeaveMessage(ChatColor.YELLOW + gp.getPlayer().getName() + " was kicked out");
         }
-        
+
         processModuleEvents(event);
-        
+
         if (!event.getPlayer().isOnline()) {
             VoxelGuest.unregsiterPlayer(gp);
             gp.saveData(VoxelGuest.getPluginId(VoxelGuest.getInstance()));
         }
-        
-        if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length)
+
+        if (VoxelGuest.ONLINE_MEMBERS != Bukkit.getOnlinePlayers().length) {
             VoxelGuest.ONLINE_MEMBERS = Bukkit.getOnlinePlayers().length;
+        }
     }
-    
-    @EventHandler(priority=EventPriority.HIGHEST)
-    public void onPlayerChat(PlayerChatEvent event) {
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerChat(PlayerChatEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(PlayerMoveEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onPlayerPreLogin(PlayerPreLoginEvent event) {
-        
-        // Always allow admins to login (in case stuff happens)
-        if (PermissionsManager.getHandler().hasPermission(event.getName(), "system.admin"))
+    public void onPlayerPreLogin(PlayerPreLoginEvent event)
+    {
+        if (PermissionsManager.getHandler().hasPermission(event.getName(), "system.maxcapacity.bypass")) {
             event.allow();
-        
+        }
+
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
+    public void onPlayerTeleport(PlayerTeleportEvent event)
+    {
         processModuleEvents(event);
     }
-    
-    @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
-    public void onBlockBreak(BlockBreakEvent event) {
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockBurn(BlockBurnEvent event) {
+    public void onBlockBurn(BlockBurnEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockDamage(BlockDamageEvent event) {
+    public void onBlockDamage(BlockDamageEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockFade(BlockFadeEvent event) {
+    public void onBlockFade(BlockFadeEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockForm(BlockFormEvent event) {
+    public void onBlockForm(BlockFormEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockIgnite(BlockIgniteEvent event) {
+    public void onBlockIgnite(BlockIgniteEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
+    public void onBlockPlace(BlockPlaceEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onBlockSpread(BlockSpreadEvent event) {
+    public void onBlockSpread(BlockSpreadEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onCreatureSpawn(CreatureSpawnEvent event) {
+    public void onCreatureSpawn(CreatureSpawnEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onEnchantItem(EnchantItemEvent event) {
+    public void onEnchantItem(EnchantItemEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onEntityDamage(EntityDamageEvent event) {
+    public void onEntityDamage(EntityDamageEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onEntityExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(EntityExplodeEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+    public void onFoodLevelChange(FoodLevelChangeEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void onLeavesDecay(LeavesDecayEvent event) {
+    public void onLeavesDecay(LeavesDecayEvent event)
+    {
         processModuleEvents(event);
     }
-    
+
     @EventHandler
-    public void signChangeEvent(SignChangeEvent event){
+    public void signChangeEvent(SignChangeEvent event)
+    {
         processModuleEvents(event);
     }
-    
-    private String formatJoinQuitKickMessage(String format, GuestPlayer gp) {
+
+    private String formatJoinQuitKickMessage(String format, GuestPlayer gp)
+    {
         return Formatter.selectFormatter(SimpleFormatter.class).format(format, gp)[0];
     }
 }

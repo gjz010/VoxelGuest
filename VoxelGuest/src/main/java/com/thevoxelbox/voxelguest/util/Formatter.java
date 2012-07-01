@@ -23,14 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.util;
 
 import com.thevoxelbox.voxelguest.players.GuestPlayer;
 
 public abstract class Formatter {
-    
-    public static Formatter selectFormatter(Class<? extends Formatter> cls) {
+
+    public static Formatter selectFormatter(Class<? extends Formatter> cls)
+    {
         try {
             Formatter formatter = cls.newInstance();
             return formatter;
@@ -38,19 +38,21 @@ public abstract class Formatter {
             return null;
         }
     }
-    
-    public static String encodeColors(String input) {
+
+    public static String encodeColors(String input)
+    {
         for (FormatColors color : FormatColors.values()) {
             input = input.replace(color.getColorCode(), color.getBukkitColorCode());
         }
-        
+
         return input;
     }
-    
+
     public abstract String[] format(String in, GuestPlayer gp, Object... otherArgs);
 }
 
 enum FormatColors {
+
     WHITE("&f"),
     DARK_BLUE("&1"),
     DARK_GREEN("&2"),
@@ -67,18 +69,20 @@ enum FormatColors {
     PINK("&d"),
     YELLOW("&e"),
     BLACK("&0");
-    
     private String color;
-    
-    private FormatColors(String c) {
+
+    private FormatColors(String c)
+    {
         color = c;
     }
-    
-    public String getColorCode() {
+
+    public String getColorCode()
+    {
         return color;
     }
-    
-    public String getBukkitColorCode() {
+
+    public String getBukkitColorCode()
+    {
         return color.replace("&", "\u00A7");
     }
- }
+}

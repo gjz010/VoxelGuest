@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.modules;
 
 import com.thevoxelbox.voxelguest.util.Configuration;
@@ -31,72 +30,89 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class ModuleConfiguration {
+
     protected final Configuration config;
     private final Module parentModule;
-    
-    public ModuleConfiguration(Module parent) {
+
+    public ModuleConfiguration(Module parent)
+    {
         parentModule = parent;
         config = new Configuration(parentModule.getName(), "/modules");
     }
-    
-    public HashMap<String, Object> getAllEntries() {
+
+    public HashMap<String, Object> getAllEntries()
+    {
         return config.getAllEntries();
     }
-    
-    public Object getEntry(String key) {
+
+    public Object getEntry(String key)
+    {
         return config.getEntry(key);
     }
-    
-    public String getString(String key) {
+
+    public String getString(String key)
+    {
         return config.getString(key);
     }
-    
-    public boolean getBoolean(String key) {
+
+    public boolean getBoolean(String key)
+    {
         return config.getBoolean(key);
     }
-    
-    public int getInt(String key) {
+
+    public int getInt(String key)
+    {
         return config.getInt(key);
     }
-    
-    public double getDouble(String key) {
+
+    public double getDouble(String key)
+    {
         return config.getDouble(key);
     }
-    
-    public void setEntry(String key, Object value) {
+
+    public void setEntry(String key, Object value)
+    {
         config.setEntry(key, value);
     }
-    
-    public void setString(String key, String value) {
+
+    public void setString(String key, String value)
+    {
         config.setString(key, value);
     }
-    
-    public void setBoolean(String key, boolean value) {
+
+    public void setBoolean(String key, boolean value)
+    {
         config.setBoolean(key, value);
     }
-    
-    public void setInt(String key, int value) {
+
+    public void setInt(String key, int value)
+    {
         config.setInt(key, value);
     }
-    
-    public void setDouble(String key, double value) {
+
+    public void setDouble(String key, double value)
+    {
         config.setDouble(key, value);
     }
-    
-    public void load() {
+
+    public void load()
+    {
         registerFieldSettings(this.getClass());
         config.load();
     }
-    
-    public void reset() {
+
+    public void reset()
+    {
         registerFieldSettings(getClass());
     }
-    
-    public void save() {
+
+    public void save()
+    {
         config.save();
     }
-    
-    private void registerFieldSettings(Class<? extends ModuleConfiguration> cls) {
+
+    private void registerFieldSettings(Class<? extends ModuleConfiguration> cls)
+    {
         for (Field field : cls.getDeclaredFields()) {
             try {
                 field.setAccessible(true);
@@ -108,20 +124,23 @@ public class ModuleConfiguration {
             }
         }
     }
-    
-    private void registerFieldSetting(Field field) throws IllegalArgumentException, 
-        IllegalAccessException {
 
-        if (!field.isAnnotationPresent(Setting.class))
+    private void registerFieldSetting(Field field) throws IllegalArgumentException,
+            IllegalAccessException
+    {
+
+        if (!field.isAnnotationPresent(Setting.class)) {
             return;
+        }
 
-        if (!field.isAccessible())
+        if (!field.isAccessible()) {
             field.setAccessible(true);
+        }
 
         Setting setting = field.getAnnotation(Setting.class);
         String key = setting.value();
         Object value = field.get(this);
-        
+
         setEntry(key, value);
     }
 }

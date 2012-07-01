@@ -23,13 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.permissions;
 
 public class InsufficientPermissionsException extends PermissionsException {
+
     private static final long serialVersionUID = 20814324162432463L;
-    
-    public InsufficientPermissionsException(String reason) {
+
+    public InsufficientPermissionsException(String reason)
+    {
         super(reason);
-    }   
+    }
 }

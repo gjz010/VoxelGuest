@@ -48,167 +48,188 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-@MetaData(name="AFK", description="Handles all AFK players and whatnot")
+@MetaData(name = "AFK", description = "Handles all AFK players and whatnot")
 public class AFKModule extends Module {
-    
+
     protected HashMap<Player, Long> timeMap = new HashMap<Player, Long>();
     protected List<Player> afkList = new ArrayList<Player>();
-    
     private int afkTaskID = -1;
-    
-    public AFKModule() {
+
+    public AFKModule()
+    {
         super(AFKModule.class.getAnnotation(MetaData.class));
     }
-    
+
     class AFKConfiguration extends ModuleConfiguration {
-        @Setting("afk-timeout-enabled") public boolean timeoutEnabled = false;
-        @Setting("afk-timeout-minutes") public int timeoutMinutes = 5;
-        
-        public AFKConfiguration(AFKModule parent) {
+
+        @Setting("afk-timeout-enabled")
+        public boolean timeoutEnabled = false;
+        @Setting("afk-timeout-minutes")
+        public int timeoutMinutes = 5;
+
+        public AFKConfiguration(AFKModule parent)
+        {
             super(parent);
         }
     }
 
     @Override
-    public void enable() {
+    public void enable()
+    {
         setConfiguration(new AFKConfiguration(this));
         timeMap.clear();
-        
-        for (Player player : Bukkit.getOnlinePlayers())
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
             timeMap.put(player, System.currentTimeMillis());
-        
+        }
+
         if (getConfiguration().getBoolean("afk-timeout-enabled")) {
             if (getConfiguration().getInt("afk-timeout-minutes") >= 0) {
                 final long timeout = 60000L * getConfiguration().getInt("afk-timeout-minutes");
-                
+
                 afkTaskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getInstance(), new Runnable() {
 
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         for (Map.Entry<Player, Long> entry : timeMap.entrySet()) {
                             Player player = entry.getKey();
-                            
+
                             if ((System.currentTimeMillis() - entry.getValue() > timeout) && !isAFK(player)) {
                                 cycleAFK(player);
                                 broadcastAFKMessage(player);
                             }
                         }
                     }
-                    
                 }, 0L, 1800L);
             }
         }
     }
-    
+
     @Override
-    public void disable() {
+    public void disable()
+    {
         timeMap.clear();
         afkList.clear();
-        
-        if (afkTaskID != -1)
+
+        if (afkTaskID != -1) {
             Bukkit.getScheduler().cancelTask(afkTaskID);
+        }
     }
 
     @Override
-    public String getLoadMessage() {
+    public String getLoadMessage()
+    {
         return "AFK module enabled - Auto-AFK timeout is " + (VoxelGuest.getConfigData().getBoolean("afk-timeout-enabled") ? "enabled" : "disabled");
     }
-    
-    public boolean isAFK(Player player) {
+
+    public boolean isAFK(Player player)
+    {
         return afkList.contains(player);
     }
-    
-    public void cycleAFK(Player player) {
-        if (!isAFK(player))
+
+    public void cycleAFK(Player player)
+    {
+        if (!isAFK(player)) {
             afkList.add(player);
-        else
+        } else {
             afkList.remove(player);
+        }
     }
-    
-    @Command(aliases={"afk", "vafk"},
-            bounds={0, -1},
-            help="To go AFK, type §c/afk (message)",
-            playerOnly=true)
-    @CommandPermission(permission="voxelguest.afk.afk")
-    public void afk(CommandSender cs, String[] args) {
+
+    @Command(aliases = {"afk", "vafk"},
+    bounds = {0, -1},
+    help = "To go AFK, type §c/afk (message)",
+    playerOnly = true)
+    @CommandPermission(permission = "voxelguest.afk.afk")
+    public void afk(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
-        
+
         if (args.length == 0 && !isAFK(p)) {
             cycleAFK(p);
             broadcastAFKMessage(p);
         } else if (!isAFK(p)) {
             String concat = "";
-            
+
             for (int i = 0; i < args.length; i++) {
                 concat = concat + args[i] + " ";
             }
-            
+
             concat = concat.trim();
-            
+
             cycleAFK(p);
             broadcastAFKMessage(p, concat);
         }
     }
-    
-    @ModuleEvent(event=PlayerJoinEvent.class)
-    public void onPlayerJoin(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerJoinEvent.class)
+    public void onPlayerJoin(BukkitEventWrapper wrapper)
+    {
         PlayerJoinEvent event = (PlayerJoinEvent) wrapper.getEvent();
         updateTimeEntry(event.getPlayer());
     }
-    
-    @ModuleEvent(event=PlayerQuitEvent.class)
-    public void onPlayerQuit(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerQuitEvent.class)
+    public void onPlayerQuit(BukkitEventWrapper wrapper)
+    {
         PlayerQuitEvent event = (PlayerQuitEvent) wrapper.getEvent();
         timeMap.remove(event.getPlayer());
-        if(isAFK(event.getPlayer())){
+        if (isAFK(event.getPlayer())) {
             afkList.remove(event.getPlayer());
         }
     }
-    
-    @ModuleEvent(event=PlayerKickEvent.class)
-    public void onPlayerKick(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerKickEvent.class)
+    public void onPlayerKick(BukkitEventWrapper wrapper)
+    {
         PlayerKickEvent event = (PlayerKickEvent) wrapper.getEvent();
         timeMap.remove(event.getPlayer());
-        if(isAFK(event.getPlayer())){
+        if (isAFK(event.getPlayer())) {
             afkList.remove(event.getPlayer());
         }
     }
-    
-    @ModuleEvent(event=PlayerChatEvent.class)
-    public void onPlayerChat(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerChatEvent.class)
+    public void onPlayerChat(BukkitEventWrapper wrapper)
+    {
         PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
         Player p = event.getPlayer();
-        
+
         if (isAFK(p)) {
             cycleAFK(p);
             broadcastAFKMessage(p);
         }
-        
+
         updateTimeEntry(p);
     }
-    
-    @ModuleEvent(event=PlayerMoveEvent.class)
-    public void onPlayerMove(BukkitEventWrapper wrapper) {
+
+    @ModuleEvent(event = PlayerMoveEvent.class)
+    public void onPlayerMove(BukkitEventWrapper wrapper)
+    {
         PlayerMoveEvent event = (PlayerMoveEvent) wrapper.getEvent();
         Player p = event.getPlayer();
-        
+
         if (isAFK(p)) {
             cycleAFK(p);
             broadcastAFKMessage(p);
         }
-        
+
         updateTimeEntry(p);
     }
-    
-    private void updateTimeEntry(Player player) {
+
+    private void updateTimeEntry(Player player)
+    {
         timeMap.put(player, System.currentTimeMillis());
     }
-    
-    private void broadcastAFKMessage(Player player) {
+
+    private void broadcastAFKMessage(Player player)
+    {
         broadcastAFKMessage(player, null);
     }
-    
-    private void broadcastAFKMessage(Player player, String message) {
+
+    private void broadcastAFKMessage(Player player, String message)
+    {
         if (message == null) {
             Bukkit.getServer().broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + ((isAFK(player)) ? " has gone AFK" : " has returned"));
         } else {

@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.modules;
 
 import java.lang.reflect.InvocationTargetException;
@@ -36,25 +35,30 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
 public class ModuleSystemListener implements Listener {
+
     private HashMap<Class<? extends Event>, HashMap<Method, ModuleEvent>> moduleEventMap = new HashMap<Class<? extends Event>, HashMap<Method, ModuleEvent>>();
     private HashMap<Method, Module> instances = new HashMap<Method, Module>();
-    
-    public void registerModuleEvents() {
+
+    public void registerModuleEvents()
+    {
         for (Module module : ModuleManager.getManager().getModules()) {
             registerModuleEvents(module);
         }
     }
-    
-    public void registerModuleEvents(Module module) {
+
+    public void registerModuleEvents(Module module)
+    {
         for (Method method : module.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ModuleEvent.class)) {
                 Class classType = method.getParameterTypes()[0];
-                if (!BukkitEventWrapper.class.isAssignableFrom(classType) || method.getParameterTypes().length != 1)
+                if (!BukkitEventWrapper.class.isAssignableFrom(classType) || method.getParameterTypes().length != 1) {
                     continue;
-                
-                if (!void.class.isAssignableFrom(method.getReturnType()))
+                }
+
+                if (!void.class.isAssignableFrom(method.getReturnType())) {
                     continue;
-                
+                }
+
                 ModuleEvent moduleEvent = method.getAnnotation(ModuleEvent.class);
 
                 if (!moduleEventMap.containsKey(moduleEvent.event())) {
@@ -71,30 +75,35 @@ public class ModuleSystemListener implements Listener {
             }
         }
     }
-    
-    public void processModuleEvents(Event event) {
+
+    public void processModuleEvents(Event event)
+    {
         HashMap<Method, ModuleEvent> map = moduleEventMap.get(event.getClass());
         List<Method> didProcess = new ArrayList<Method>();
         BukkitEventWrapper wrapper = new BukkitEventWrapper(event);
-        
-        if (map == null || map.isEmpty())
+
+        if (map == null || map.isEmpty()) {
             return;
-        
+        }
+
         didProcess.clear();
-        
+
         for (int i = 4; i >= 0; i--) {
             for (Map.Entry<Method, ModuleEvent> entry : map.entrySet()) {
-                if (entry.getValue().priority().getIntValue() < i)
+                if (entry.getValue().priority().getIntValue() < i) {
                     continue;
-                
+                }
+
                 Method method = entry.getKey();
-                
-                if (didProcess.contains(method))
+
+                if (didProcess.contains(method)) {
                     continue;
-                
-                if (!instances.get(method).isEnabled())
+                }
+
+                if (!instances.get(method).isEnabled()) {
                     continue;
-                
+                }
+
                 try {
                     method.invoke(instances.get(method), wrapper);
                     didProcess.add(method);

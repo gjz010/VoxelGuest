@@ -67,7 +67,8 @@ public class CubicleModule extends Module {
     public static final String PERM_DELETE = "voxelguest.cubicle.command.delete";
     public static final String PERM_REGENERATE = "voxelguest.cubicle.command.regenerate";
 
-    public CubicleModule() {
+    public CubicleModule()
+    {
         super(CubicleModule.class.getAnnotation(MetaData.class));
     }
 
@@ -98,13 +99,15 @@ public class CubicleModule extends Module {
         @Setting("cubicle-regeneration-speed")
         public int regenSpeed = 5;
 
-        public CubicleConfiguration(CubicleModule parent) {
+        public CubicleConfiguration(CubicleModule parent)
+        {
             super(parent);
         }
     }
 
     @Override
-    public void enable() throws ModuleException {
+    public void enable() throws ModuleException
+    {
         setConfiguration(new CubicleConfiguration(this));
 
         if (getConfiguration().getBoolean("disable-module")) {
@@ -131,13 +134,15 @@ public class CubicleModule extends Module {
     }
 
     @Override
-    public String getLoadMessage() {
+    public String getLoadMessage()
+    {
         return "Cubicle Module enabled -- cubicle world is "
                 + (Bukkit.getServer().getWorld(worldUID) == null ? "not loaded" : "loaded");
     }
 
     @Override
-    public void disable() throws ModuleException {
+    public void disable() throws ModuleException
+    {
         if (getConfiguration().getBoolean("save-world-on-reload")) {
             if (Bukkit.getServer().getWorld(getConfiguration().getString("world-name")) != null) {
                 Bukkit.getServer().getWorld(getConfiguration().getString("world-name")).save();
@@ -147,7 +152,8 @@ public class CubicleModule extends Module {
     }
 
     @ModuleEvent(event = PlayerInteractEvent.class, ignoreCancelledEvents = true)
-    public void playerInteract(BukkitEventWrapper wrap) {
+    public void playerInteract(BukkitEventWrapper wrap)
+    {
         PlayerInteractEvent e = (PlayerInteractEvent) wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (e.getClickedBlock() == null) {
@@ -167,7 +173,8 @@ public class CubicleModule extends Module {
     }
 
     @ModuleEvent(event = PlayerMoveEvent.class, ignoreCancelledEvents = true)
-    public void playerMove(BukkitEventWrapper wrap) {
+    public void playerMove(BukkitEventWrapper wrap)
+    {
         PlayerMoveEvent e = (PlayerMoveEvent) wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (!manager.hasCubicle(e.getTo())) {
@@ -181,7 +188,8 @@ public class CubicleModule extends Module {
     }
 
     @ModuleEvent(event = PlayerVelocityEvent.class, ignoreCancelledEvents = true)
-    public void playerVelocity(BukkitEventWrapper wrap) {
+    public void playerVelocity(BukkitEventWrapper wrap)
+    {
         PlayerVelocityEvent e = (PlayerVelocityEvent) wrap.getEvent();
         if (e.getPlayer().getWorld().getUID().equals(worldUID)) {
             if (!manager.hasCubicle(e.getPlayer().getLocation().toVector().add(e.getVelocity()).toLocation(e.getPlayer().getWorld()))) {
@@ -189,13 +197,14 @@ public class CubicleModule extends Module {
             }
         }
     }
-    
+
     @Command(aliases = {"cwarp"},
     bounds = {2, 2},
     playerOnly = true,
     help = "/cwarp allows you to warp to a players' cubicle.")
     @CommandPermission(permission = "voxelguest.cubicle.command.warp")
-    public void cubicleWarp(CommandSender cs, String[] args) {
+    public void cubicleWarp(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
         String fullName = getFullName(p, args[1]);
     }
@@ -205,7 +214,8 @@ public class CubicleModule extends Module {
     playerOnly = true,
     help = "/cubicle allows you to manage the cubicles.")
     @CommandPermission(permission = "voxelguest.cubicle.command")
-    public void cubicleCommand(CommandSender cs, String[] args) {
+    public void cubicleCommand(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
         if (args == null || args.length == 0) {
             p.sendMessage(ChatColor.AQUA + "The available subcommands are as follows:");
@@ -384,11 +394,13 @@ public class CubicleModule extends Module {
         }
     }
 
-    public void noPerm(Player user) {
+    public void noPerm(Player user)
+    {
         user.sendMessage(ChatColor.RED + "You do not have the permission to use this command.");
     }
 
-    private String[] removeParameters(String[] args) {
+    private String[] removeParameters(String[] args)
+    {
         int i = args.length;
         for (String st : args) {
             if (st.equals("--")) {
@@ -405,7 +417,8 @@ public class CubicleModule extends Module {
         return temp;
     }
 
-    private Cubicle getFromPlayerInput(Player user, String[] args) {
+    private Cubicle getFromPlayerInput(Player user, String[] args)
+    {
         if (args.length == 1) {
             if (manager.hasCubicle(user)) {
                 return manager.getCubicle(user);
@@ -518,7 +531,8 @@ public class CubicleModule extends Module {
         return null;
     }
 
-    private String getFullName(Player user, String partial) {
+    private String getFullName(Player user, String partial)
+    {
         List<Player> onlineMatch = Bukkit.matchPlayer(partial);
         if (onlineMatch.isEmpty()) {
             List<OfflinePlayer> offlineMatch = matchOfflinePlayer(partial);
@@ -539,7 +553,8 @@ public class CubicleModule extends Module {
         }
     }
 
-    public List<OfflinePlayer> matchOfflinePlayer(String partialName) {
+    public List<OfflinePlayer> matchOfflinePlayer(String partialName)
+    {
         List matchedPlayers = new ArrayList();
 
         for (OfflinePlayer iterPlayer : Bukkit.getOfflinePlayers()) {

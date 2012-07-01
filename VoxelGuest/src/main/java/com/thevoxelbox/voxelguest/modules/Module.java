@@ -23,54 +23,61 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.modules;
 
 public abstract class Module {
+
     protected String name;
     protected String description;
     private ModuleConfiguration configuration;
-    
     protected boolean enabled = false;
-    
-    public Module(MetaData md) {
+
+    public Module(MetaData md)
+    {
         this.name = md.name();
         this.description = md.description();
     }
-    
+
     public abstract void enable() throws ModuleException;
-    
+
     public abstract String getLoadMessage();
-    
+
     public abstract void disable() throws ModuleException;
-    
-    public boolean isEnabled() {
+
+    public boolean isEnabled()
+    {
         return this.enabled;
     }
-    
-    public void setEnabled(boolean bool) {
+
+    public void setEnabled(boolean bool)
+    {
         this.enabled = bool;
     }
-    
-    public String getName() {
+
+    public String getName()
+    {
         return this.name;
     }
-    
-    public String getDescription() {
+
+    public String getDescription()
+    {
         return this.description;
     }
-    
-    public void setConfiguration(ModuleConfiguration config) {
+
+    public void setConfiguration(ModuleConfiguration config)
+    {
         if (config != null) {
             configuration = config;
             configuration.load();
         }
     }
-    
-    public ModuleConfiguration getConfiguration() {
-        if (configuration != null)
+
+    public ModuleConfiguration getConfiguration()
+    {
+        if (configuration != null) {
             return configuration;
-        
+        }
+
         return null;
     }
 }

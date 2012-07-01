@@ -45,7 +45,8 @@ public class CubicleGenerator extends ChunkGenerator {
     protected byte colour2;
     protected boolean makeBedrock;
 
-    public CubicleGenerator(int size, int grass, int wall, byte filler, byte topLayer, byte c1, byte c2, boolean bedrock) {
+    public CubicleGenerator(int size, int grass, int wall, byte filler, byte topLayer, byte c1, byte c2, boolean bedrock)
+    {
         chunkSize = size;
         grassLevel = grass;
         wallHeigth = wall;
@@ -60,7 +61,8 @@ public class CubicleGenerator extends ChunkGenerator {
     }
 
     @Override
-    public byte[][] generateBlockSections(World world, Random random, int x, int z, BiomeGrid biomes) {
+    public byte[][] generateBlockSections(World world, Random random, int x, int z, BiomeGrid biomes)
+    {
         byte[][] blocks = new byte[world.getMaxHeight() / 16][];
         for (int gy = 0; gy < grassLevel; gy++) {
             for (int gx = 0; gx < 16; gx++) {
@@ -118,7 +120,8 @@ public class CubicleGenerator extends ChunkGenerator {
         return blocks;
     }
 
-    private void setBlock(byte[][] result, int x, int y, int z, byte blkid) {
+    private void setBlock(byte[][] result, int x, int y, int z, byte blkid)
+    {
         if (result[y >> 4] == null) {
             result[y >> 4] = new byte[4096];
         }
@@ -126,12 +129,14 @@ public class CubicleGenerator extends ChunkGenerator {
     }
 
     @Override
-    public boolean canSpawn(World world, int x, int z) {
+    public boolean canSpawn(World world, int x, int z)
+    {
         return false;
     }
 
     @Override
-    public Location getFixedSpawnLocation(World world, Random random) {
+    public Location getFixedSpawnLocation(World world, Random random)
+    {
         return new Location(world, 0, 128, 0);
     }
 }

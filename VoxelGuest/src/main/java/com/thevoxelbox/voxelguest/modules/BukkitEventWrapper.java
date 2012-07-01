@@ -23,28 +23,32 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.modules;
 
 import org.bukkit.event.Event;
 
 public class BukkitEventWrapper {
+
     private Event event;
     private static boolean cancelled = false;
-    
-    public BukkitEventWrapper(Event event) {
+
+    public BukkitEventWrapper(Event event)
+    {
         this.event = event;
     }
-    
-    public Event getEvent() {
+
+    public Event getEvent()
+    {
         return event;
     }
-    
-    public boolean isCancelled() {
+
+    public boolean isCancelled()
+    {
         return cancelled;
     }
-    
-    public void setCancelled(boolean cancel) {
+
+    public void setCancelled(boolean cancel)
+    {
         cancelled = cancel;
     }
 }

@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.players;
 
 import java.util.HashMap;
@@ -40,22 +39,25 @@ public class GuestPlayer {
     protected Player p;
     protected Map<String, HashMap<String, Object>> storage = new HashMap<String, HashMap<String, Object>>();
     protected String[] groups;
-    
-    public GuestPlayer(Player player) {
+
+    public GuestPlayer(Player player)
+    {
         this.p = player;
 
         Map<String, Object> data = PropertyManager.load(p.getName(), "/players");
         storage.put(VoxelGuest.getPluginId(VoxelGuest.getInstance()), ((HashMap<String, Object>) data));
-        
+
         groups = PermissionsManager.getHandler().getGroups(p.getName());
     }
 
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return this.p;
     }
 
     // -- Storage Stuff -- //
-    public void store(String id, String k, Object v) {
+    public void store(String id, String k, Object v)
+    {
         if (!storage.containsKey(id)) {
             VoxelGuest.log("Tried to store to unregistered plugin storage for player \"" + p.getName() + "\"", 1);
             return;
@@ -72,7 +74,8 @@ public class GuestPlayer {
         }
     }
 
-    public Object get(String id, String k) {
+    public Object get(String id, String k)
+    {
         if (!storage.containsKey(id)) {
             VoxelGuest.log("Tried to retrieve from unregistered plugin storage for player \"" + p.getName() + "\"", 1);
             return null;
@@ -85,15 +88,18 @@ public class GuestPlayer {
             return null;
         }
     }
-    
-    public void saveData(String pluginID) {
+
+    public void saveData(String pluginID)
+    {
         HashMap<String, Object> map = storage.get(pluginID);
-        
-        if (map != null)
+
+        if (map != null) {
             PropertyManager.save(p.getName(), map, "/players");
+        }
     }
-    
-    public String[] getGroups() {
+
+    public String[] getGroups()
+    {
         return groups;
     }
 }

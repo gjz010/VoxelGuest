@@ -23,13 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.commands.engine;
 
 public class CommandMethodInvocationException extends CommandException {
+
     private static final long serialVersionUID = 9407231027666806L;
 
-    public CommandMethodInvocationException(String reason) {
+    public CommandMethodInvocationException(String reason)
+    {
         super(reason);
     }
 }

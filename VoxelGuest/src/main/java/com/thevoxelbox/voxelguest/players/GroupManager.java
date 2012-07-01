@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.players;
 
 import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
@@ -37,25 +36,25 @@ import java.util.TreeMap;
 import org.bukkit.entity.Player;
 
 public class GroupManager {
-    
+
     protected static Map<String, Configuration> groupMap = new TreeMap<String, Configuration>();
     protected static HashMap<String, List<String>> playerMap = new HashMap<String, List<String>>();
-    
     // Basic group defaults
     private final String defaultGroupName = "Group";
     private final String defaultGroupID = "§fG";
     private final Configuration defaultConfig = new Configuration(defaultGroupName, "/groups");
-    
-    public GroupManager() {
+
+    public GroupManager()
+    {
         File dir = new File("plugins/VoxelGuest/groups/");
-        
+
         if (!dir.isDirectory()) {
             dir.mkdirs();
             return;
         }
-        
+
         String[] files = dir.list();
-        
+
         for (String file : files) {
             if (file.endsWith(".properties")) {
                 String f = file.replace(".properties", "");
@@ -63,86 +62,100 @@ public class GroupManager {
                 groupMap.put(f, config);
             }
         }
-        
+
         defaultConfig.setString("group-id", defaultGroupID);
     }
-    
-    public Configuration getGroupConfiguration(String name) {
-        if (groupMap.containsKey(name))
+
+    public Configuration getGroupConfiguration(String name)
+    {
+        if (groupMap.containsKey(name)) {
             return groupMap.get(name);
-        
+        }
+
         Configuration config = new Configuration(name, "/groups");
         setGroupConfiguration(name, config);
         return config;
     }
-    
-    public void setGroupConfiguration(String name, Configuration config) {
+
+    public void setGroupConfiguration(String name, Configuration config)
+    {
         groupMap.put(name, config);
     }
-    
-    public String findGroup(String key, Object value) throws GroupNotFoundException {
+
+    public String findGroup(String key, Object value) throws GroupNotFoundException
+    {
         for (Map.Entry<String, Configuration> entry : groupMap.entrySet()) {
             Configuration config = entry.getValue();
-            
-            if (config.getEntry(key) != null && value.equals(config.getEntry(key)))
+
+            if (config.getEntry(key) != null && value.equals(config.getEntry(key))) {
                 return entry.getKey();
+            }
         }
-        
+
         throw new GroupNotFoundException("No group found for key-value pair");
     }
-    
-    public String findGroup(String str) {
+
+    public String findGroup(String str)
+    {
         for (Map.Entry<String, Configuration> entry : groupMap.entrySet()) {
-            if (entry.getKey().toLowerCase().startsWith(str.toLowerCase()))
+            if (entry.getKey().toLowerCase().startsWith(str.toLowerCase())) {
                 return entry.getKey();
+            }
         }
-        
+
         return null;
     }
-    
-    public void saveGroupConfigurations() {
+
+    public void saveGroupConfigurations()
+    {
         for (Map.Entry<String, Configuration> entry : groupMap.entrySet()) {
             saveGroupConfiguration(entry.getKey());
         }
     }
-    
-    public void saveGroupConfiguration(String name) {
+
+    public void saveGroupConfiguration(String name)
+    {
         Configuration config = groupMap.get(name);
         config.save();
     }
-    
-    public void verifyPlayerGroupExistence(Player p) {
+
+    public void verifyPlayerGroupExistence(Player p)
+    {
         String[] groups = PermissionsManager.getHandler().getGroups(p.getName());
-        
+
         if (groups != null && groups.length > 0) {
             String group = groups[0];
-            
+
             if (!groupMap.containsKey(group)) {
                 groupMap.put(group, defaultConfig);
                 getGroupConfiguration(group).assignTarget(group);
             }
-            
+
         } else {
             groupMap.put(defaultGroupName, defaultConfig);
         }
     }
-    
-    public List<String> getPlayerListForGroup(String group) {
+
+    public List<String> getPlayerListForGroup(String group)
+    {
         return playerMap.get(group);
     }
-    
-    public List<String> getRegisteredGroups() {
+
+    public List<String> getRegisteredGroups()
+    {
         List<String> l = new ArrayList<String>();
-        
+
         for (Map.Entry<String, Configuration> entry : groupMap.entrySet()) {
-            if (!l.contains(entry.getKey()))
+            if (!l.contains(entry.getKey())) {
                 l.add(entry.getKey());
+            }
         }
-        
+
         return l;
     }
-    
-    public Configuration getDefaultConfiguration() {
+
+    public Configuration getDefaultConfiguration()
+    {
         return defaultConfig;
     }
 }

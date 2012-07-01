@@ -23,13 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.players;
 
 public class GroupNotFoundException extends Exception {
+
     private static final long serialVersionUID = -640627620741724L;
-    
-    public GroupNotFoundException(String reason) {
+
+    public GroupNotFoundException(String reason)
+    {
         super(reason);
     }
 }

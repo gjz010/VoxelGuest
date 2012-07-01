@@ -23,7 +23,6 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.util;
 
 import com.thevoxelbox.voxelguest.VoxelGuest;
@@ -34,45 +33,50 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class FlatFileManager {
-    
+
     private static String directory = "plugins/VoxelGuest";
-    
-    public static String[] load(String target) {
+
+    public static String[] load(String target)
+    {
         return load(target, "", false);
     }
-    
-    public static String[] load(String target, String destination) {
+
+    public static String[] load(String target, String destination)
+    {
         return load(target, destination, false);
     }
-    
-    public static String[] load(String target, String destination, boolean autoDestroy) {
+
+    public static String[] load(String target, String destination, boolean autoDestroy)
+    {
         // Note: Destination is appended to plugins/VoxelGuest/data
         // For example, when destination is "/channels",
         // the target directory will be "plugins/VoxelGuest/data/channels/"
-        
+
         File f = new File(directory + destination + "/" + target + ".txt");
         Scanner snr = null;
-        
+
         if (f.exists()) {
             try {
                 snr = new Scanner(f);
                 String toCut = "";
-                
+
                 while (snr.hasNextLine()) {
                     String line = snr.nextLine();
-                    
-                    if (line.startsWith("#"))
+
+                    if (line.startsWith("#")) {
                         continue;
-                    
+                    }
+
                     toCut = toCut + line + "\n";
                 }
-                
+
                 snr.close();
                 String[] split = toCut.split("\n");
-                
-                if (autoDestroy)
+
+                if (autoDestroy) {
                     f.delete();
-                
+                }
+
                 return split;
             } catch (FileNotFoundException ex) {
                 return null;
@@ -87,22 +91,24 @@ public class FlatFileManager {
                 }
             }
         }
-        
+
         return null;
     }
-    
-    public static void save(String[] strs, String target) {
+
+    public static void save(String[] strs, String target)
+    {
         save(strs, target, "");
     }
-    
-    public static void save(String[] strs, String target, String destination) {
+
+    public static void save(String[] strs, String target, String destination)
+    {
         // Note: Destination is appended to plugins/VoxelGuest/data
         // For example, when destination is "/channels",
         // the target directory will be "plugins/VoxelGuest/data/channels/"
-        
+
         File f = new File(directory + destination + "/" + target + ".txt");
         PrintWriter pw = null;
-        
+
         if (!f.exists()) {
             try {
                 f.createNewFile();
@@ -110,13 +116,13 @@ public class FlatFileManager {
                 VoxelGuest.log("Could not create new file \"" + f.getAbsolutePath() + "\"", 2);
             }
         }
-        
+
         if (f.exists()) {
             try {
                 pw = new PrintWriter(f);
-                
+
                 String concat = "";
-                
+
                 for (int i = 0; i < strs.length; i++) {
                     if (i == (strs.length - 1)) {
                         concat = concat + strs[i];
@@ -124,7 +130,7 @@ public class FlatFileManager {
                         concat = concat + strs[i] + "\n";
                     }
                 }
-                
+
                 pw.write(concat);
                 pw.close();
             } catch (FileNotFoundException ex) {

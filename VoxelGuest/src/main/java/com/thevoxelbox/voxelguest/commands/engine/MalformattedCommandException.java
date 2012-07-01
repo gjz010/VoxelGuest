@@ -23,13 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.commands.engine;
 
 public class MalformattedCommandException extends CommandException {
+
     private static final long serialVersionUID = 6045041945680663L;
 
-    public MalformattedCommandException(String reason) {
+    public MalformattedCommandException(String reason)
+    {
         super(reason);
     }
 }

@@ -47,49 +47,53 @@ import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 
 public class ServerAdministrationCommands {
+
     private long pollInterval = 150L;
     private long lastTimestamp = 0L;
     private long lastDifference = 0L;
-    
-    public ServerAdministrationCommands() {
+
+    public ServerAdministrationCommands()
+    {
         lastTimestamp = System.currentTimeMillis();
         Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getInstance(), new Runnable() {
 
             @Override
-            public void run() {
+            public void run()
+            {
                 lastDifference = (System.currentTimeMillis() - lastTimestamp) / 1000;
                 lastTimestamp = System.currentTimeMillis();
             }
-            
         }, 0L, pollInterval);
-        
+
         if (VoxelGuest.getConfigData().getBoolean("enable-ram-clear-cycle")) {
             long interval = VoxelGuest.getConfigData().getInt("ram-clear-cycle-time") * 1200L;
-            
+
             if (interval > 0) {
                 Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getInstance(), new Runnable() {
 
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         VoxelGuest.log("Running RAM cleaner...");
-                        
+
                         for (World world : Bukkit.getWorlds()) {
                             EntityPurgeThread thread = new EntityPurgeThread(world);
                             thread.start();
                         }
-                        
+
                         new GarbageCollectionThread().start();
-                        
+
                     }
                 }, interval, interval);
             }
         }
     }
-    
+
     @Command(aliases = {"system", "sys"},
-        bounds = {0, -1})
+    bounds = {0, -1})
     @CommandPermission(permission = "system.admin")
-    public void system(CommandSender cs, String[] args) {
+    public void system(CommandSender cs, String[] args)
+    {
         if (args.length == 0) {
             printSpecs(cs);
             return;
@@ -98,26 +102,41 @@ public class ServerAdministrationCommands {
         if (args[0].equalsIgnoreCase("settings")) {
             if (args.length > 1 && args[1].equalsIgnoreCase("set")) {
                 if (args[2] != null && args[2].equals("-m")) {
-                    if (args.length != 6) {
+                    if (args.length < 6) {
                         cs.sendMessage("§cIncorrect format: /system settings set -m [module] [setting] [value]");
                         return;
                     }
+                    
+                    String concat = "";
+                    
+                    if (args.length > 6) {
+                        for (short i = 5; i < args.length; ++i) {
+                            concat = concat + args[i] + " ";
+                        }
+                        
+                        concat = concat.trim();
+                    } else {
+                        if (args[5].equalsIgnoreCase("null"))
+                            concat = "";
+                        else
+                            concat = args[5];
+                    }
 
-                    Module[] activeModules   = ModuleManager.getManager().getActiveModules();
+                    Module[] activeModules = ModuleManager.getManager().getActiveModules();
                     Module[] inactiveModules = ModuleManager.getManager().getInactiveModules();
 
                     for (Module module : activeModules) {
                         if (module.getName().replace(" ", "").equalsIgnoreCase(args[3])) {
-                            smartSetSetting(module.getConfiguration(), args[4], args[5]);
-                            cs.sendMessage("§aSet " + module.getName() + "'s setting \"" + args[4] + "\" to \"" + args[5] + "\"");
+                            smartSetSetting(module.getConfiguration(), args[4], concat);
+                            cs.sendMessage("§aSet " + module.getName() + "'s setting \"" + args[4] + "\" to \"" + concat + "\"");
                             return;
                         }
                     }
 
                     for (Module module : inactiveModules) {
                         if (module.getName().replace(" ", "").equalsIgnoreCase(args[3])) {
-                            smartSetSetting(module.getConfiguration(), args[4], args[5]);
-                            cs.sendMessage("§aSet " + module.getName() + "'s setting \"" + args[4] + "\" to \"" + args[5] + "\"");
+                            smartSetSetting(module.getConfiguration(), args[4], concat);
+                            cs.sendMessage("§aSet " + module.getName() + "'s setting \"" + args[4] + "\" to \"" + concat + "\"");
                             return;
                         }
                     }
@@ -125,34 +144,64 @@ public class ServerAdministrationCommands {
                     cs.sendMessage("§cCould not find module specified");
                     return;
                 } else if (args[2] != null && args[2].equals("-g")) {
-                    if (args.length != 6) {
+                    if (args.length < 6) {
                         cs.sendMessage("§cIncorrect format: /system settings set -g [group] [setting] [value]");
                         return;
                     }
                     
+                    String concat = "";
+                    
+                    if (args.length > 6) {
+                        for (short i = 5; i < args.length; ++i) {
+                            concat = concat + args[i] + " ";
+                        }
+                        
+                        concat = concat.trim();
+                    } else {
+                        if (args[5].equalsIgnoreCase("null"))
+                            concat = "";
+                        else
+                            concat = args[5];
+                    }
+
                     List<String> groups = VoxelGuest.getGroupManager().getRegisteredGroups();
                     String[] test = new String[groups.size()];
                     test = groups.toArray(test);
-                    
+
                     for (String group : test) {
                         if (group.equalsIgnoreCase(args[3])) {
                             Configuration config = VoxelGuest.getGroupManager().getGroupConfiguration(group);
-                            smartSetSetting(config, args[4], args[5]);
-                            cs.sendMessage("§aSet master setting \"" + args[4] + "\" to \"" + args[5] + "\"");
+                            smartSetSetting(config, args[4], concat);
+                            cs.sendMessage("§aSet master setting \"" + args[4] + "\" to \"" + concat + "\"");
                             return;
                         }
                     }
-                    
+
                     cs.sendMessage("§cCould not find group specified");
                     return;
                 } else {
-                    if (args.length != 4) {
+                    if (args.length < 4) {
                         cs.sendMessage("§cIncorrect format: /system settings set [setting] [value]");
                         return;
                     }
+                    
+                    String concat = "";
+                    
+                    if (args.length > 4) {
+                        for (short i = 3; i < args.length; ++i) {
+                            concat = concat + args[i] + " ";
+                        }
+                        
+                        concat = concat.trim();
+                    } else {
+                        if (args[3].equalsIgnoreCase("null"))
+                            concat = "";
+                        else
+                            concat = args[3];
+                    }
 
-                    smartSetSetting(VoxelGuest.getConfigData(), args[2], args[3]);
-                    cs.sendMessage("§aSet master setting \"" + args[2] + "\" to \"" + args[3] + "\"");
+                    smartSetSetting(VoxelGuest.getConfigData(), args[2], concat);
+                    cs.sendMessage("§aSet master setting \"" + args[2] + "\" to \"" + concat + "\"");
                     return;
                 }
             }
@@ -205,41 +254,42 @@ public class ServerAdministrationCommands {
             new GarbageCollectionThread(cs).start();
         }
     }
-    
-    @Command(aliases={"vmptg", "vpg"},
-            bounds={2,2},
-            help="Set a player's group using\n"
-            + "§c/vmptg [player] [group]\n"
-            + "§6WARNING: This does NOT support multiworld",
-            playerOnly=true)
-    @CommandPermission(permission="system.groups.set.enable")
-    public void setGroup(CommandSender cs, String[] args) {
+
+    @Command(aliases = {"vmptg", "vpg"},
+        bounds = {2, 2},
+        help = "Set a player's group using\n"
+        + "§c/vmptg [player] [group]\n"
+        + "§6WARNING: This does NOT support multiworld",
+        playerOnly = true)
+    @CommandPermission(permission = "system.groups.set.enable")
+    public void setGroup(CommandSender cs, String[] args)
+    {
         Player p = (Player) cs;
-        
+
         List<Player> l = Bukkit.matchPlayer(args[0]);
-        
+
         if (l.isEmpty()) {
             cs.sendMessage("§cNo player found with that name.");
         } else if (l.size() > 1) {
             cs.sendMessage("§cMultiple players found with that name.");
         } else {
             Player toChange = l.get(0);
-            
+
             String currentGroup = PermissionsManager.getHandler().getGroups(toChange.getName())[0];
             String newGroup = VoxelGuest.getGroupManager().findGroup(args[1]);
-            
+
             if (newGroup == null) {
                 cs.sendMessage("§cNo group found with that name.");
                 return;
             }
-            
-            if (PermissionsManager.getHandler().hasPermission(p.getName(), "system.groups.set." + currentGroup.toLowerCase()) &&
-                PermissionsManager.getHandler().hasPermission(p.getName(), "system.groups.set." + newGroup.toLowerCase())) {
-                
+
+            if (PermissionsManager.getHandler().hasPermission(p.getName(), "system.groups.set." + currentGroup.toLowerCase())
+                    && PermissionsManager.getHandler().hasPermission(p.getName(), "system.groups.set." + newGroup.toLowerCase())) {
+
                 for (String old : PermissionsManager.getHandler().getGroups(toChange.getName())) {
                     PermissionsManager.getHandler().removeGroup(toChange.getName(), old);
                 }
-                
+
                 PermissionsManager.getHandler().addGroup(toChange.getName(), newGroup);
                 p.sendMessage("§7Set §a" + toChange.getName() + "§7's group to: §a" + newGroup);
             } else {
@@ -248,8 +298,9 @@ public class ServerAdministrationCommands {
             }
         }
     }
-    
-    private void printSpecs(CommandSender cs) {
+
+    private void printSpecs(CommandSender cs)
+    {
         cs.sendMessage("§8==============================");
         cs.sendMessage("§bServer Specs");
 
@@ -298,12 +349,13 @@ public class ServerAdministrationCommands {
             cs.sendMessage(ticks + renderTPSBar(calculateTPS(), 20));
         }
     }
-    
-    private String renderBar(double value, double max) {
+
+    private String renderBar(double value, double max)
+    {
         double usedLevel = 20 * (value / max);
         int usedRounded = (int) Math.round(usedLevel);
         String bar = "§8[";
-        
+
         for (int i = 0; i < 20; i++) {
             if ((i + 1) <= usedRounded) {
                 bar += "§b#";
@@ -311,18 +363,19 @@ public class ServerAdministrationCommands {
                 bar += "§7_";
             }
         }
-        
+
         double percent = (usedLevel / 20);
         NumberFormat format = NumberFormat.getPercentInstance();
-        
+
         return (bar + "§8] (§f" + format.format(percent) + "§8)");
     }
-    
-    private String renderTPSBar(double value, double max) {
+
+    private String renderTPSBar(double value, double max)
+    {
         double usedLevel = 20 * (value / max);
         int usedRounded = (int) Math.round(usedLevel);
         String bar = "§8[";
-        
+
         for (int i = 0; i < 20; i++) {
             if ((i + 1) <= usedRounded) {
                 bar += "§b#";
@@ -330,24 +383,27 @@ public class ServerAdministrationCommands {
                 bar += "§7_";
             }
         }
-        
+
         double percent = (usedLevel / 20);
         if (percent > 1) {
             percent = 1;
         }
-        
+
         return (bar + "§8] (§f" + percent * 20 + " TPS§8)");
     }
-    
-    private double calculateTPS() {
-        if (lastDifference == 0L)
+
+    private double calculateTPS()
+    {
+        if (lastDifference == 0L) {
             lastDifference = 1L;
-        
+        }
+
         double tps = pollInterval / lastDifference;
         return tps;
     }
-    
-    private void smartSetSetting(Configuration config, String key, String value) {
+
+    private void smartSetSetting(Configuration config, String key, String value)
+    {
         try {
             if (value.contains(".") || (Double.parseDouble(value) > 2147483647 || Double.parseDouble(value) < -2147483648)) {
                 Double d = Double.parseDouble(value);
@@ -367,8 +423,9 @@ public class ServerAdministrationCommands {
             config.setString(key, value);
         }
     }
-    
-    private void smartSetSetting(ModuleConfiguration config, String key, String value) {
+
+    private void smartSetSetting(ModuleConfiguration config, String key, String value)
+    {
         try {
             if (value.contains(".") || (Double.parseDouble(value) > 2147483647 || Double.parseDouble(value) < -2147483648)) {
                 Double d = Double.parseDouble(value);
@@ -388,19 +445,22 @@ public class ServerAdministrationCommands {
             config.setString(key, value);
         }
     }
-    
+
     class EntityPurgeThread extends Thread {
+
         private final World world;
-        
-        public EntityPurgeThread(World w) {
+
+        public EntityPurgeThread(World w)
+        {
             world = w;
         }
-        
+
         @Override
-        public void run() {
+        public void run()
+        {
             Entity[] entities = new Entity[world.getEntities().size()];
             entities = world.getEntities().toArray(entities);
-            
+
             int removed = 0;
 
             for (Entity e : entities) {
@@ -411,30 +471,32 @@ public class ServerAdministrationCommands {
             }
 
             Bukkit.getConsoleSender().sendMessage("§aEntity purge complete - Removed " + removed + " entities in world " + world.getName());
-            return;
         }
     }
-    
+
     class GarbageCollectionThread extends Thread {
+
         private final CommandSender sender;
-        
-        public GarbageCollectionThread(CommandSender cs) {
+
+        public GarbageCollectionThread(CommandSender cs)
+        {
             sender = cs;
         }
-        
-        public GarbageCollectionThread() {
+
+        public GarbageCollectionThread()
+        {
             sender = Bukkit.getConsoleSender();
         }
-        
+
         @Override
-        public void run() {
+        public void run()
+        {
             double old = Runtime.getRuntime().freeMemory() / 1048576;
             Runtime.getRuntime().gc();
             double current = Runtime.getRuntime().freeMemory() / 1048576;
             double change = current - old;
-            
+
             sender.sendMessage("§6" + change + " MB of memory have been freed.");
-            return;
         }
     }
 }

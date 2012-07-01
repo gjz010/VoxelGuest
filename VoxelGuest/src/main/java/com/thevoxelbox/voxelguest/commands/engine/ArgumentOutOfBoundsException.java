@@ -23,14 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.commands.engine;
 
 public class ArgumentOutOfBoundsException extends CommandException {
 
     private static final long serialVersionUID = 37193865765124786L;
 
-    public ArgumentOutOfBoundsException(String reason) {
+    public ArgumentOutOfBoundsException(String reason)
+    {
         super(reason);
     }
 }

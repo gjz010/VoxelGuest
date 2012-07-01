@@ -23,13 +23,14 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.thevoxelbox.voxelguest.util;
 
 public class FormatException extends Exception {
+
     private static final long serialVersionUID = -2599979280494153700L;
-    
-    public FormatException(String reason) {
+
+    public FormatException(String reason)
+    {
         super(reason);
     }
 }
