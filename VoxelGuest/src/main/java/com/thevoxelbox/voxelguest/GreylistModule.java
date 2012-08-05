@@ -86,6 +86,7 @@ public class GreylistModule extends Module {
     
     private final List<String> helpers = new ArrayList<String>();
     private final HashMap<String, String> openReviewTickets = new HashMap<String, String>();
+    private final List<String> reviewBlacklist = new ArrayList<String>();
 
     public GreylistModule()
     {
@@ -213,7 +214,7 @@ public class GreylistModule extends Module {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(entry.getKey());
                 
                 if (!op.isOnline()) {
-                    closeReview(op.getName());
+                    closeReviewNoUpdate(op.getName());
                 }
             }
             
@@ -383,8 +384,12 @@ public class GreylistModule extends Module {
             help="§c/whitelistreview §fwill open a new whitelist review request for a greylistee\n"
             + "§c/whitelistreview <player> §fwill close a review request by a helper/whitelisting figure\n"
             + "and will teleport the reviewer to the requesting party\n"
-            + "§c/whitelistreview history <player> §f will show the review request count\n"
-            + "to the command sender. <player> must be spelled completely.",
+            + "§c/whitelistreview [history, -h] <player> §f will show the review request count\n"
+            + "to the command sender. <player> must be spelled completely.\n"
+            + "§c/whitelistreview [flag, -f] <player> §f will blacklist a greylistee\n"
+            + "in case the greylistee spams the Gatekeeper service.\n"
+            + "<player> must be spelled completely. The flag will only last\n"
+            + "until a stop or reload.",
             playerOnly=true)
     @CommandPermission("voxelguest.greylist.whitelistreview.whitelistreview")
     public void whitelistReview(CommandSender cs, String[] args)
@@ -398,6 +403,11 @@ public class GreylistModule extends Module {
         
         if ((args == null || args.length == 0) && !PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.greylist.bypass")) {
             
+            if (reviewBlacklist.contains(p.getName())) {
+                p.sendMessage("§cYou cannot open a whitelist review request at this time.");
+                return;
+            }
+            
             if (openReview(p.getName())) {
                 p.sendMessage("§6You have opened a whitelist review request.");
                 p.sendMessage("§6A helper or whitelisting figure will be with you shortly.");
@@ -405,6 +415,22 @@ public class GreylistModule extends Module {
                 p.sendMessage("§cYou cannot open multiple requests.");
             }
             
+            return;
+        }
+        
+        if (args.length > 0 && (args[0].equalsIgnoreCase("flag") || args[0].equalsIgnoreCase("-f")) && (helpers.contains(p.getName()) || PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.greylist.whitelist"))) {
+            if (args.length == 2) {
+                String greylistee = args[1];
+                reviewBlacklist.add(greylistee);
+                
+                if (openReviewTickets.containsKey(greylistee))
+                    closeReviewNoUpdate(greylistee);
+                
+                p.sendMessage("§aFlagged §7greylistee \"§a" + greylistee + "§7\" for Gatekeeper blacklist");
+                return;
+            }
+            
+            showBlacklistedGreylistees(p);
             return;
         }
         
@@ -425,32 +451,27 @@ public class GreylistModule extends Module {
                 
                 closeReview(greylistee.getName());
                 p.teleport(greylistee.getLocation());
+                showHistory(greylistee.getName(), p);
             }
             
             return;
         }
         
-        if (args.length == 2 && (helpers.contains(p.getName()) || PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.greylist.whitelist"))) {
-            if (!(args[0].equalsIgnoreCase("history") || args[0].equalsIgnoreCase("-h"))) {
-                p.sendMessage("§cIncorrect format. See /whitelistreview help");
-                return;
-            }
-            
+        if (args.length == 2  && (args[0].equalsIgnoreCase("history") || args[0].equalsIgnoreCase("-h")) && (helpers.contains(p.getName()) || PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.greylist.whitelist"))) {
             String greylistee = args[1];
-            int count = getReviewHistoryForGreylistee(greylistee);
             
-            p.sendMessage("§7\"§a" + greylistee + "§7\" has been reviewed §a" + count + " §7times.");
+            showHistory(greylistee, p);
             return;
         }
         
         p.sendMessage("§cIncorrect format. See /whitelistreview help");
     }
     
-    @Command(aliases={"helper"},
-            bounds={2,2},
-            help="§c/helper [add, -a] <name> §fadds a helper with <name>.\n"
+    @Command(aliases = {"helper"},
+            bounds = {2,2},
+            help = "§c/helper [add, -a] <name> §fadds a helper with <name>.\n"
             + "<name> must be spelled correctly.\n"
-            + "§c/helper [remove, -r] <name> §remove a helper with <name>.\n"
+            + "§c/helper [remove, -r] <name> §fremoves a helper with <name>.\n"
             + "<name> must be spelled correctly.")
     @CommandPermission("voxelguest.greylist.whitelistreview.helpermanagement")
     public void helperManagement(CommandSender cs, String[] args)
@@ -477,6 +498,15 @@ public class GreylistModule extends Module {
         }
         
         cs.sendMessage("§cIncorrect format. See /helper help");
+    }
+    
+    @Command(aliases = {"listhelpers", "helpers"},
+            bounds = {0,0},
+            help = "Lists all helpers and indicates if online or offline")
+    @CommandPermission("voxelguest.greylist.whitelistreview.listhelpers")
+    public void listHelpers(CommandSender cs, String[] args)
+    {
+        showHelpers(cs);
     }
 
     @Command(aliases = {"unwhitelist", "unwl"},
@@ -921,15 +951,13 @@ public class GreylistModule extends Module {
     
     // -- Begin Gatekeeper portion --
     
-    protected int getReviewHistoryForGreylistee(String greylistee)
+    private HistoryEntry getHistoryEntry(String greylistee)
     {
-        int ret = 0;
+        HistoryEntry entry = null;
         
-        if (!driver.checkTable(REVIEW_HISTORY_TABLE)) {
-            driver.createTable("CREATE TABLE " + REVIEW_HISTORY_TABLE + "(Name varchar(255), Count int)");
-        } else {
+        if (driver.checkTable(REVIEW_HISTORY_TABLE)) {
             try {
-                
+
                 Statement statement;
                 ResultSet result;
 
@@ -937,68 +965,95 @@ public class GreylistModule extends Module {
                     driver.getConnection();
                     statement = driver.getStatement();
                     result = statement.executeQuery("SELECT * FROM " + REVIEW_HISTORY_TABLE + " WHERE Name='" + greylistee + "'");
-
+                    
                     while (result.next()) {
-                        ret = result.getInt("Count");
+                        String _grey = result.getString("Name");
+                        int _count = result.getInt("Count");
+                        String _lastReview = result.getString("LastReview");
+                        
+                        entry = new HistoryEntry(_grey, _lastReview, _count);
                     }
-
                 } catch (SQLException ex) {
-                    VoxelGuest.log("SQLException caught in GreylistModule.getReviewHistoryForGreylistee(): " + ex.getMessage());
+                    VoxelGuest.log("SQLException caught in GreylistModule.getHistoryEntry(): " + ex.getMessage());
                 } finally {
                     driver.release();
                 }
             } catch (SQLException ex) {
-                VoxelGuest.log("SQLException caught in GreylistModule.getReviewHistoryForGreylistee(): " + ex.getMessage());
-            }
-        }
-        
-        return ret;
-    }
-    
-    protected void updateHistoryEntry(String greylistee, int newEntry)
-    {
-        if (!driver.checkTable(REVIEW_HISTORY_TABLE)) {
-            driver.createTable("CREATE TABLE " + REVIEW_HISTORY_TABLE + "(Name varchar(255), Count int)");
-            
-            try {
-                
-                Statement statement;
-
-                try {
-                    driver.getConnection();
-                    statement = driver.getStatement();
-                    statement.execute("INSERT INTO " + REVIEW_HISTORY_TABLE + " VALUES ('" + greylistee + "', " + newEntry + ")");
-
-                } catch (SQLException ex) {
-                    VoxelGuest.log("SQLException caught in GreylistModule.updateHistoryEntry(): " + ex.getMessage());
-                } finally {
-                    driver.release();
-                }
-            } catch (SQLException ex) {
-                VoxelGuest.log("SQLException caught in GreylistModule.updateHistoryEntry(): " + ex.getMessage());
+                VoxelGuest.log("SQLException caught in GreylistModule.getHistoryEntry(): " + ex.getMessage());
             }
         } else {
+            driver.createTable("CREATE TABLE " + REVIEW_HISTORY_TABLE + "(Name varchar(255), Count int, LastReview varchar(255))");
+        }
+        
+        return entry;
+    }
+    
+    private void updateHistoryEntry(String greylistee)
+    {
+        HistoryEntry entry = getHistoryEntry(greylistee);
+        
+        if (entry == null) {
+            Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+            String lastReviewRequest = format.format(now);
+            
+            entry = new HistoryEntry(greylistee, lastReviewRequest, 1);
+            
             try {
-                
+
                 Statement statement;
 
                 try {
                     driver.getConnection();
                     statement = driver.getStatement();
-                    statement.execute("UPDATE " + REVIEW_HISTORY_TABLE + " SET Count=" + newEntry + " WHERE Name='" + greylistee + "'");
+                    statement.execute("INSERT INTO " + REVIEW_HISTORY_TABLE + " VALUES('" + entry.getGreylistee() + "', " + entry.getReviewCount() + ", '" + entry.getLastReviewRequest() + "')");
 
                 } catch (SQLException ex) {
-                    VoxelGuest.log("SQLException caught in GreylistModule.updateHistoryEntry(): " + ex.getMessage());
+                    VoxelGuest.log("SQLException caught in GreylistModule.getHistoryEntry(): " + ex.getMessage());
                 } finally {
                     driver.release();
                 }
             } catch (SQLException ex) {
-                VoxelGuest.log("SQLException caught in GreylistModule.updateHistoryEntry(): " + ex.getMessage());
+                VoxelGuest.log("SQLException caught in GreylistModule.getHistoryEntry(): " + ex.getMessage());
+            }
+        } else {
+            entry.update();
+            
+            try {
+
+                Statement statement;
+
+                try {
+                    driver.getConnection();
+                    statement = driver.getStatement();
+                    statement.execute("UPDATE " + REVIEW_HISTORY_TABLE + " SET Count=" + entry.getReviewCount() + ", LastReview='" + entry.getLastReviewRequest() + "' WHERE Name='" + greylistee + "'");
+
+                } catch (SQLException ex) {
+                    VoxelGuest.log("SQLException caught in GreylistModule.getHistoryEntry(): " + ex.getMessage());
+                } finally {
+                    driver.release();
+                }
+            } catch (SQLException ex) {
+                VoxelGuest.log("SQLException caught in GreylistModule.getHistoryEntry(): " + ex.getMessage());
             }
         }
     }
     
-    protected boolean openReview(String greylistee)
+    private void showHistory(String greylistee, Player player)
+    {
+        if (getHistoryEntry(greylistee) == null) {
+            player.sendMessage("§7\"§a" + greylistee + "§7\" has never been reviewed.");
+            return;
+        }
+
+        int count = getHistoryEntry(greylistee).getReviewCount();
+        String lastReview = getHistoryEntry(greylistee).getLastReviewRequest();
+
+        player.sendMessage("§7\"§a" + greylistee + "§7\" has been reviewed §a" + count + " §7times.");
+        player.sendMessage("§7\"§a" + greylistee + "§7\" was last reviewed at §a" + lastReview + " §.");
+    }
+    
+    private boolean openReview(String greylistee)
     {
         if (openReviewTickets.containsKey(greylistee))
             return false;
@@ -1013,7 +1068,7 @@ public class GreylistModule extends Module {
         return true;
     }
     
-    protected void closeReview(String greylistee)
+    private void closeReview(String greylistee)
     {
         if (!openReviewTickets.containsKey(greylistee))
             return;
@@ -1021,8 +1076,93 @@ public class GreylistModule extends Module {
         NotificationCentre.sharedCentre().cancelNotification(openReviewTickets.get(greylistee));
         openReviewTickets.remove(greylistee);
         
-        int newEntry = getReviewHistoryForGreylistee(greylistee) + 1;
-        updateHistoryEntry(greylistee, newEntry);
+        updateHistoryEntry(greylistee);
+    }
+    
+    private void closeReviewNoUpdate(String greylistee)
+    {
+        if (!openReviewTickets.containsKey(greylistee))
+            return;
+        
+        NotificationCentre.sharedCentre().cancelNotification(openReviewTickets.get(greylistee));
+        openReviewTickets.remove(greylistee);
+    }
+    
+    private void showBlacklistedGreylistees(CommandSender cs)
+    {
+        if (reviewBlacklist.isEmpty()) {
+            cs.sendMessage("§cNo one is blacklisted.");
+            return;
+        }
+        
+        cs.sendMessage("§8====================");
+        cs.sendMessage("§6Blacklisted Greylistees");
+        cs.sendMessage("§6");
+        
+        for (String str : reviewBlacklist) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(str);
+            
+            cs.sendMessage((op.isOnline() ? "§a" : "§7") + str);
+        }
+        
+        cs.sendMessage("§8====================");
+    }
+    
+    private void showHelpers(CommandSender cs)
+    {
+        if (helpers.isEmpty()) {
+            cs.sendMessage("§cNo one is a helper.");
+            return;
+        }
+        
+        cs.sendMessage("§8====================");
+        cs.sendMessage("§6Blacklisted Greylistees");
+        cs.sendMessage("§6");
+        
+        for (String str : helpers) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(str);
+            
+            cs.sendMessage((op.isOnline() ? "§a" : "§7") + str);
+        }
+        
+        cs.sendMessage("§8====================");
+    }
+    
+    final class HistoryEntry {
+        
+        private final String greylistee;
+        private String lastReviewRequest;
+        private int reviewCount;
+
+        public HistoryEntry(String greylistee, String lastReviewRequest, int reviewCount)
+        {
+            this.greylistee = greylistee;
+            this.lastReviewRequest = lastReviewRequest;
+            this.reviewCount = reviewCount;
+        }
+        
+        public String getGreylistee()
+        {
+            return greylistee;
+        }
+        
+        public String getLastReviewRequest()
+        {
+            return lastReviewRequest;
+        }
+        
+        public int getReviewCount()
+        {
+            return reviewCount;
+        }
+        
+        public void update()
+        {
+            ++reviewCount;
+            Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
+            lastReviewRequest = format.format(now);
+        }
     }
     
     // -- End Gatekeeper portion --
