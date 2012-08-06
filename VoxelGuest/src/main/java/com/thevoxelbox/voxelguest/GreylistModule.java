@@ -1116,7 +1116,7 @@ public class GreylistModule extends Module {
         }
         
         cs.sendMessage("§8====================");
-        cs.sendMessage("§6Blacklisted Greylistees");
+        cs.sendMessage("§6Helpers");
         cs.sendMessage("§6");
         
         for (String str : helpers) {
