@@ -29,6 +29,7 @@ import com.patrickanker.lib.commands.Command;
 import com.patrickanker.lib.commands.CommandPermission;
 import com.patrickanker.lib.commands.Subcommands;
 import com.patrickanker.lib.permissions.PermissionsManager;
+import com.patrickanker.lib.util.Formatter;
 import com.thevoxelbox.voxelguest.AFKModule;
 import com.thevoxelbox.voxelguest.VanishModule;
 import com.thevoxelbox.voxelguest.VoxelGuest;
@@ -48,7 +49,7 @@ import org.bukkit.entity.Player;
 
 public class MiscellaneousCommands {
 
-    private final String AFK = "§8[§9AFK§8]";
+    private final String AFK = "§7";
     private final String FAKEQUIT = "§8[§cFQ§8]";
     private final String COMMA = "§6,";
     private HashMap<String, Location> teleportHistory = new HashMap<String, Location>();
@@ -167,7 +168,6 @@ public class MiscellaneousCommands {
     {
         HashMap<String, List<String>> storage = new HashMap<String, List<String>>();
         String defaultGroupId = VoxelGuest.getGroupManager().getDefaultConfiguration().getString("group-id");
-        boolean colorSwitch = false;
 
         String header = "";
 
@@ -185,7 +185,7 @@ public class MiscellaneousCommands {
             boolean afk = isAFK(p);
             boolean fq = isInFakeQuit(p);
 
-            String user = ((fq) ? FAKEQUIT : "") + ((afk) ? AFK : "") + ((colorSwitch) ? "§7" : "§f") + p.getName();
+            String user = ((fq) ? FAKEQUIT : "") + ((afk) ? AFK : "§f") +  p.getName();
             groupId = "§8[" + groupId + "§8]";
 
             if (!storage.containsKey(groupId)) {
@@ -197,8 +197,6 @@ public class MiscellaneousCommands {
                 l.add(user);
                 storage.put(groupId, l);
             }
-
-            colorSwitch = !colorSwitch;
         }
 
         header = writeHeader(storage, Bukkit.getOnlinePlayers().length);
@@ -217,7 +215,6 @@ public class MiscellaneousCommands {
     {
         HashMap<String, List<String>> storage = new HashMap<String, List<String>>();
         String defaultGroupId = VoxelGuest.getGroupManager().getDefaultConfiguration().getString("group-id");
-        boolean colorSwitch = false;
 
         String header = "";
 
@@ -238,7 +235,7 @@ public class MiscellaneousCommands {
 
             boolean afk = isAFK(p);
 
-            String user = ((afk) ? AFK : "") + ((colorSwitch) ? "§7" : "§f") + p.getName();
+            String user = ((afk) ? AFK : "§f") +  p.getName();
             groupId = "§8[" + groupId + "§8]";
 
             if (!storage.containsKey(groupId)) {
@@ -250,8 +247,6 @@ public class MiscellaneousCommands {
                 l.add(user);
                 storage.put(groupId, l);
             }
-
-            colorSwitch = !colorSwitch;
         }
 
 
@@ -278,7 +273,8 @@ public class MiscellaneousCommands {
             if (groupId == null) {
                 groupId = defaultGroupId;
             }
-
+            
+            groupId = Formatter.encodeColors(groupId);
             String groupTest = "§8[" + groupId + "§8]";
 
             if (storage.containsKey(groupTest)) {

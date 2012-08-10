@@ -25,6 +25,7 @@
  */
 package com.thevoxelbox.voxelguest;
 
+import com.patrickanker.lib.bukkit.LibraryPlugin;
 import com.patrickanker.lib.commands.*;
 import com.patrickanker.lib.config.PropertyConfiguration;
 import com.patrickanker.lib.logging.ConsoleLogger;
@@ -42,7 +43,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -95,20 +95,37 @@ public class VoxelGuest extends JavaPlugin {
 
         getConfigData().save();
     }
+    
+    @Override
+    public void onLoad()
+    {   
+        instance = this;
+        
+        config.load();
+        
+        commandsManager = new CommandManager();
+        
+        // Register system / miscellaneous commands
+        if (LibraryPlugin.getConfigData().getBoolean("override-other-commands")) {
+            commandsManager.registerCommands(MiscellaneousCommands.class, VoxelGuest.getInstance());
+            commandsManager.registerCommands(ServerAdministrationCommands.class, VoxelGuest.getInstance());
+            VoxelGuest.log("Registered necessary dynamic commands");
+        }
+    }
 
     @Override
     public void onEnable()
     {
-        instance = this;
-
         perms = new PermissionsManager(this.getServer(), "[VoxelGuest]", config);
         groupManager = new GroupManager();
         moduleManager = new ModuleManager(this, commandsManager);
         registerPluginIds();
 
         // Register system / miscellaneous commands
-        commandsManager.registerCommands(MiscellaneousCommands.class, VoxelGuest.getInstance());
-        commandsManager.registerCommands(ServerAdministrationCommands.class, VoxelGuest.getInstance());
+        if (!LibraryPlugin.getConfigData().getBoolean("override-other-commands")) {
+            commandsManager.registerCommands(MiscellaneousCommands.class, VoxelGuest.getInstance());
+            commandsManager.registerCommands(ServerAdministrationCommands.class, VoxelGuest.getInstance());
+        }
 
         // Load system event listeners
         Bukkit.getPluginManager().registerEvents(listener, this);
@@ -136,7 +153,7 @@ public class VoxelGuest extends JavaPlugin {
 
         // Load module events into the system listener
         listener.registerModuleEvents();
-
+        
         if (getConfigData().getString("reset") == null || getConfigData().getString("reset").equalsIgnoreCase("yes")) {
             loadFactorySettings();
         }

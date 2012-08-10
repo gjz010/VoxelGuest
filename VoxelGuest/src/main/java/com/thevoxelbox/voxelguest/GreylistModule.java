@@ -59,6 +59,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 @MetaData(name = "Greylist", description = "Allows for the setup of a greylist system!")
 public class GreylistModule extends Module {
@@ -450,7 +451,7 @@ public class GreylistModule extends Module {
                 }
                 
                 closeReview(greylistee.getName());
-                p.teleport(greylistee.getLocation());
+                p.teleport(greylistee.getLocation(), PlayerTeleportEvent.TeleportCause.ENDER_PEARL); // Because VoxelBorder is a pain in the ass
                 showHistory(greylistee.getName(), p);
             }
             
@@ -484,15 +485,17 @@ public class GreylistModule extends Module {
         if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("-a")) {
             if (!helpers.contains(args[1])) {
                 helpers.add(args[1]);
-                cs.sendMessage("§7Added new helper \"§a" + args[1] + "§7\"");
+                NotificationCentre.sharedCentre().addObserver(args[1], NEW_REVIEW_UUID);
                 
+                cs.sendMessage("§7Added new helper \"§a" + args[1] + "§7\"");
                 return;
             }
         } else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-r")) {
             if (helpers.contains(args[1])) {
                 helpers.remove(args[1]);
-                cs.sendMessage("§Removed helper \"§a" + args[1] + "§7\"");
+                NotificationCentre.sharedCentre().removeObserver(args[1], NEW_REVIEW_UUID);
                 
+                cs.sendMessage("§Removed helper \"§a" + args[1] + "§7\"");
                 return;
             }
         }
@@ -710,7 +713,7 @@ public class GreylistModule extends Module {
                 ++i;
             }
 
-            FlatFileManager.save(toSave, "greylist");
+            FlatFileManager.save(toSave, "greylist", "/VoxelGuest");
         }
     }
 
@@ -733,7 +736,7 @@ public class GreylistModule extends Module {
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-            FlatFileManager.save(toSave, dateFormat.format(new Date()), "/greylist-backups");
+            FlatFileManager.save(toSave, dateFormat.format(new Date()), "/VoxelGuest/greylist-backups");
         }
     }
 
@@ -1254,6 +1257,7 @@ public class GreylistModule extends Module {
                 groupId = defaultGroupId;
             }
 
+            groupId = com.patrickanker.lib.util.Formatter.encodeColors(groupId);
             String groupTest = "§8[" + groupId + "§8]";
 
             if (storage.containsKey(groupTest)) {

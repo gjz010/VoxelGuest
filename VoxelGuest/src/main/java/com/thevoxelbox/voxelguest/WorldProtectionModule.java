@@ -179,6 +179,11 @@ public class WorldProtectionModule extends Module {
             b.setType(Material.AIR);
             event.setCancelled(true);
         }
+        
+        if (!bannedblocks.isEmpty() && bannedblocks.contains(b.getTypeId()) && !PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.protection.bannedblocks")) {
+            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT BREAK THIS.");
+            event.setCancelled(true);
+        }
     }
 
     /*
@@ -200,15 +205,8 @@ public class WorldProtectionModule extends Module {
         }
 
         if (!bannedblocks.isEmpty() && bannedblocks.contains(b.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.bannedblocks")) {
-            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT PLACE THIS."); //Why the hell wasnt this already here?
-            event.getPlayer().sendMessage(ChatColor.RED + "An Admin has been notified of your block placement.");
+            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT PLACE THIS.");
             event.setCancelled(true);
-
-            for (int i = 0; i < onlinecount; i++) {
-                if (PermissionsManager.getHandler().hasPermission(p[i].getName(), "voxelguest.protection.bannedblocks.warning")) {
-                    p[i].sendMessage("§9[VG] §8Player §c" + event.getPlayer().getName() + " §8tried to §bplace §9" + b.getType().toString() + "§8(§9" + b.getTypeId() + "§8)");
-                }
-            }
         }
     }
 
@@ -231,18 +229,9 @@ public class WorldProtectionModule extends Module {
         }
 
         if (is != null && !banneditems.isEmpty() && banneditems.contains(is.getTypeId()) && !PermissionsManager.getHandler().hasPermission(player.getName(), "voxelguest.protection.banneditems")) {
-            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT USE THIS."); //Why the hell wasnt this already here?
-            event.getPlayer().sendMessage(ChatColor.RED + "An Admin has been notified of your item use.");
+            event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT USE THIS.");
             event.setCancelled(true);
-
-            for (int i = 0; i < onlinecount; i++) {
-                if (PermissionsManager.getHandler().hasPermission(p[i].getName(), "voxelguest.protection.banneditems.warning")) {
-                    p[i].sendMessage("§9[VG] §8Player &c" + event.getPlayer().getName() + " §8tried to §buse §9" + is.getType().toString() + "§8(§9" + is.getTypeId() + "§8)");
-                }
-            }
         }
-
-
     }
 
     /*
