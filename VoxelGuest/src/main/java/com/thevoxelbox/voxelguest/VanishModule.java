@@ -178,7 +178,9 @@ public class VanishModule extends Module {
 
         for (String str : vanished) {
             Player p = Bukkit.getPlayer(str);
-            silentHidePlayer(p);
+            if (p != null) {
+                silentHidePlayer(p);
+            }
         }
         
         if (PermissionsManager.getHandler().hasPermission(event.getPlayer().getName(), "voxelguest.vanish.safelist")) {
