@@ -43,10 +43,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 
 /**
  *
@@ -391,10 +388,10 @@ public class AsshatMitigationModule extends Module {
         }
     }
 
-    @ModuleEvent(event = PlayerChatEvent.class, ignoreCancelledEvents = false)
+    @ModuleEvent(event = AsyncPlayerChatEvent.class, ignoreCancelledEvents = false)
     public void onPlayerChat(BukkitEventWrapper wrapper)
     {
-        PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
+        AsyncPlayerChatEvent event = (AsyncPlayerChatEvent) wrapper.getEvent();
         Player p = event.getPlayer();
         
         if (silenceMode) {

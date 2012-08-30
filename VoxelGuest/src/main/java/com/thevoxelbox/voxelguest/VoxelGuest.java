@@ -53,7 +53,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class VoxelGuest extends JavaPlugin {
 
     private static VoxelGuest instance;
-    protected static CommandManager commandsManager = new CommandManager();
+    protected static CommandManager commandsManager;
     protected static SystemListener listener = new SystemListener();
     protected static List<GuestPlayer> guestPlayers = new LinkedList<GuestPlayer>();
     protected static Map<Plugin, String> pluginIds = new HashMap<Plugin, String>();
@@ -102,15 +102,12 @@ public class VoxelGuest extends JavaPlugin {
         instance = this;
         
         config.load();
-        
-        commandsManager = new CommandManager();
-        
-        // Register system / miscellaneous commands
-        if (LibraryPlugin.getConfigData().getBoolean("override-other-commands")) {
-            commandsManager.registerCommands(MiscellaneousCommands.class, VoxelGuest.getInstance());
-            commandsManager.registerCommands(ServerAdministrationCommands.class, VoxelGuest.getInstance());
-            VoxelGuest.log("Registered necessary dynamic commands");
+
+        if ((getConfigData().getString("reset") == null) || (getConfigData().getString("reset").equalsIgnoreCase("yes"))) {
+            loadFactorySettings();
         }
+        
+        commandsManager = new CommandManager(this);
     }
 
     @Override
@@ -122,11 +119,9 @@ public class VoxelGuest extends JavaPlugin {
         registerPluginIds();
 
         // Register system / miscellaneous commands
-        if (!LibraryPlugin.getConfigData().getBoolean("override-other-commands")) {
-            commandsManager.registerCommands(MiscellaneousCommands.class, VoxelGuest.getInstance());
-            commandsManager.registerCommands(ServerAdministrationCommands.class, VoxelGuest.getInstance());
-        }
-
+        commandsManager.registerCommands(MiscellaneousCommands.class);
+        commandsManager.registerCommands(ServerAdministrationCommands.class);
+        
         // Load system event listeners
         Bukkit.getPluginManager().registerEvents(listener, this);
         Bukkit.getPluginManager().registerEvents(perms, this);

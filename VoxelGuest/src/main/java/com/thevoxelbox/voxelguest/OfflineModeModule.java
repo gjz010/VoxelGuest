@@ -49,12 +49,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 @MetaData(name = "Offline Mode", description = "Manage your server in offline mode!")
 public class OfflineModeModule extends Module {
@@ -218,10 +213,10 @@ public class OfflineModeModule extends Module {
         }
     }
 
-    @ModuleEvent(event = PlayerChatEvent.class)
+    @ModuleEvent(event = AsyncPlayerChatEvent.class)
     public void onPlayerChat(BukkitEventWrapper wrapper)
     {
-        PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
+        AsyncPlayerChatEvent event = (AsyncPlayerChatEvent) wrapper.getEvent();
 
         if (isActive() && needsUnlock.contains(event.getPlayer().getName())) {
             if (isPassword(event.getPlayer().getName(), event.getFormat())) {

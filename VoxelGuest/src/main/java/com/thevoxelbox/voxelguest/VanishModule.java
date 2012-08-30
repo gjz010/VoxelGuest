@@ -23,6 +23,7 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package com.thevoxelbox.voxelguest;
 
 import com.patrickanker.lib.commands.Command;
@@ -43,7 +44,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -51,10 +52,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 @MetaData(name = "Vanish", description = "Vanish in front of your peers!")
 public class VanishModule extends Module {
 
-    protected static List<String> vanished = new ArrayList<String>();
-    protected static List<String> safeList = new ArrayList<String>();
-    protected static List<String> fakequit = new ArrayList<String>();
-    protected static List<String> ofakequit = new ArrayList<String>();
+    protected List<String> vanished = new ArrayList<String>();
+    protected List<String> ovanished = new ArrayList<String>();
+    protected List<String> safeList = new ArrayList<String>();
+    protected List<String> fakequit = new ArrayList<String>();
+    protected List<String> ofakequit = new ArrayList<String>();
     private String[] reloadVanishedList;
     private String[] reloadFakequitList;
     private String[] reloadOfflineFQList;
@@ -120,11 +122,13 @@ public class VanishModule extends Module {
     @Override
     public void disable()
     {
-        String[] saveVanished = new String[vanished.size()];
+        String[] saveVanished = new String[vanished.size() + ovanished.size()];
         String[] saveFakequit = new String[fakequit.size()];
         String[] saveOfakequit = new String[ofakequit.size()];
+        
+        ovanished.addAll(vanished);
 
-        saveVanished = vanished.toArray(saveVanished);
+        saveVanished = ovanished.toArray(saveVanished);
         saveFakequit = fakequit.toArray(saveFakequit);
         saveOfakequit = ofakequit.toArray(saveOfakequit);
 
@@ -175,6 +179,11 @@ public class VanishModule extends Module {
     public void onPlayerJoin(BukkitEventWrapper wrapper)
     {
         PlayerJoinEvent event = (PlayerJoinEvent) wrapper.getEvent();
+        
+        if (ovanished.contains(event.getPlayer().getName())) {
+            ovanished.remove(event.getPlayer().getName());
+            hidePlayer(event.getPlayer());
+        }
 
         for (String str : vanished) {
             Player p = Bukkit.getPlayer(str);
@@ -198,6 +207,11 @@ public class VanishModule extends Module {
     public void onPlayerQuit(BukkitEventWrapper wrapper)
     {
         PlayerQuitEvent event = (PlayerQuitEvent) wrapper.getEvent();
+        
+        if (vanished.contains(event.getPlayer().getName())) {
+            vanished.remove(event.getPlayer().getName());
+            ovanished.add(event.getPlayer().getName());
+        }
 
         if (fakequit.contains(event.getPlayer().getName())) {
             ofakequit.add(event.getPlayer().getName());
@@ -211,6 +225,11 @@ public class VanishModule extends Module {
     {
         PlayerKickEvent event = (PlayerKickEvent) wrapper.getEvent();
 
+        if (vanished.contains(event.getPlayer().getName())) {
+            vanished.remove(event.getPlayer().getName());
+            ovanished.add(event.getPlayer().getName());
+        }
+        
         if (fakequit.contains(event.getPlayer().getName())) {
             ofakequit.add(event.getPlayer().getName());
             fakequit.remove(event.getPlayer().getName());
@@ -218,10 +237,10 @@ public class VanishModule extends Module {
         }
     }
 
-    @ModuleEvent(event = PlayerChatEvent.class)
+    @ModuleEvent(event = AsyncPlayerChatEvent.class)
     public void onPlayerChat(BukkitEventWrapper wrapper)
     {
-        PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
+        AsyncPlayerChatEvent event = (AsyncPlayerChatEvent) wrapper.getEvent();
 
         if (isInFakequit(event.getPlayer())) {
             event.getPlayer().sendMessage("§cYou cannot chat while in FakeQuit");
@@ -250,6 +269,10 @@ public class VanishModule extends Module {
     
     public void silentHidePlayer(Player hidden)
     {
+        if (hidden == null) {
+            
+        }
+        
         if (!vanished.contains(hidden.getName())) {
             vanished.add(hidden.getName());
         }

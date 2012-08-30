@@ -26,7 +26,6 @@
 package com.thevoxelbox.voxelguest.modules;
 
 import com.patrickanker.lib.commands.CommandManager;
-import com.thevoxelbox.voxelguest.VoxelGuest;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -113,7 +112,7 @@ public class ModuleManager {
                 }
 
                 module.setEnabled(true);
-                commandsManager.registerCommands(module, VoxelGuest.getInstance());
+                commandsManager.registerCommands(module);
 
                 activeModules.add(module);
                 classInstanceMap.put(cls, module);
