@@ -103,11 +103,13 @@ public class VoxelGuest extends JavaPlugin {
         
         config.load();
 
+        commandsManager = new CommandManager(this);
+        moduleManager = new ModuleManager(this, commandsManager);
+        ModuleManager.setActiveModuleManager(moduleManager);
+
         if ((getConfigData().getString("reset") == null) || (getConfigData().getString("reset").equalsIgnoreCase("yes"))) {
             loadFactorySettings();
         }
-        
-        commandsManager = new CommandManager(this);
     }
 
     @Override
@@ -115,7 +117,6 @@ public class VoxelGuest extends JavaPlugin {
     {
         perms = new PermissionsManager(this.getServer(), "[VoxelGuest]", config);
         groupManager = new GroupManager();
-        moduleManager = new ModuleManager(this, commandsManager);
         registerPluginIds();
 
         // Register system / miscellaneous commands

@@ -50,6 +50,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -844,6 +846,8 @@ public class GreylistModule extends Module {
                 serverSocket.close();
             } catch (IOException ex) {
                 VoxelGuest.log(name, "Could not release port " + streamPort, 2);
+            } catch (NullPointerException ex) {
+                VoxelGuest.log(name, "Could not release socket because it is null.", 2);
             }
         }
 
