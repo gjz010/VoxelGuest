@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelGuest</artifactId>
-    <version>4.2.3</version>
+    <version>4.2.4</version>
     <packaging>jar</packaging>
     <name>VoxelGuest</name>
     <description>A server administration suite from The Voxel Box</description>

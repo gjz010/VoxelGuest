@@ -30,6 +30,7 @@ import com.patrickanker.lib.commands.Command;
 import com.patrickanker.lib.commands.CommandPermission;
 import com.patrickanker.lib.config.PropertyConfiguration;
 import com.patrickanker.lib.permissions.PermissionsManager;
+import com.patrickanker.lib.util.Formatter;
 import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.Module;
 import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
@@ -172,7 +173,7 @@ public class ServerAdministrationCommands {
                         if (group.equalsIgnoreCase(args[3])) {
                             PropertyConfiguration config = VoxelGuest.getGroupManager().getGroupConfiguration(group);
                             smartSetSetting(config, args[4], concat);
-                            cs.sendMessage("§aSet master setting \"" + args[4] + "\" to \"" + concat + "\"");
+                            cs.sendMessage("§aSet group " + group + " setting \"" + args[4] + "\" to \"" + concat + "\"");
                             return;
                         }
                     }

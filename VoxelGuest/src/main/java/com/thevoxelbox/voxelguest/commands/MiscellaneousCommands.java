@@ -232,6 +232,8 @@ public class MiscellaneousCommands {
             } else {
                 groupId = VoxelGuest.getGroupManager().getGroupConfiguration(groups[0]).getString("group-id");
             }
+            
+            groupId = Formatter.encodeColors(groupId);
 
             boolean afk = isAFK(p);
 
