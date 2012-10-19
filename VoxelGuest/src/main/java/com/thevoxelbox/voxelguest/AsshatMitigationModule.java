@@ -27,6 +27,7 @@
 package com.thevoxelbox.voxelguest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -90,10 +91,27 @@ public class AsshatMitigationModule extends Module {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void enable() {
 		setConfiguration(new AsshatMitigationConfiguration(this));
+		
 		bannedList.load();
+		// update ban list
+		final HashMap<String, Object> _updatedMap = new HashMap<String, Object>();
+		for(final String _name : bannedList.getAllEntries().keySet()) {
+			if(_updatedMap.containsKey(_name.toLowerCase())) {
+				continue;
+			}
+			
+			_updatedMap.put(_name.toLowerCase(), bannedList.getEntry(_name));
+		}
+		bannedList.clear();
+		for(final String _name : _updatedMap.keySet()) {
+			bannedList.setString(_name, (String)_updatedMap.get(_name));
+		}
+		bannedList.save();
+		
 		gagged.clear();
 	}
 
