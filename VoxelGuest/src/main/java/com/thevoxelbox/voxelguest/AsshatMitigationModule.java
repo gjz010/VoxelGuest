@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -167,11 +168,9 @@ public class AsshatMitigationModule extends Module {
 	public void unban(final CommandSender cs, final String[] args) {
 		boolean _silent = false;
 
-		if (args.length > 1) {
-			for (final String _arg : args) {
-				if (_arg.equalsIgnoreCase("-silent") || _arg.equalsIgnoreCase("-si")) {
-					_silent = true;
-				}
+		for (final String _arg : args) {
+			if (_arg.equalsIgnoreCase("-silent") || _arg.equalsIgnoreCase("-si")) {
+				_silent = true;
 			}
 		}
 
@@ -326,7 +325,7 @@ public class AsshatMitigationModule extends Module {
 		final List<Player> _players = Bukkit.matchPlayer(_playerName);
 
 		if (_players.isEmpty()) {
-			cs.sendMessage("§cNo player found with that name.");
+			cs.sendMessage(ChatColor.RED + "No player found with that name.");
 		} else if (_players.size() > 1) {
 			cs.sendMessage(ChatColor.RED + "Partial match:");
 			String _nameList = "";
@@ -360,7 +359,7 @@ public class AsshatMitigationModule extends Module {
 
 		if (isPlayerBanned(_playerName)) {
 			_event.setResult(PlayerPreLoginEvent.Result.KICK_FULL);
-			_event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned for: " + bannedList.getString(_playerName));
+			_event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned for: " + getBanReason(_playerName));
 		}
 	}
 
@@ -401,8 +400,14 @@ public class AsshatMitigationModule extends Module {
 		final PlayerMoveEvent _event = (PlayerMoveEvent) wrapper.getEvent();
 
 		if (frozen.contains(_event.getPlayer().getName())) {
-			_event.setTo(_event.getFrom());
-			_event.setCancelled(true);
+			final Location _orig = _event.getFrom();
+			final Location _dest = _event.getTo();
+			
+			// only cancel if the player actually walks; do not cancel rotation
+			if((_orig.getBlockX() != _dest.getBlockX()) || (_orig.getBlockY() != _dest.getBlockY()) || (_orig.getBlockZ() != _dest.getBlockZ())) {
+				_event.setTo(_orig);
+				_event.setCancelled(true);
+			}
 		}
 	}
 
@@ -425,8 +430,8 @@ public class AsshatMitigationModule extends Module {
 	}
 	
 	private void unbanPlayer(final String playerName) {
-		if (bannedList.hasEntry(playerName)) {
-			bannedList.removeEntry(playerName);
+		if (isPlayerBanned(playerName.toLowerCase())) {
+			bannedList.removeEntry(playerName.toLowerCase());
 		}
 		
 		bannedList.save();
@@ -434,5 +439,9 @@ public class AsshatMitigationModule extends Module {
 	
 	private boolean isPlayerBanned(final String playerName) {
 		return bannedList.hasEntry(playerName.toLowerCase());
+	}
+	
+	private String getBanReason(final String playerName) {
+		return bannedList.getString(playerName.toLowerCase());
 	}
 }
