@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
@@ -422,7 +423,7 @@ public class WorldProtectionModule extends Module {
             entities = world.getEntities().toArray(entities);
 
             for (Entity e : entities) {
-                if (!((e instanceof Player) || (e instanceof Painting))) {
+                if (!((e instanceof Player) || (e instanceof Painting) || (e instanceof ItemFrame))) {
                     e.remove();
                 }
             }
