@@ -60,9 +60,14 @@ public class WorldProtectionModule extends Module {
         @Setting("disable-snow-formation") public boolean snowform = false;
         @Setting("disable-block-burning") public boolean blockburn = false;
         @Setting("disable-block-ignite") public boolean blockignite = true;
+        @Setting("disable-block-growth") public boolean blockgrow = true;
         @Setting("disable-fire-spread") public boolean firespred = false;
+        @Setting("disable-lava-flow") public boolean lavaflow = false;
+        @Setting("disable-water-flow") public boolean waterflow = false;
         @Setting("disable-enchanting") public boolean enchanting = false;
+        @Setting("disable-painting-pop") public boolean paintingpop = false;
         @Setting("disable-creeper-explosion") public boolean creeperexplode = false;
+        @Setting("disable-dragonegg-movement") public boolean dragoneggmovement = false;
         @Setting("unplacable-blocks") public String unplacable = "8,9,10,11,46";
         @Setting("unusable-items") public String unusableitems = "325,326,327";
 
@@ -176,7 +181,7 @@ public class WorldProtectionModule extends Module {
             return;
         }
 
-        if (getConfiguration().getBoolean("diable-block-drops")) {
+        if (getConfiguration().getBoolean("disable-block-drops")) {
             b.setType(Material.AIR);
             event.setCancelled(true);
         }
@@ -255,6 +260,68 @@ public class WorldProtectionModule extends Module {
     }
 
     /*
+     * World Protection - BlockGrow Event Written by: Billyyjoee
+     *
+     * Handles Block Growth such as;
+     * Wheat,
+     * Pumpkins,
+     * Sugar Cane,
+     * Watermelons &
+     * Cactus
+     */
+     @ModuleEvent(event = BlockGrowEvent.class, ignore CancelledEvents = true)
+     public void onBlockGrow(BukkitEventWrapper wrapper)
+    {
+        BlockGrowEvent event = (BlockGrowEvent) wrapper.getEvent();
+
+        if (!isProtectedWorld(event.getBlock().getWorld())) {
+            return;
+        }
+
+        if (getConfiguration().getBoolean("disable-block-growth")) {
+            event.setCancelled(true);
+        }
+    }
+     
+    /*
+     * World Protection - BlockFromTo Event Written by: Billyyjoee
+     *
+     * Handles Water/Lava/DragonEgg Movement
+     */
+     @ModuleEvent(event = BlockFromToEvent.class, ignoreCancelledEvents = true)
+     publc void OnBlockFromTo(BukkitEventWrapper wrapper)
+     {
+         BlockFromToEvent event = (BlockFromToEvent) wrapper.getEvent();
+         Block b = event.GetBlock();
+         
+         if (!isProtectedWorld(b.getWorld())) {
+            return;
+        }
+
+        if (b.getType().equals(Material.DRAGON_EGG) && getConfiguration().getBoolean("disable-dragonegg-movement")) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (b.getType().equals(Material.STATIONARY_LAVA) && getConfiguration().getBoolean("disable-lava-flow")) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        if (b.getType().equals(Material.LAVA) && getConfiguration().getBoolean("disable-lava-flow")) {
+            event.setCancelled(true);
+            return;
+        }
+        if (b.getType().equals(Material.STATIONARY_WATER) && getConfiguration().getBoolean("disable-water-flow")) {
+            event.setCancelled(true);
+            return;
+        }    
+        if (b.getType().equals(Material.WATER) && getConfiguration().getBoolean("disable-water-flow")) {
+            event.setCancelled(true);
+        }
+    }
+         
+    /*
      * World Protection - BlockFade Event Written by: Razorcane
      *
      * Handles Snow/Ice Melting
@@ -303,7 +370,7 @@ public class WorldProtectionModule extends Module {
             event.setCancelled(true);
         }
     }
-
+    
     /*
      * World Protection - BlockBurn Event Written by: Razorcane
      *
@@ -403,7 +470,32 @@ public class WorldProtectionModule extends Module {
             event.setCancelled(true);
         }
     }
-
+    
+    /*
+     * World Protection - PaintingBreak Event Written by: Billyyjoee
+     *
+     * Handlesh how a painting is broken
+     */
+     @ModuleEvent(event = PaintingBreakEvent.class)
+     public void onPaintingBreak(BukkitEventWrapper wrapper)
+     {
+         PaintingBreakEvent event = (PaintingBreakEvent) wrapper.getEvent();
+         
+         if (getConfiguration().getBoolean("disable-painting-pop")) {
+             event.setCancelled(true);
+         }
+     }
+     
+     @ModuleEvent(event = PaintingBreakByEntityEvent.class)
+     public void onPaintingBreakByEntity(BukkitEventWrapper wrapper)
+     {
+         PaintingBreakByEntityEvent event = (PaintingBreakByEntityEvent) wrapper.getEvent();
+         
+         if (getConfiguration().getBoolean("disable-painting-pop")) {
+             event.setCancelled(true);
+         }
+     }
+     
     class EntityPurgeThread extends Thread {
 
         private final World world;

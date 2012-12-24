@@ -31,6 +31,7 @@ public class CreatureProtectionModule extends Module {
 
     class CreatureProtectionConfiguration extends ModuleConfiguration {
 
+        @Setting("disable-bat-spawning") public boolean bat = false;
         @Setting("disable-blaze-spawning") public boolean blaze = false;
         @Setting("disable-cavespider-spawning") public boolean cavespider = false;
         @Setting("disable-chicken-spawning") public boolean chicken = false;
@@ -53,6 +54,7 @@ public class CreatureProtectionModule extends Module {
         @Setting("disable-spider-spawning") public boolean spider = false;
         @Setting("disable-squid-spawning") public boolean squid = false;
         @Setting("disable-villager-spawning") public boolean villager = false;
+        @Setting("disable-wither-spawning") public boolean wither = false;
         @Setting("disable-wolf-spawning") public boolean wolf = false;
         @Setting("disable-zombie-spawning") public boolean zombie = false;
 
@@ -95,6 +97,10 @@ public class CreatureProtectionModule extends Module {
 
         if (reason != SpawnReason.CUSTOM) {
             switch (mob) {
+                case BAT:
+                    if (getConfiguration().getBoolean("disable-bat-spawning")) {
+                        event.setCancelled(true);
+                    }
                 case BLAZE:
                     if (getConfiguration().getBoolean("disable-blaze-spawning")) {
                         event.setCancelled(true);
@@ -185,6 +191,10 @@ public class CreatureProtectionModule extends Module {
                     }
                 case WOLF:
                     if (getConfiguration().getBoolean("disable-wolf-spawning")) {
+                        event.setCancelled(true);
+                    }
+                case WITHER:
+                    if (getConfiguration().getBoolean("disable-wither-spawning")) {
                         event.setCancelled(true);
                     }
                 case ZOMBIE:
