@@ -481,9 +481,15 @@ public class WorldProtectionModule extends Module {
      {
          PaintingBreakEvent event = (PaintingBreakEvent) wrapper.getEvent();
          
-         if (isProtectedWorld(event.getEntity().getWorld())) {
-             return;
+         if (getConfiguration().getBoolean("disable-painting-pop")) {
+             event.setCancelled(true);
          }
+     }
+     
+     @ModuleEvent(event = PaintingBreakByEntityEvent.class)
+     public void onPaintingBreakByEntity(BukkitEventWrapper wrapper)
+     {
+         PaintingBreakByEntityEvent event = (PaintingBreakByEntityEvent) wrapper.getEvent();
          
          if (getConfiguration().getBoolean("disable-painting-pop")) {
              event.setCancelled(true);
