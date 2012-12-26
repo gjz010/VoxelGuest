@@ -4,32 +4,31 @@ import com.patrickanker.lib.commands.Command;
 import com.patrickanker.lib.commands.CommandPermission;
 import com.patrickanker.lib.permissions.PermissionsManager;
 import com.thevoxelbox.voxelguest.modules.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * The World Protection Module was created to help maintain various server
  * aspects, such as grief prevention. The World Protection Module offers extreme
  * amounts of customization based on config variables.
- *
+ * <p/>
  * Handles: Block Drops Leaf Decay Ice Melting/Forming Snow Melting/Forming All
  * Fire/Explosion Events Enchanting(allow or disallow) Vehicle Damage Vehicle
  * Creation Weather Controls Portal Creation
@@ -43,43 +42,12 @@ public class WorldProtectionModule extends Module {
     private List<EntityPurgeThread> purgeThreads = new ArrayList<EntityPurgeThread>();
     private List<String> protectedWorlds = new ArrayList<String>();
 
-    public WorldProtectionModule()
-    {
+    public WorldProtectionModule() {
         super(WorldProtectionModule.class.getAnnotation(MetaData.class));
     }
 
-    class WorldProtectionConfiguration extends ModuleConfiguration {
-
-        @Setting("enable-multi-worlds") public boolean multiworld = false;
-        @Setting("protected-worlds") public String protectedWorlds = "";
-        @Setting("disable-block-drops") public boolean blockdrops = false;
-        @Setting("disable-leaf-decay") public boolean leafdecay = false;
-        @Setting("disable-ice-melting") public boolean icemelt = false;
-        @Setting("disable-snow-melting")public boolean snowmelt = false;
-        @Setting("disable-ice-formation") public boolean iceform = false;
-        @Setting("disable-snow-formation") public boolean snowform = false;
-        @Setting("disable-block-burning") public boolean blockburn = false;
-        @Setting("disable-block-ignite") public boolean blockignite = true;
-        @Setting("disable-block-growth") public boolean blockgrow = true;
-        @Setting("disable-fire-spread") public boolean firespred = false;
-        @Setting("disable-lava-flow") public boolean lavaflow = false;
-        @Setting("disable-water-flow") public boolean waterflow = false;
-        @Setting("disable-enchanting") public boolean enchanting = false;
-        @Setting("disable-painting-pop") public boolean paintingpop = false;
-        @Setting("disable-creeper-explosion") public boolean creeperexplode = false;
-        @Setting("disable-dragonegg-movement") public boolean dragoneggmovement = false;
-        @Setting("unplacable-blocks") public String unplacable = "8,9,10,11,46";
-        @Setting("unusable-items") public String unusableitems = "325,326,327";
-
-        public WorldProtectionConfiguration(WorldProtectionModule parent)
-        {
-            super(parent);
-        }
-    }
-
     @Override
-    public void enable()
-    {
+    public void enable() {
         setConfiguration(new WorldProtectionConfiguration(this));
         bannedblocks.clear();
         banneditems.clear();
@@ -117,14 +85,12 @@ public class WorldProtectionModule extends Module {
     }
 
     @Override
-    public String getLoadMessage()
-    {
+    public String getLoadMessage() {
         return "World Protection has been loaded.";
     }
 
     @Override
-    public void disable()
-    {
+    public void disable() {
         if (!purgeThreads.isEmpty()) {
             for (EntityPurgeThread thread : purgeThreads) {
                 thread.interrupt();
@@ -133,12 +99,11 @@ public class WorldProtectionModule extends Module {
     }
 
     @Command(aliases = {"entitypurge", "ep"},
-        bounds = {1, 1},
-        help = "Purge all non-players and non-paintings from worlds using\n"
-        + "§c/entitypurge [world]")
+            bounds = {1, 1},
+            help = "Purge all non-players and non-paintings from worlds using\n"
+                    + "§c/entitypurge [world]")
     @CommandPermission("voxelguest.protection.entitypurge")
-    public void entityPurge(CommandSender cs, String[] args)
-    {
+    public void entityPurge(CommandSender cs, String[] args) {
         World world = Bukkit.getWorld(args[0]);
 
         if (world == null) {
@@ -150,8 +115,7 @@ public class WorldProtectionModule extends Module {
         thread.start();
     }
 
-    private boolean isProtectedWorld(World world)
-    {
+    private boolean isProtectedWorld(World world) {
         if (protectedWorlds.isEmpty()) {
             return true;
         }
@@ -171,8 +135,7 @@ public class WorldProtectionModule extends Module {
      * Handles Block Drops.
      */
     @ModuleEvent(event = BlockBreakEvent.class)
-    public void onBlockBreak(BukkitEventWrapper wrapper)
-    {
+    public void onBlockBreak(BukkitEventWrapper wrapper) {
         BlockBreakEvent event = (BlockBreakEvent) wrapper.getEvent();
         Player p = event.getPlayer();
         Block b = event.getBlock();
@@ -185,7 +148,7 @@ public class WorldProtectionModule extends Module {
             b.setType(Material.AIR);
             event.setCancelled(true);
         }
-        
+
         if (!bannedblocks.isEmpty() && bannedblocks.contains(b.getTypeId()) && !PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.protection.bannedblocks")) {
             event.getPlayer().sendMessage(ChatColor.RED + "YOU CANNOT BREAK THIS.");
             event.setCancelled(true);
@@ -198,8 +161,7 @@ public class WorldProtectionModule extends Module {
      * Handles prevention of certain blocks from being placed.
      */
     @ModuleEvent(event = BlockPlaceEvent.class)
-    public void onBlockPlace(BukkitEventWrapper wrapper)
-    {
+    public void onBlockPlace(BukkitEventWrapper wrapper) {
         BlockPlaceEvent event = (BlockPlaceEvent) wrapper.getEvent();
         Player player = event.getPlayer();
         Player[] p = Bukkit.getOnlinePlayers();
@@ -222,8 +184,7 @@ public class WorldProtectionModule extends Module {
      * Handles the prevention of using restricted items.
      */
     @ModuleEvent(event = PlayerInteractEvent.class)
-    public void onPlayerInteract(BukkitEventWrapper wrapper)
-    {
+    public void onPlayerInteract(BukkitEventWrapper wrapper) {
         PlayerInteractEvent event = (PlayerInteractEvent) wrapper.getEvent();
         Player player = event.getPlayer();
         Player[] p = Bukkit.getOnlinePlayers();
@@ -246,8 +207,7 @@ public class WorldProtectionModule extends Module {
      * Handles leaf decay, obviously.
      */
     @ModuleEvent(event = LeavesDecayEvent.class, ignoreCancelledEvents = true)
-    public void onLeavesDecay(BukkitEventWrapper wrapper)
-    {
+    public void onLeavesDecay(BukkitEventWrapper wrapper) {
         LeavesDecayEvent event = (LeavesDecayEvent) wrapper.getEvent();
 
         if (!isProtectedWorld(event.getBlock().getWorld())) {
@@ -269,9 +229,8 @@ public class WorldProtectionModule extends Module {
      * Watermelons &
      * Cactus
      */
-     @ModuleEvent(event = BlockGrowEvent.class, ignore CancelledEvents = true)
-     public void onBlockGrow(BukkitEventWrapper wrapper)
-    {
+    @ModuleEvent(event = BlockGrowEvent.class, ignoreCancelledEvents=true)
+    public void onBlockGrow(BukkitEventWrapper wrapper) {
         BlockGrowEvent event = (BlockGrowEvent) wrapper.getEvent();
 
         if (!isProtectedWorld(event.getBlock().getWorld())) {
@@ -282,19 +241,18 @@ public class WorldProtectionModule extends Module {
             event.setCancelled(true);
         }
     }
-     
+
     /*
      * World Protection - BlockFromTo Event Written by: Billyyjoee
      *
      * Handles Water/Lava/DragonEgg Movement
      */
-     @ModuleEvent(event = BlockFromToEvent.class, ignoreCancelledEvents = true)
-     publc void OnBlockFromTo(BukkitEventWrapper wrapper)
-     {
-         BlockFromToEvent event = (BlockFromToEvent) wrapper.getEvent();
-         Block b = event.GetBlock();
-         
-         if (!isProtectedWorld(b.getWorld())) {
+    @ModuleEvent(event = BlockFromToEvent.class, ignoreCancelledEvents = true)
+    public void OnBlockFromTo(BukkitEventWrapper wrapper) {
+        BlockFromToEvent event = (BlockFromToEvent) wrapper.getEvent();
+        Block b = event.getBlock();
+
+        if (!isProtectedWorld(b.getWorld())) {
             return;
         }
 
@@ -307,7 +265,7 @@ public class WorldProtectionModule extends Module {
             event.setCancelled(true);
             return;
         }
-        
+
         if (b.getType().equals(Material.LAVA) && getConfiguration().getBoolean("disable-lava-flow")) {
             event.setCancelled(true);
             return;
@@ -315,20 +273,19 @@ public class WorldProtectionModule extends Module {
         if (b.getType().equals(Material.STATIONARY_WATER) && getConfiguration().getBoolean("disable-water-flow")) {
             event.setCancelled(true);
             return;
-        }    
+        }
         if (b.getType().equals(Material.WATER) && getConfiguration().getBoolean("disable-water-flow")) {
             event.setCancelled(true);
         }
     }
-         
+
     /*
      * World Protection - BlockFade Event Written by: Razorcane
      *
      * Handles Snow/Ice Melting
      */
     @ModuleEvent(event = BlockFadeEvent.class, ignoreCancelledEvents = true)
-    public void onBlockFade(BukkitEventWrapper wrapper)
-    {
+    public void onBlockFade(BukkitEventWrapper wrapper) {
         BlockFadeEvent event = (BlockFadeEvent) wrapper.getEvent();
         Block b = event.getNewState().getBlock();
 
@@ -352,8 +309,7 @@ public class WorldProtectionModule extends Module {
      * Handles Ice/Snow Forming
      */
     @ModuleEvent(event = BlockFormEvent.class, ignoreCancelledEvents = true)
-    public void onBlockForm(BukkitEventWrapper wrapper)
-    {
+    public void onBlockForm(BukkitEventWrapper wrapper) {
         BlockFormEvent event = (BlockFormEvent) wrapper.getEvent();
         Block b = event.getBlock();
 
@@ -370,15 +326,14 @@ public class WorldProtectionModule extends Module {
             event.setCancelled(true);
         }
     }
-    
+
     /*
      * World Protection - BlockBurn Event Written by: Razorcane
      *
      * Handles Fire burning blocks
      */
     @ModuleEvent(event = BlockBurnEvent.class)
-    public void onBlockBurn(BukkitEventWrapper wrapper)
-    {
+    public void onBlockBurn(BukkitEventWrapper wrapper) {
         BlockBurnEvent event = (BlockBurnEvent) wrapper.getEvent();
 
         if (!isProtectedWorld(event.getBlock().getWorld())) {
@@ -397,8 +352,7 @@ public class WorldProtectionModule extends Module {
      * or player means.
      */
     @ModuleEvent(event = BlockIgniteEvent.class)
-    public void onBlockIgnite(BukkitEventWrapper wrapper)
-    {
+    public void onBlockIgnite(BukkitEventWrapper wrapper) {
         BlockIgniteEvent event = (BlockIgniteEvent) wrapper.getEvent();
         IgniteCause cause = event.getCause();
 
@@ -419,8 +373,7 @@ public class WorldProtectionModule extends Module {
      * Handles Fire Spread.
      */
     @ModuleEvent(event = BlockSpreadEvent.class)
-    public void onBlockSpread(BukkitEventWrapper wrapper)
-    {
+    public void onBlockSpread(BukkitEventWrapper wrapper) {
         BlockSpreadEvent event = (BlockSpreadEvent) wrapper.getEvent();
         boolean fireSpread = (event.getNewState().getType() == Material.FIRE);
 
@@ -439,8 +392,7 @@ public class WorldProtectionModule extends Module {
      * Handles Item Enchanting, obviously.
      */
     @ModuleEvent(event = EnchantItemEvent.class)
-    public void onEnchantItem(BukkitEventWrapper wrapper)
-    {
+    public void onEnchantItem(BukkitEventWrapper wrapper) {
         EnchantItemEvent event = (EnchantItemEvent) wrapper.getEvent();
 
         if (!isProtectedWorld(event.getEnchanter().getWorld())) {
@@ -458,8 +410,7 @@ public class WorldProtectionModule extends Module {
      * Handles mob explosions, such as creepers.
      */
     @ModuleEvent(event = EntityExplodeEvent.class)
-    public void onEntityExplode(BukkitEventWrapper wrapper)
-    {
+    public void onEntityExplode(BukkitEventWrapper wrapper) {
         EntityExplodeEvent event = (EntityExplodeEvent) wrapper.getEvent();
 
         if (!isProtectedWorld(event.getEntity().getWorld())) {
@@ -470,47 +421,95 @@ public class WorldProtectionModule extends Module {
             event.setCancelled(true);
         }
     }
-    
+
     /*
      * World Protection - PaintingBreak Event Written by: Billyyjoee
      *
      * Handlesh how a painting is broken
      */
-     @ModuleEvent(event = PaintingBreakEvent.class)
-     public void onPaintingBreak(BukkitEventWrapper wrapper)
-     {
-         PaintingBreakEvent event = (PaintingBreakEvent) wrapper.getEvent();
-         
-         if (getConfiguration().getBoolean("disable-painting-pop")) {
-             event.setCancelled(true);
-         }
-     }
-     
-     @ModuleEvent(event = PaintingBreakByEntityEvent.class)
-     public void onPaintingBreakByEntity(BukkitEventWrapper wrapper)
-     {
-         PaintingBreakByEntityEvent event = (PaintingBreakByEntityEvent) wrapper.getEvent();
-         
-         if (getConfiguration().getBoolean("disable-painting-pop")) {
-             event.setCancelled(true);
-         }
-     }
-     
+    @ModuleEvent(event = PaintingBreakEvent.class)
+    public void onPaintingBreak(BukkitEventWrapper wrapper) {
+        PaintingBreakEvent event = (PaintingBreakEvent) wrapper.getEvent();
+
+        if (getConfiguration().getBoolean("disable-painting-pop")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * @deprecated
+     * @param wrapper
+     */
+    @ModuleEvent(event = PaintingBreakByEntityEvent.class)
+    public void onPaintingBreakByEntity(BukkitEventWrapper wrapper) {
+        PaintingBreakByEntityEvent event = (PaintingBreakByEntityEvent) wrapper.getEvent();
+
+        if (getConfiguration().getBoolean("disable-painting-pop")) {
+            event.setCancelled(true);
+        }
+    }
+
+    class WorldProtectionConfiguration extends ModuleConfiguration {
+
+        @Setting("enable-multi-worlds")
+        public boolean multiworld = false;
+        @Setting("protected-worlds")
+        public String protectedWorlds = "";
+        @Setting("disable-block-drops")
+        public boolean blockdrops = false;
+        @Setting("disable-leaf-decay")
+        public boolean leafdecay = false;
+        @Setting("disable-ice-melting")
+        public boolean icemelt = false;
+        @Setting("disable-snow-melting")
+        public boolean snowmelt = false;
+        @Setting("disable-ice-formation")
+        public boolean iceform = false;
+        @Setting("disable-snow-formation")
+        public boolean snowform = false;
+        @Setting("disable-block-burning")
+        public boolean blockburn = false;
+        @Setting("disable-block-ignite")
+        public boolean blockignite = true;
+        @Setting("disable-block-growth")
+        public boolean blockgrow = true;
+        @Setting("disable-fire-spread")
+        public boolean firespred = false;
+        @Setting("disable-lava-flow")
+        public boolean lavaflow = false;
+        @Setting("disable-water-flow")
+        public boolean waterflow = false;
+        @Setting("disable-enchanting")
+        public boolean enchanting = false;
+        @Setting("disable-painting-pop")
+        public boolean paintingpop = false;
+        @Setting("disable-creeper-explosion")
+        public boolean creeperexplode = false;
+        @Setting("disable-dragonegg-movement")
+        public boolean dragoneggmovement = false;
+        @Setting("unplacable-blocks")
+        public String unplacable = "8,9,10,11,46";
+        @Setting("unusable-items")
+        public String unusableitems = "325,326,327";
+
+        public WorldProtectionConfiguration(WorldProtectionModule parent) {
+            super(parent);
+        }
+    }
+
     class EntityPurgeThread extends Thread {
 
         private final World world;
         private final CommandSender sender;
 
-        public EntityPurgeThread(World w, CommandSender cs)
-        {
+        public EntityPurgeThread(World w, CommandSender cs) {
             world = w;
             sender = cs;
             registerPurgeThread();
         }
 
         @Override
-        public void run()
-        {
+        public void run() {
             Entity[] entities = new Entity[world.getEntities().size()];
             entities = world.getEntities().toArray(entities);
 
@@ -527,8 +526,7 @@ public class WorldProtectionModule extends Module {
             }
         }
 
-        private void registerPurgeThread()
-        {
+        private void registerPurgeThread() {
             purgeThreads.add(this);
         }
     }
