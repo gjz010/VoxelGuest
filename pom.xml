@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelGuest</artifactId>
-    <version>4.2.4</version>
+    <version>4.2.5</version>
     <packaging>jar</packaging>
     <name>VoxelGuest</name>
     <description>A server administration suite from The Voxel Box</description>
@@ -26,8 +26,8 @@
         </repository>
         
         <repository>
-            <id>libpsanker-releases</id>
-            <url>https://github.com/psanker/libpsanker/raw/master/releases</url>
+            <id>TVPT-repo</id>
+            <url>http://jenkins.thevoxelbox.com/plugin/repository/everything/</url>
         </repository>
         
     </repositories>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.5-R0.3-SNAPSHOT</version>
+            <version>1.4.6-R0.1</version>
             <type>jar</type>
         </dependency>
         
@@ -49,12 +49,12 @@
             <version>2.1</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <!-- library -->
         <dependency>
             <groupId>com.patrickanker</groupId>
             <artifactId>libpsanker</artifactId>
-            <version>1.4.3</version>
+            <version>1.4.5</version>
         </dependency>
     </dependencies>
     
