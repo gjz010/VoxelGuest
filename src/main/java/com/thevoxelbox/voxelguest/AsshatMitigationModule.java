@@ -444,8 +444,8 @@ public class AsshatMitigationModule extends Module
 		{
 			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY
 					+ " has been kicked by " + ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + " for:");
-		}
-		Bukkit.broadcastMessage(ChatColor.BLUE + reason);
+			Bukkit.broadcastMessage(ChatColor.BLUE + reason);
+		}		
 
 	}
 
