@@ -40,7 +40,6 @@ import com.thevoxelbox.voxelguest.modules.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -140,7 +139,8 @@ public class AsshatMitigationModule extends Module
 				{
 					silent = true;
 				}
-				else if(arg.equals("-exact") || arg.equalsIgnoreCase("-e")) {
+				else if (arg.equals("-exact") || arg.equalsIgnoreCase("-e"))
+				{
 					forceExact = true;
 				}
 				else
@@ -445,7 +445,7 @@ public class AsshatMitigationModule extends Module
 			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY
 					+ " has been kicked by " + ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + " for:");
 			Bukkit.broadcastMessage(ChatColor.BLUE + reason);
-		}		
+		}
 
 	}
 
@@ -462,6 +462,26 @@ public class AsshatMitigationModule extends Module
 		silenceMode = !silenceMode;
 		getConfiguration().setBoolean("silence-mode", silenceMode);
 		cs.sendMessage(ChatColor.GOLD + "Silent mode has been " + ((silenceMode) ? "enabled" : "disabled"));
+	}
+
+	/**
+	 * @param cs   The command sender.
+	 * @param args The command arguments.
+	 */
+	@Command(aliases = {"banreason", "br"}, bounds = {1, 1}, help = "Display ban reason for player")
+	@CommandPermission("voxelguest.asshat.ban")
+	public final void banreason(final CommandSender cs, final String[] args)
+	{
+		String playerName = args[0];
+
+		if (!isPlayerBanned(playerName))
+		{
+			cs.sendMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " is not even banned.");
+			return;
+		}
+
+		cs.sendMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " is banned for ");
+		cs.sendMessage(ChatColor.BLUE + getBanReason(playerName));
 	}
 
 	/**
@@ -566,7 +586,8 @@ public class AsshatMitigationModule extends Module
 	private void banPlayer(final String playerName, final String reason)
 	{
 		Player player = Bukkit.getPlayerExact(playerName);
-		if(player != null) {
+		if (player != null)
+		{
 			player.kickPlayer(reason);
 		}
 
@@ -614,7 +635,8 @@ public class AsshatMitigationModule extends Module
 		if (exactPlayer != null)
 		{
 			possibleNames.add(exactPlayer.getName());
-			if(!includeOffline) {
+			if (!includeOffline)
+			{
 				return possibleNames;
 			}
 		}
@@ -626,7 +648,8 @@ public class AsshatMitigationModule extends Module
 
 		if ((possibleNames.isEmpty() && includeOffline) || forceExact)
 		{
-			if(forceExact) {
+			if (forceExact)
+			{
 				possibleNames.clear();
 			}
 
