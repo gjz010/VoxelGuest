@@ -26,6 +26,10 @@
 
 package com.thevoxelbox.voxelguest;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.patrickanker.lib.commands.Command;
 import com.patrickanker.lib.commands.CommandPermission;
 import com.patrickanker.lib.permissions.PermissionsManager;
@@ -37,9 +41,7 @@ import com.thevoxelbox.voxelguest.modules.Module;
 import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
 import com.thevoxelbox.voxelguest.modules.ModuleEvent;
 import com.thevoxelbox.voxelguest.modules.ModuleEventPriority;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -290,7 +292,6 @@ public class VanishModule extends Module {
     {
         if (vanished.contains(hidden.getName())) {
             vanished.remove(hidden.getName());
-            VoxelGuest.log(Boolean.valueOf(isVanished(hidden)).toString());
 
             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                 if (!safeList.contains(p.getName())) {
