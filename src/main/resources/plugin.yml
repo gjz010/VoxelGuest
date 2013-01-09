@@ -3,4 +3,3 @@ main: com.thevoxelbox.voxelguest.VoxelGuest
 author: VoxelPlugineering
 version: MAVEN_VERSION
 website: http://voxelwiki.com/minecraft/VoxelGuest
-depend: [libpsanker]
