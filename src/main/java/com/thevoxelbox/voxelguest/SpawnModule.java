@@ -25,8 +25,8 @@
  */
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
 import com.thevoxelbox.voxelguest.modules.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

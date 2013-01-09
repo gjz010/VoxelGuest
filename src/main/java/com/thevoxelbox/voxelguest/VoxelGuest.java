@@ -25,17 +25,6 @@
  */
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.bukkit.LibraryPlugin;
-import com.patrickanker.lib.commands.*;
-import com.patrickanker.lib.config.PropertyConfiguration;
-import com.patrickanker.lib.logging.ConsoleLogger;
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.thevoxelbox.voxelguest.commands.MiscellaneousCommands;
-import com.thevoxelbox.voxelguest.commands.ServerAdministrationCommands;
-import com.thevoxelbox.voxelguest.modules.Module;
-import com.thevoxelbox.voxelguest.modules.ModuleManager;
-import com.thevoxelbox.voxelguest.players.GroupManager;
-import com.thevoxelbox.voxelguest.players.GuestPlayer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,6 +32,17 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
+
+import com.thevoxelbox.voxelguest.commands.CommandManager;
+import com.thevoxelbox.voxelguest.commands.MiscellaneousCommands;
+import com.thevoxelbox.voxelguest.commands.ServerAdministrationCommands;
+import com.thevoxelbox.voxelguest.management.ConfigurationManager;
+import com.thevoxelbox.voxelguest.modules.Module;
+import com.thevoxelbox.voxelguest.modules.ModuleManager;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+import com.thevoxelbox.voxelguest.players.GroupManager;
+import com.thevoxelbox.voxelguest.players.GuestPlayer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -60,13 +60,12 @@ public class VoxelGuest extends JavaPlugin {
     protected static GroupManager groupManager;
     protected static PermissionsManager perms;
     protected static ModuleManager moduleManager;
-    protected static final PropertyConfiguration config = new PropertyConfiguration("VoxelGuest", "/VoxelGuest");
+    protected static final ConfigurationManager config = new ConfigurationManager("/VoxelGuest");
     public static int ONLINE_MEMBERS = 0;
     
     protected Class<? extends Module>[] availableModules = new Class[]{
         AFKModule.class,
         SpawnModule.class,
-        CubicleModule.class,
         AsshatMitigationModule.class,
         CreatureProtectionModule.class,
         GreylistModule.class,
@@ -161,7 +160,7 @@ public class VoxelGuest extends JavaPlugin {
         return commandsManager.executeCommandProcessErrors(command, cs, args, this);
     }
 
-    public static PropertyConfiguration getConfigData()
+    public static ConfigurationManager getConfigData()
     {
         return config;
     }
@@ -290,16 +289,27 @@ public class VoxelGuest extends JavaPlugin {
 
     public static void log(String str)
     {
-        ConsoleLogger.getLogger("VoxelGuest").log(str);
+        Bukkit.getLogger().info(str);
     }
 
     public static void log(String str, int importance)
     {
-        ConsoleLogger.getLogger("VoxelGuest").log(str, importance);
+    	if(!(str.startsWith("[VoxelGuest]"))) str = "[VoxelGuest] " + str;
+    	switch(importance) {
+    	case 0: Bukkit.getLogger().info(str);
+    	case 1: Bukkit.getLogger().warning(str);
+    	case 2: Bukkit.getLogger().severe(str);
+    	}
+    
     }
 
     public static void log(String module, String str, int importance)
     {
-        ConsoleLogger.getLogger("VoxelGuest").log(module, str, importance);
+    	if(!(str.startsWith("[VoxelGuest:"))) str = "[VoxelGuest:" + module + "] " + str;
+    	switch(importance) {
+    	case 0: Bukkit.getLogger().info(str);
+    	case 1: Bukkit.getLogger().warning(str);
+    	case 2: Bukkit.getLogger().severe(str);
+    	}
     }
 }

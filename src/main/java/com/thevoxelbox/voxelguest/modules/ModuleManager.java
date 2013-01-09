@@ -25,13 +25,14 @@
  */
 package com.thevoxelbox.voxelguest.modules;
 
-import com.patrickanker.lib.commands.CommandManager;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.plugin.Plugin;
+
+import com.thevoxelbox.voxelguest.commands.CommandManager;
 
 public class ModuleManager {
 

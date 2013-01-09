@@ -25,6 +25,10 @@
  */
 package com.thevoxelbox.voxelguest.modules;
 
+import org.bukkit.Bukkit;
+
+import com.thevoxelbox.voxelguest.VoxelGuest;
+
 public abstract class Module {
 
     protected String name;
@@ -68,8 +72,12 @@ public abstract class Module {
     {
         if (config != null) {
             configuration = config;
-            configuration.load();
+            if(configuration.isEmpty())
+            	configuration.assignDestination("/VoxelGuest/modules");
+            	configuration.assignTarget(config.parentModule.name);
+            	configuration.load();
         }
+        
     }
 
     public ModuleConfiguration getConfiguration()

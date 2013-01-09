@@ -25,10 +25,14 @@
  */
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.commands.Subcommands;
-import com.patrickanker.lib.permissions.PermissionsManager;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
+import com.thevoxelbox.voxelguest.commands.Subcommands;
 import com.thevoxelbox.voxelguest.modules.BukkitEventWrapper;
 import com.thevoxelbox.voxelguest.modules.MetaData;
 import com.thevoxelbox.voxelguest.modules.Module;
@@ -36,12 +40,10 @@ import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
 import com.thevoxelbox.voxelguest.modules.ModuleEvent;
 import com.thevoxelbox.voxelguest.modules.ModuleException;
 import com.thevoxelbox.voxelguest.modules.Setting;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 import com.thevoxelbox.voxelguest.regions.Region;
 import com.thevoxelbox.voxelguest.regions.Vector3D;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -135,7 +137,7 @@ public class RegionModule extends Module {
     public void regions(CommandSender cs, String[] args)
     {
         if (args.length == 0) {
-            cs.sendMessage("§aThere are " + loadedRegions.size() + " registered regions.");   
+            cs.sendMessage("§aThere are " + loadedRegions.size() + " registered regions.");
         } else {
             if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("-c")) {
                 if (!(cs instanceof Player)) {
@@ -152,6 +154,12 @@ public class RegionModule extends Module {
 
                 String regName = args[1];
                 World world = p.getWorld();
+                
+                List<Region> l = matchRegion(args[1]);
+                if(!l.isEmpty()) {
+                	p.sendMessage("§cRegion already exists by that name.");
+                	return;
+                }
 
                 try {
                     int x1 = Integer.parseInt(args[2]);
@@ -483,12 +491,15 @@ public class RegionModule extends Module {
             event.setCancelled(true);
         }
     }
+    
+    /*
+     * Creative mode bypasses this for some reason
+     */
 
     @ModuleEvent(event = BlockBreakEvent.class)
     public void onBlockBreak(BukkitEventWrapper wrapper)
     {
         BlockBreakEvent event = (BlockBreakEvent) wrapper.getEvent();
-
         if (!canModify(event.getPlayer(), event.getBlock().getLocation())) {
             event.getPlayer().sendMessage("§cYou cannot modify this area.");
             event.setCancelled(true);

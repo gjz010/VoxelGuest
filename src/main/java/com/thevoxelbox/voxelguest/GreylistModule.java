@@ -25,18 +25,18 @@
  */
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.bukkit.LibraryPlugin;
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.commands.Subcommands;
-import com.patrickanker.lib.notifications.Notification;
-import com.patrickanker.lib.notifications.NotificationCentre;
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.patrickanker.lib.persist.MySQLDriver;
-import com.patrickanker.lib.persist.SQLDriver;
-import com.patrickanker.lib.persist.SQLiteDriver;
-import com.patrickanker.lib.util.FlatFileManager;
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
+import com.thevoxelbox.voxelguest.commands.Subcommands;
+import com.thevoxelbox.voxelguest.management.FlatFileManager;
+import com.thevoxelbox.voxelguest.management.Formatter;
+import com.thevoxelbox.voxelguest.management.MySQLDriver;
+import com.thevoxelbox.voxelguest.management.Notification;
+import com.thevoxelbox.voxelguest.management.NotificationCentre;
+import com.thevoxelbox.voxelguest.management.SQLDriver;
+import com.thevoxelbox.voxelguest.management.SQLiteDriver;
 import com.thevoxelbox.voxelguest.modules.*;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 import com.thevoxelbox.voxelguest.players.GroupNotFoundException;
 import com.thevoxelbox.voxelguest.players.GuestPlayer;
 import java.io.*;
@@ -151,11 +151,11 @@ public class GreylistModule extends Module {
             // Gatekeeper loading logic
             
             if (getConfiguration().getString("gatekeeper-storage-type").equalsIgnoreCase("mysql")) {
-                driver = new MySQLDriver(LibraryPlugin.getConfigData().getString("mysql-username"), 
-                            LibraryPlugin.getConfigData().getString("mysql-password"), 
-                            LibraryPlugin.getConfigData().getString("mysql-hostname"), 
-                            LibraryPlugin.getConfigData().getString("mysql-port"), 
-                            LibraryPlugin.getConfigData().getString("mysql-database"));
+                driver = new MySQLDriver(VoxelGuest.getConfigData().getString("mysql-username"), 
+                			VoxelGuest.getConfigData().getString("mysql-password"), 
+                			VoxelGuest.getConfigData().getString("mysql-hostname"), 
+                			VoxelGuest.getConfigData().getString("mysql-port"), 
+                			VoxelGuest.getConfigData().getString("mysql-database"));
             } else {
                 driver = new SQLiteDriver(gatekeeperDatabase, gatekeeperSqliteDir.getAbsolutePath());
             }
@@ -1261,7 +1261,7 @@ public class GreylistModule extends Module {
                 groupId = defaultGroupId;
             }
 
-            groupId = com.patrickanker.lib.util.Formatter.encodeColors(groupId);
+            groupId = Formatter.encodeColors(groupId);
             String groupTest = "§8[" + groupId + "§8]";
 
             if (storage.containsKey(groupTest)) {

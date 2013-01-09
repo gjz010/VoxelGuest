@@ -8,40 +8,40 @@
     <packaging>jar</packaging>
     <name>VoxelGuest</name>
     <description>A server administration suite from The Voxel Box</description>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <scm>
         <connection>scm:git:git://github.com/TVPT/VoxelGuest.git</connection>
         <url>https://github.com/TVPT/VoxelGuest</url>
         <developerConnection>scm:git:git@github.com:TVPT/VoxelGuest.git</developerConnection>
     </scm>
-    
+
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
-        
+
         <repository>
             <id>TVPT-repo</id>
             <url>http://jenkins.thevoxelbox.com/plugin/repository/everything/</url>
         </repository>
-        
+
     </repositories>
-    
+
     <dependencies>
-        
+
         <!-- Bukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.4.6-R0.1</version>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.4.6-R0.3</version>
             <type>jar</type>
         </dependency>
-        
+
         <!--  Gson: Java to Json conversion -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -50,17 +50,30 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- library -->
+        <!-- bPermissions -->
         <dependency>
-            <groupId>com.patrickanker</groupId>
-            <artifactId>libpsanker</artifactId>
-            <version>1.4.5</version>
+            <groupId>de.bananaco</groupId>
+            <artifactId>bPermissions</artifactId>
+            <version>dev-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/bpermissions.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <!-- Since PEX's repo sucks from time to time -->
+        <dependency>
+            <groupId>ru.tehkode</groupId>
+            <artifactId>PermissionsEx</artifactId>
+            <version>1.19.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/PermissionsEx.jar</systemPath>
+            <type>jar</type>
         </dependency>
     </dependencies>
-    
+
     <build>
         <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
-        
+
         <!-- Resources -->
         <resources>
             <resource>
@@ -80,7 +93,7 @@
                 </includes>
             </resource>
         </resources>
-        
+
         <!-- Plugins -->
         <plugins>
             <plugin>
@@ -92,7 +105,7 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -107,7 +120,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
@@ -130,7 +143,7 @@
                     </replacements>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-2</version>
@@ -140,7 +153,7 @@
                     <outputDirectory>${basedir}/dist</outputDirectory>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -151,37 +164,37 @@
                     <tagNameFormat>@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
-            
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-						    <minimizeJar>true</minimizeJar>
-							<artifactSet>
-								<excludes>
-								    <exclude>org.bukkit:craftbukkit</exclude>
-								    <exclude>org.bukkit:bukkit</exclude>
-								    <exclude>com.patrickanker:libpsanker</exclude>
-								    <exclude>junit:junit</exclude>
-							    </excludes>
-							</artifactSet>
-							<relocations>
-				              	<relocation>
-				                  <pattern>com.google.gson</pattern>
-				                  <shadedPattern>com.thevoxelbox.voxelguest.libs.com.google.gson</shadedPattern>
-				                </relocation>
-							</relocations>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>            
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.bukkit:craftbukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>com.patrickanker:libpsanker</exclude>
+                                    <exclude>junit:junit</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>com.thevoxelbox.voxelguest.libs.com.google.gson</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

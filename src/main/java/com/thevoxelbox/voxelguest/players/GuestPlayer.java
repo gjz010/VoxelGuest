@@ -25,26 +25,29 @@
  */
 package com.thevoxelbox.voxelguest.players;
 
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.patrickanker.lib.util.JavaPropertiesFileManager;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
 
 import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.management.ConfigurationManager;
+import com.thevoxelbox.voxelguest.management.NoteBoard;
+import com.thevoxelbox.voxelguest.management.Notification;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 
 public class GuestPlayer {
 
     protected Player p;
     protected Map<String, HashMap<String, Object>> storage = new HashMap<String, HashMap<String, Object>>();
     protected String[] groups;
+    private NoteBoard noteBoard;
 
     public GuestPlayer(Player player)
     {
         this.p = player;
 
-        Map<String, Object> data = JavaPropertiesFileManager.load(p.getName(), "/VoxelGuest/players");
+        Map<String, Object> data = ConfigurationManager.load(p.getName(), "/VoxelGuest/players");
         storage.put(VoxelGuest.getPluginId(VoxelGuest.getInstance()), ((HashMap<String, Object>) data));
 
         groups = PermissionsManager.getHandler().getGroups(p.getName());
@@ -94,12 +97,36 @@ public class GuestPlayer {
         HashMap<String, Object> map = storage.get(pluginID);
 
         if (map != null) {
-            JavaPropertiesFileManager.save(p.getName(), map, "/VoxelGuest/players");
+            ConfigurationManager.save(p.getName(), map, "/VoxelGuest/players");
         }
     }
 
     public String[] getGroups()
     {
         return groups;
+    }
+    public NoteBoard getNoteBoard()
+    {
+        return noteBoard;
+    }
+    
+    public void addNotification(Notification note)
+    {
+        noteBoard.addNotification(note);
+    }
+    
+    public void removeNotification(Notification note)
+    {
+        noteBoard.removeNotification(note);
+    }
+ // Player calls
+    public String getName()
+    {
+        return p.getName();
+    }
+    
+    public void sendMessage(String string)
+    {
+        p.sendMessage(string);
     }
 }

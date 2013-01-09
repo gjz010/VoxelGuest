@@ -25,90 +25,33 @@
  */
 package com.thevoxelbox.voxelguest.modules;
 
-import com.patrickanker.lib.config.PropertyConfiguration;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
-public class ModuleConfiguration {
+import org.bukkit.Bukkit;
 
-    protected final PropertyConfiguration config;
-    private final Module parentModule;
+import com.thevoxelbox.voxelguest.management.ConfigurationManager;
+
+public class ModuleConfiguration extends ConfigurationManager{
+	
+    public final Module parentModule;
 
     public ModuleConfiguration(Module parent)
     {
         parentModule = parent;
-        config = new PropertyConfiguration(parentModule.getName(), "/VoxelGuest/modules");
-    }
-
-    public HashMap<String, Object> getAllEntries()
-    {
-        return config.getAllEntries();
-    }
-
-    public Object getEntry(String key)
-    {
-        return config.getEntry(key);
-    }
-
-    public String getString(String key)
-    {
-        return config.getString(key);
-    }
-
-    public boolean getBoolean(String key)
-    {
-        return config.getBoolean(key);
-    }
-
-    public int getInt(String key)
-    {
-        return config.getInt(key);
-    }
-
-    public double getDouble(String key)
-    {
-        return config.getDouble(key);
-    }
-
-    public void setEntry(String key, Object value)
-    {
-        config.setEntry(key, value);
-    }
-
-    public void setString(String key, String value)
-    {
-        config.setString(key, value);
-    }
-
-    public void setBoolean(String key, boolean value)
-    {
-        config.setBoolean(key, value);
-    }
-
-    public void setInt(String key, int value)
-    {
-        config.setInt(key, value);
-    }
-
-    public void setDouble(String key, double value)
-    {
-        config.setDouble(key, value);
-    }
-
-    public void load()
-    {
-        registerFieldSettings(this.getClass());
-        config.load();
+        config = (HashMap<String, Object>) load(parentModule.getName(), "/VoxelGuest/modules");
+        
     }
 
     public void reset()
     {
         registerFieldSettings(getClass());
-    }
-
-    public void save()
-    {
-        config.save();
     }
 
     private void registerFieldSettings(Class<? extends ModuleConfiguration> cls)

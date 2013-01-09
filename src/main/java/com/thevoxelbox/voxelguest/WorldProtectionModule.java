@@ -1,14 +1,20 @@
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.permissions.PermissionsManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
 import com.thevoxelbox.voxelguest.modules.BukkitEventWrapper;
 import com.thevoxelbox.voxelguest.modules.MetaData;
 import com.thevoxelbox.voxelguest.modules.Module;
 import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
 import com.thevoxelbox.voxelguest.modules.ModuleEvent;
 import com.thevoxelbox.voxelguest.modules.Setting;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,11 +42,6 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * The World Protection Module was created to help maintain various server
@@ -368,16 +369,17 @@ public class WorldProtectionModule extends Module
 
 		if (!isProtectedWorld(b.getWorld()))
 		{
+			Bukkit.getLogger().info("Returning");
 			return;
 		}
 
-		if (b.getType().equals(Material.ICE) && getConfiguration().getBoolean("disable-ice-formation"))
+		if ((b.getType().equals(Material.WATER) || b.getType().equals(Material.STATIONARY_WATER)) && getConfiguration().getBoolean("disable-ice-formation"))
 		{
 			event.setCancelled(true);
 			return;
 		}
 
-		if (b.getType().equals(Material.SNOW) && getConfiguration().getBoolean("disable-snow-formation"))
+		if (b.getType().equals(Material.AIR) && getConfiguration().getBoolean("disable-snow-formation"))
 		{
 			event.setCancelled(true);
 		}

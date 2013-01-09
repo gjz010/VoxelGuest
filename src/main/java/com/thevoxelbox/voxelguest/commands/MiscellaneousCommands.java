@@ -25,22 +25,21 @@
  */
 package com.thevoxelbox.voxelguest.commands;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.commands.Subcommands;
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.patrickanker.lib.util.Formatter;
-import com.thevoxelbox.voxelguest.AFKModule;
-import com.thevoxelbox.voxelguest.VanishModule;
-import com.thevoxelbox.voxelguest.VoxelGuest;
-import com.thevoxelbox.voxelguest.modules.ModuleException;
-import com.thevoxelbox.voxelguest.modules.ModuleManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.thevoxelbox.voxelguest.AFKModule;
+import com.thevoxelbox.voxelguest.VanishModule;
+import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.management.Formatter;
+import com.thevoxelbox.voxelguest.modules.ModuleException;
+import com.thevoxelbox.voxelguest.modules.ModuleManager;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

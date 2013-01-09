@@ -26,18 +26,18 @@
 
 package com.thevoxelbox.voxelguest.regions;
 
-import com.patrickanker.lib.config.PropertyConfiguration;
-import com.patrickanker.lib.util.JavaPropertiesFileManager;
 import java.io.File;
 import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import com.thevoxelbox.voxelguest.management.ConfigurationManager;
+
 public class Region {
 
     private final String name;
-    private final World world;
+    private World world;
     private final Vector3D pos1;
     private final Vector3D pos2;
     private boolean disableGeneralBuildOverride = false;
@@ -45,11 +45,14 @@ public class Region {
     public Region(String name)
     {
         this.name = name;
-        PropertyConfiguration config = new PropertyConfiguration(name, "/VoxelGuest/regions");
+        ConfigurationManager config = new ConfigurationManager("/regions/" + name);
         this.world = Bukkit.getWorld(config.getString("world"));
         this.pos1 = new Vector3D(config.getDouble("x1"), config.getDouble("y1"), config.getDouble("z1"));
         this.pos2 = new Vector3D(config.getDouble("x2"), config.getDouble("y2"), config.getDouble("z2"));
         this.disableGeneralBuildOverride = config.getBoolean("disable-general-build-override");
+        if(world == null) {
+        	this.world = Bukkit.getWorlds().get(0);
+        }
     }
 
     public Region(String name, World world, Vector3D vec1, Vector3D vec2)
@@ -91,12 +94,12 @@ public class Region {
         map.put("y2", pos2.getY());
         map.put("z2", pos2.getZ());
         map.put("disable-general-build-override", disableGeneralBuildOverride);
-        JavaPropertiesFileManager.save(name, map, "/VoxelGuest/regions");
+        ConfigurationManager.save(name, map, "/VoxelGuest/regions");
     }
 
     public void delete()
     {
-        File f = new File(JavaPropertiesFileManager.BASE + "/VoxelGuest/regions/" + name + ".properties");
+        File f = new File(ConfigurationManager.directory + "/VoxelGuest/regions/" + name + ".properties");
         f.delete();
     }
 

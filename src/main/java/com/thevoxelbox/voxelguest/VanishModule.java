@@ -30,17 +30,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.patrickanker.lib.util.FlatFileManager;
-import com.patrickanker.lib.util.Formatter;
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
+import com.thevoxelbox.voxelguest.management.FlatFileManager;
+import com.thevoxelbox.voxelguest.management.Formatter;
 import com.thevoxelbox.voxelguest.modules.BukkitEventWrapper;
 import com.thevoxelbox.voxelguest.modules.MetaData;
 import com.thevoxelbox.voxelguest.modules.Module;
 import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
 import com.thevoxelbox.voxelguest.modules.ModuleEvent;
 import com.thevoxelbox.voxelguest.modules.ModuleEventPriority;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -334,7 +334,7 @@ public class VanishModule extends Module {
         if (leaveMessageFormat == null) {
             leaveMessage = "§e" + p.getName() + " left";
         } else {
-            leaveMessage = Formatter.selectFormatter(SimpleFormatter.class).formatMessage(leaveMessageFormat, VoxelGuest.getGuestPlayer(p));
+            leaveMessage = Formatter.formatMessage(leaveMessageFormat, VoxelGuest.getGuestPlayer(p));
         }
 
         Bukkit.broadcastMessage(leaveMessage);
@@ -373,7 +373,7 @@ public class VanishModule extends Module {
         if (leaveMessageFormat == null) {
             leaveMessage = "§e" + p.getName() + " joined";
         } else {
-            leaveMessage = Formatter.selectFormatter(SimpleFormatter.class).formatMessage(leaveMessageFormat, VoxelGuest.getGuestPlayer(p));
+            leaveMessage = Formatter.formatMessage(leaveMessageFormat, VoxelGuest.getGuestPlayer(p));
         }
 
         Bukkit.broadcastMessage(leaveMessage);

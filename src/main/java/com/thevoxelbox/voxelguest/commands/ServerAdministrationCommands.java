@@ -26,19 +26,18 @@
 
 package com.thevoxelbox.voxelguest.commands;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.config.PropertyConfiguration;
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.patrickanker.lib.util.Formatter;
-import com.thevoxelbox.voxelguest.VoxelGuest;
-import com.thevoxelbox.voxelguest.modules.Module;
-import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
-import com.thevoxelbox.voxelguest.modules.ModuleManager;
 import java.lang.management.ManagementFactory;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
+
+import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.management.ConfigurationManager;
+import com.thevoxelbox.voxelguest.modules.Module;
+import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
+import com.thevoxelbox.voxelguest.modules.ModuleManager;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -66,7 +65,7 @@ public class ServerAdministrationCommands {
             }
         }, 0L, pollInterval);
 
-        if (VoxelGuest.getConfigData().getBoolean("enable-ram-clear-cycle")) {
+        /*if (VoxelGuest.getConfigData().getBoolean("enable-ram-clear-cycle")) {
             long interval = VoxelGuest.getConfigData().getInt("ram-clear-cycle-time") * 1200L;
 
             if (interval > 0) {
@@ -87,7 +86,7 @@ public class ServerAdministrationCommands {
                     }
                 }, interval, interval);
             }
-        }
+        }*/
     }
 
     @Command(aliases = {"system", "sys"},
@@ -171,7 +170,7 @@ public class ServerAdministrationCommands {
 
                     for (String group : test) {
                         if (group.equalsIgnoreCase(args[3])) {
-                            PropertyConfiguration config = VoxelGuest.getGroupManager().getGroupConfiguration(group);
+                            ConfigurationManager config = VoxelGuest.getGroupManager().getGroupConfiguration(group);
                             smartSetSetting(config, args[4], concat);
                             cs.sendMessage("§aSet group " + group + " setting \"" + args[4] + "\" to \"" + concat + "\"");
                             return;
@@ -403,7 +402,7 @@ public class ServerAdministrationCommands {
         return tps;
     }
 
-    private void smartSetSetting(PropertyConfiguration config, String key, String value)
+    private void smartSetSetting(ConfigurationManager config, String key, String value)
     {
         try {
             if (value.contains(".") || (Double.parseDouble(value) > 2147483647 || Double.parseDouble(value) < -2147483648)) {

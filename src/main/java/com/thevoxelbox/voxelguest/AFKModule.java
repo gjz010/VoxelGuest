@@ -26,8 +26,8 @@
 
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
 import com.thevoxelbox.voxelguest.modules.BukkitEventWrapper;
 import com.thevoxelbox.voxelguest.modules.MetaData;
 import com.thevoxelbox.voxelguest.modules.Module;
@@ -188,7 +188,10 @@ public class AFKModule extends Module {
         }
     }
 
-    @ModuleEvent(event = PlayerChatEvent.class)
+   /*
+    * Broken
+    *  
+    *  @ModuleEvent(event = PlayerChatEvent.class)
     public void onPlayerChat(BukkitEventWrapper wrapper)
     {
         PlayerChatEvent event = (PlayerChatEvent) wrapper.getEvent();
@@ -200,7 +203,7 @@ public class AFKModule extends Module {
         }
 
         updateTimeEntry(p);
-    }
+    }*/
 
     @ModuleEvent(event = PlayerMoveEvent.class)
     public void onPlayerMove(BukkitEventWrapper wrapper)

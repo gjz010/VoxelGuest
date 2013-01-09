@@ -26,17 +26,18 @@
 
 package com.thevoxelbox.voxelguest;
 
-import com.patrickanker.lib.commands.Command;
-import com.patrickanker.lib.commands.CommandPermission;
-import com.patrickanker.lib.config.PropertyConfiguration;
-import com.patrickanker.lib.permissions.PermissionsManager;
-import com.patrickanker.lib.util.Formatter;
+import com.thevoxelbox.voxelguest.commands.Command;
+import com.thevoxelbox.voxelguest.commands.CommandPermission;
+import com.thevoxelbox.voxelguest.management.ConfigurationManager;
+import com.thevoxelbox.voxelguest.management.Formatter;
 import com.thevoxelbox.voxelguest.modules.BukkitEventWrapper;
 import com.thevoxelbox.voxelguest.modules.MetaData;
 import com.thevoxelbox.voxelguest.modules.Module;
 import com.thevoxelbox.voxelguest.modules.ModuleConfiguration;
 import com.thevoxelbox.voxelguest.modules.ModuleEvent;
 import com.thevoxelbox.voxelguest.modules.Setting;
+import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -60,7 +61,7 @@ import java.util.List;
 public class AsshatMitigationModule extends Module
 {
 
-	private final PropertyConfiguration bannedList = new PropertyConfiguration("banned", "/VoxelGuest/asshatmitigation");
+	private final ConfigurationManager bannedList = new ConfigurationManager("/asshatmitigation/banned");
 	private final List<String> gagged = new ArrayList<String>();
 	private final List<String> frozen = new ArrayList<String>();
 	private boolean allFreeze = false;
@@ -80,7 +81,6 @@ public class AsshatMitigationModule extends Module
 	{
 		setConfiguration(new AsshatMitigationConfiguration(this));
 
-		bannedList.load();
 		// update ban list
 		final HashMap<String, Object> updatedMap = new HashMap<String, Object>();
 		for (final String name : bannedList.getAllEntries().keySet())
@@ -525,7 +525,7 @@ public class AsshatMitigationModule extends Module
 			{
 				gagged.remove(player.getName());
 
-				for (String str : Formatter.selectFormatter(SimpleFormatter.class).formatMessages(getConfiguration().getString("ungag-message-format"),
+				for (String str : Formatter.formatMessages(getConfiguration().getString("ungag-message-format"),
 						VoxelGuest.getGuestPlayer(player)))
 				{
 					player.sendMessage(str);
@@ -535,7 +535,7 @@ public class AsshatMitigationModule extends Module
 			}
 			else
 			{
-				for (String str : Formatter.selectFormatter(SimpleFormatter.class).formatMessages(getConfiguration().getString("gag-message-format"),
+				for (String str : Formatter.formatMessages(getConfiguration().getString("gag-message-format"),
 						VoxelGuest.getGuestPlayer(player)))
 				{
 					player.sendMessage(str);
@@ -643,7 +643,7 @@ public class AsshatMitigationModule extends Module
 
 		for (Player player : possibilities)
 		{
-			possibleNames.add(player.getName());
+			if(!possibleNames.contains(player.getName())) possibleNames.add(player.getName());
 		}
 
 		if ((possibleNames.isEmpty() && includeOffline) || forceExact)
@@ -653,7 +653,7 @@ public class AsshatMitigationModule extends Module
 				possibleNames.clear();
 			}
 
-			possibleNames.add(exp);
+			if(!possibleNames.contains(exp)) possibleNames.add(exp);
 		}
 
 		return possibleNames;
