@@ -43,6 +43,7 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 
@@ -464,7 +465,7 @@ public class ServerAdministrationCommands {
             int removed = 0;
 
             for (Entity e : entities) {
-                if (!((e instanceof Player) || (e instanceof Painting))) {
+                if (!((e instanceof Player) || (e instanceof Painting) || (e instanceof ItemFrame))) {
                     e.remove();
                     removed++;
                 }
