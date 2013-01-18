@@ -7,6 +7,7 @@
     <version>4.2.5</version>
     <packaging>jar</packaging>
     <name>VoxelGuest</name>
+    <url>http://voxelwiki.com/minecraft/VoxelGuest</url>
     <description>A server administration suite from The Voxel Box</description>
 
     <properties>
@@ -77,7 +78,6 @@
         <!-- Resources -->
         <resources>
             <resource>
-                <targetPath>.</targetPath>
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
@@ -85,8 +85,7 @@
                 </includes>
             </resource>
             <resource>
-                <targetPath>.</targetPath>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <directory>${basedir}</directory>
                 <includes>
                     <include>LICENSE.txt</include>
@@ -118,29 +117,6 @@
                             <mainClass>com.thevoxelbox.voxelguest.VoxelGuest</mainClass>
                         </manifest>
                     </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.0</version>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <file>target/classes/plugin.yml</file>
-                    <replacements>
-                        <replacement>
-                            <token>MAVEN_VERSION</token>
-                            <value>${project.version}</value>
-                        </replacement>
-                    </replacements>
                 </configuration>
             </plugin>
 
