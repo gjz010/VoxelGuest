@@ -43,8 +43,6 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 
 public class ServerAdministrationCommands {
@@ -444,34 +442,6 @@ public class ServerAdministrationCommands {
             }
 
             config.setString(key, value);
-        }
-    }
-
-    class EntityPurgeThread extends Thread {
-
-        private final World world;
-
-        public EntityPurgeThread(World w)
-        {
-            world = w;
-        }
-
-        @Override
-        public void run()
-        {
-            Entity[] entities = new Entity[world.getEntities().size()];
-            entities = world.getEntities().toArray(entities);
-
-            int removed = 0;
-
-            for (Entity e : entities) {
-                if (!((e instanceof Player) || (e instanceof Painting) || (e instanceof ItemFrame))) {
-                    e.remove();
-                    removed++;
-                }
-            }
-
-            Bukkit.getConsoleSender().sendMessage("§aEntity purge complete - Removed " + removed + " entities in world " + world.getName());
         }
     }
 
