@@ -4,7 +4,7 @@
 
     <groupId>com.thevoxelbox</groupId>
     <artifactId>VoxelGuest</artifactId>
-    <version>4.2.5</version>
+    <version>4.2.6</version>
     <packaging>jar</packaging>
     <name>VoxelGuest</name>
     <url>http://voxelwiki.com/minecraft/VoxelGuest</url>

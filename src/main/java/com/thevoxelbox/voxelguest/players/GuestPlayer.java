@@ -28,13 +28,13 @@ package com.thevoxelbox.voxelguest.players;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
 import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.management.ConfigurationManager;
 import com.thevoxelbox.voxelguest.management.NoteBoard;
 import com.thevoxelbox.voxelguest.management.Notification;
 import com.thevoxelbox.voxelguest.permissions.PermissionsManager;
+
+import org.bukkit.entity.Player;
 
 public class GuestPlayer {
 
@@ -51,6 +51,8 @@ public class GuestPlayer {
         storage.put(VoxelGuest.getPluginId(VoxelGuest.getInstance()), ((HashMap<String, Object>) data));
 
         groups = PermissionsManager.getHandler().getGroups(p.getName());
+
+        noteBoard = new NoteBoard(p);
     }
 
     public Player getPlayer()
