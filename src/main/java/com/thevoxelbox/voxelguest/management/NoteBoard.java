@@ -115,6 +115,16 @@ public class NoteBoard {
             parent.sendMessage("§7No notifications");
         }
     }
+
+    public void sendPanel()
+    {
+        parent.sendMessage("§8====================");
+        parent.sendMessage("§6Notice Board");
+        parent.sendMessage("§6");
+
+        panelList();
+        parent.sendMessage("§8====================");
+    }
     
     public enum Marking
     {

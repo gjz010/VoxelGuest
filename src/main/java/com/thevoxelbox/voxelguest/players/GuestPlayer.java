@@ -111,24 +111,31 @@ public class GuestPlayer {
     {
         return noteBoard;
     }
-    
+
     public void addNotification(Notification note)
     {
         noteBoard.addNotification(note);
     }
-    
+
     public void removeNotification(Notification note)
     {
         noteBoard.removeNotification(note);
     }
+
+    public void sendNoteBoardPanel()
+    {
+        noteBoard.sendPanel();
+    }
+
  // Player calls
     public String getName()
     {
         return p.getName();
     }
-    
+
     public void sendMessage(String string)
     {
         p.sendMessage(string);
     }
+
 }
