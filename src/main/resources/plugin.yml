@@ -1,6 +1,6 @@
 name: ${project.name}
 main: com.thevoxelbox.voxelguest.VoxelGuest
-author: VoxelPlugineering
+authors: [MikeMatrix]
 version: ${project.version}
 website: ${project.url}
 description: ${project.description}
