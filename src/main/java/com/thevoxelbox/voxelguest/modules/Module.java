@@ -1,17 +1,18 @@
 package com.thevoxelbox.voxelguest.modules;
 
-import java.util.Set;
-
 import org.bukkit.event.Listener;
+
+import java.util.Set;
 
 /**
  * @author MikeMatrix
  */
 public interface Module
 {
-    void onEnable();
+	void onEnable();
+	void onDisable();
 
-    void onDisable();
-
-    Set<Listener> getListeners();
+	boolean isEnabled();
+	Set<Listener> getListeners();
+	String getName();
 }
