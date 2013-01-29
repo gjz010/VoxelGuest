@@ -5,6 +5,8 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
 import com.thevoxelbox.voxelguest.modules.GuestModule;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,12 +15,15 @@ import com.thevoxelbox.voxelguest.modules.GuestModule;
 public class RegionModule extends GuestModule
 {
 
+    private List<Region> regions = new ArrayList<>();
+    
     public RegionModule() {
         setName("Region Module");
     }
 
     @Override
     public void onEnable(){
+        this.eventListeners.add(new BlockEventListener(this));
         super.onEnable();
     }
 
