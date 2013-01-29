@@ -7,6 +7,7 @@ package com.thevoxelbox.voxelguest.modules.regions;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.Location;
 
 /**
  *
@@ -30,6 +31,15 @@ public class RegionModule extends GuestModule
     @Override
     public void onDisable(){
         super.onDisable();
-    }    
+    }
+    
+    public Region getRegionAtLocation(Location regionLocation){
+        for(Region region : regions){
+            if(region.isLocationInRegion(regionLocation)){
+                return region;
+            }
+        }
+        return null;
+    } 
     
 }

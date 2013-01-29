@@ -32,21 +32,23 @@ public class Region
     private boolean allowBreakingItemframes = false;
     private List<Block> bannedBlocks = new ArrayList<>();
     private List<ItemStack> bannedItems = new ArrayList<>();
+    private String buildPermission;
     
     //Player
     private boolean allowPlayerDamage;
     private boolean allowHunger;
 
-    public Region(Location pointOne, Location pointTwo, String regionName) {
+    public Region(Location pointOne, Location pointTwo, String regionName, String buildPermission) {
         this.pointOne = pointOne;
         this.pointTwo = pointTwo;
         this.regionName = regionName;
-    }
-
-    public boolean isLocationInRegion(Location checkLocation){
-        return true;
+        this.buildPermission = buildPermission;
     }
     
+    public boolean isLocationInRegion(Location locationToCheck){
+        return true;
+    }
+
     public Location getPointOne() {
         return pointOne;
     }
@@ -63,52 +65,52 @@ public class Region
         this.pointTwo = pointTwo;
     }
 
-    public boolean isMobSpawn() {
+    public boolean isAllowMobSpawn() {
         return allowMobSpawn;
     }
 
-    public void setMobSpawn(boolean mobSpawn) {
-        this.allowMobSpawn = mobSpawn;
+    public void setAllowMobSpawn(boolean allowMobSpawn) {
+        this.allowMobSpawn = allowMobSpawn;
     }
 
-    public boolean isFireSpread() {
+    public boolean isAllowFireSpread() {
         return allowFireSpread;
     }
 
-    public void setFireSpread(boolean fireSpread) {
-        this.allowFireSpread = fireSpread;
+    public void setAllowFireSpread(boolean allowFireSpread) {
+        this.allowFireSpread = allowFireSpread;
     }
 
-    public boolean isLeafDecay() {
+    public boolean isAllowLeafDecay() {
         return allowLeafDecay;
     }
 
-    public void setLeafDecay(boolean leafDecay) {
-        this.allowLeafDecay = leafDecay;
+    public void setAllowLeafDecay(boolean allowLeafDecay) {
+        this.allowLeafDecay = allowLeafDecay;
     }
 
-    public boolean isBlockGrowth() {
+    public boolean isAllowBlockGrowth() {
         return allowBlockGrowth;
     }
 
-    public void setBlockGrowth(boolean blockGrowth) {
-        this.allowBlockGrowth = blockGrowth;
+    public void setAllowBlockGrowth(boolean allowBlockGrowth) {
+        this.allowBlockGrowth = allowBlockGrowth;
     }
 
-    public boolean isBlockSpread() {
+    public boolean isAllowBlockSpread() {
         return allowBlockSpread;
     }
 
-    public void setBlockSpread(boolean blockSpread) {
-        this.allowBlockSpread = blockSpread;
+    public void setAllowBlockSpread(boolean allowBlockSpread) {
+        this.allowBlockSpread = allowBlockSpread;
     }
 
-    public boolean isExplosionsAllowed() {
+    public boolean isAllowExplosions() {
         return allowExplosions;
     }
 
-    public void setExplosionsAllowed(boolean explosionsAllowed) {
-        this.allowExplosions = explosionsAllowed;
+    public void setAllowExplosions(boolean allowExplosions) {
+        this.allowExplosions = allowExplosions;
     }
 
     public boolean isAllowBreakingPaintings() {
@@ -158,7 +160,11 @@ public class Region
     public void setAllowHunger(boolean allowHunger) {
         this.allowHunger = allowHunger;
     }
-    
+
+    public String getBuildPermission() {
+        return buildPermission;
+    }
+
     
     
 }
