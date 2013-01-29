@@ -27,9 +27,17 @@ public class Region
     private boolean allowLeafDecay = false;
     private boolean allowBlockGrowth = false;
     private boolean allowBlockSpread = false;
-    private boolean allowExplosions = false;
+    private boolean allowCreeperExplosions = false;
     private boolean allowBreakingPaintings = false;
     private boolean allowBreakingItemframes = false;
+    private boolean allowLavaFlow = false;
+    private boolean allowWaterFlow = false;
+    private boolean allowDragonEggMovement = false;
+    private boolean allowSnowMelting = false;
+    private boolean allowIceMelting = false;
+    private boolean allowSnowFormation = false;
+    private boolean allowIceFormation = false;
+    private boolean allowEnchanting = false;
     private List<Block> bannedBlocks = new ArrayList<>();
     private List<ItemStack> bannedItems = new ArrayList<>();
     private String buildPermission;
@@ -45,10 +53,12 @@ public class Region
         this.buildPermission = buildPermission;
     }
     
+    //To-Do
     public boolean isLocationInRegion(Location locationToCheck){
         return true;
     }
 
+    //These are auto generated - will refactor later
     public Location getPointOne() {
         return pointOne;
     }
@@ -106,11 +116,11 @@ public class Region
     }
 
     public boolean isAllowExplosions() {
-        return allowExplosions;
+        return allowCreeperExplosions;
     }
 
-    public void setAllowExplosions(boolean allowExplosions) {
-        this.allowExplosions = allowExplosions;
+    public void setAllowCreeperExplosions(boolean allowCreeperExplosions) {
+        this.allowCreeperExplosions = allowCreeperExplosions;
     }
 
     public boolean isAllowBreakingPaintings() {
@@ -165,6 +175,63 @@ public class Region
         return buildPermission;
     }
 
+    public boolean isAllowLavaFlow() {
+        return allowLavaFlow;
+    }
+
+    public void setAllowLavaFlow(boolean allowLavaFlow) {
+        this.allowLavaFlow = allowLavaFlow;
+    }
+
+    public boolean isAllowWaterFlow() {
+        return allowWaterFlow;
+    }
+
+    public void setAllowWaterFlow(boolean allowWaterFlow) {
+        this.allowWaterFlow = allowWaterFlow;
+    }
+
+    public boolean isAllowDragonEggMovement() {
+        return allowDragonEggMovement;
+    }
+
+    public void setAllowDragonEggMovement(boolean allowDragonEggMovement) {
+        this.allowDragonEggMovement = allowDragonEggMovement;
+    }
+
+    public boolean isAllowSnowMelting() {
+        return allowSnowMelting;
+    }
+
+    public void setAllowSnowMelting(boolean allowSnowMelting) {
+        this.allowSnowMelting = allowSnowMelting;
+    }
+
+    public boolean isAllowIceMelting() {
+        return allowIceMelting;
+    }
+
+    public void setAllowIceMelting(boolean allowIceMelting) {
+        this.allowIceMelting = allowIceMelting;
+    }
+
+    public boolean isAllowSnowFormation() {
+        return allowSnowFormation;
+    }
+
+    public boolean isAllowIceFormation() {
+        return allowIceFormation;
+    }
+
+    public boolean isAllowEnchanting() {
+        return allowEnchanting;
+    }
+
+    public void setAllowEnchanting(boolean allowEnchanting) {
+        this.allowEnchanting = allowEnchanting;
+    }
+    
+    
     
     
 }
