@@ -6,8 +6,6 @@ package com.thevoxelbox.voxelguest.modules.regions;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

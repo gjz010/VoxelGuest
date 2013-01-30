@@ -62,11 +62,11 @@ public class Region implements Serializable
         }
         
         //For open worlds that do not have specified points
-        if(pointOne == null || pointTwo == null){
-            return false;
+        if(pointOne == null && pointTwo == null){
+            return true;
         }
         
-        if(locationToCheck.toVector().isInAABB(pointOne.toVector(), pointTwo.toVector())){
+        if(locationToCheck.toVector().isInAABB(Vector.getMinimum(pointOne.toVector(), pointTwo.toVector()), Vector.getMaximum(pointOne.toVector(), pointTwo.toVector()))){
             return true;
         }
         else{

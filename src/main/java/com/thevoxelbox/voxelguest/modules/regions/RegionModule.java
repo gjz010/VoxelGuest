@@ -25,6 +25,7 @@ public class RegionModule extends GuestModule
     @Override
     public void onEnable(){
         this.eventListeners.add(new BlockEventListener(this));
+        this.eventListeners.add(new PlayerEventListener(this));
         super.onEnable();
     }
 
