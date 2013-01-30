@@ -19,6 +19,7 @@ public class Region implements Serializable
 {
     
     public final String regionName;
+    public final String worldName;
     private Location pointOne;
     private Location pointTwo;
     
@@ -46,7 +47,8 @@ public class Region implements Serializable
     private boolean allowPlayerDamage;
     private boolean allowHunger;
 
-    public Region(Location pointOne, Location pointTwo, String regionName, String buildPermission) {
+    public Region(String worldName, Location pointOne, Location pointTwo, String regionName, String buildPermission) {
+        this.worldName = worldName;
         this.pointOne = pointOne;
         this.pointTwo = pointTwo;
         this.regionName = regionName;
