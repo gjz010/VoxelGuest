@@ -10,6 +10,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -65,8 +66,7 @@ public class Region implements Serializable
             return false;
         }
         
-        Cuboid cuboid = new Cuboid(pointOne, pointOne);
-        if(cuboid.isLocationInside(locationToCheck)){
+        if(locationToCheck.toVector().isInAABB(pointOne.toVector(), pointTwo.toVector())){
             return true;
         }
         else{
@@ -245,58 +245,6 @@ public class Region implements Serializable
 
     public void setAllowIceFormation(boolean allowIceFormation) {
         this.allowIceFormation = allowIceFormation;
-    }
-    
-    private class Cuboid {
-        
-        public final double minX;
-        public final double minY;
-        public final double minZ;
-        public final double maxX;
-        public final double maxY;
-        public final double maxZ;
-        
-        public final String worldName;
-        
-        public Cuboid(Location point1, Location point2){
-            this.worldName = point1.getWorld().getName();
-            this.minX = Math.min(point1.getBlockX(), point2.getBlockX());
-            this.maxX = Math.max(point1.getBlockX(), point2.getBlockX());
-            this.minY = Math.min(point1.getBlockY(), point2.getBlockY());
-            this.maxY = Math.max(point1.getBlockY(), point2.getBlockY());
-            this.minZ = Math.min(point1.getBlockZ(), point2.getBlockZ());
-            this.maxZ = Math.max(point1.getBlockZ(), point2.getBlockZ());            
-        }
-        
-        public boolean isLocationInside(Location toCheck){
-            if(!toCheck.getWorld().getName().equalsIgnoreCase(this.worldName)){
-                return false;
-            }
-            if(toCheck.getX() < minX){
-                return false;
-            }
-            if(toCheck.getX() > maxX){
-                return false;
-            }
-            if(toCheck.getY() < minY){
-                return false;
-            }
-            if(toCheck.getY() > maxY){
-                return false;
-            }
-            if(toCheck.getZ() < minZ){
-                return false;
-            }
-            if(toCheck.getZ() > maxZ){
-                return false;
-            }           
-            return true;
-        }
-        
-        public double getArea(){
-            return (maxX - minX) * (maxY - minY) * (maxZ - minZ);
-        }
-        
     }
     
 }
