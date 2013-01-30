@@ -103,7 +103,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.allowLeafyDecay()){
+        if(!region.isLeafDecayAllowed()){
             event.setCancelled(true);
         }
     }
@@ -115,7 +115,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.allowBlockGrowth()){
+        if(!region.isBlowGrowthAllowed()){
             event.setCancelled(true);
         }
     }
@@ -129,19 +129,19 @@ public class BlockEventListener implements Listener
         
         final Block movedBlock = event.getBlock();
         if((movedBlock.getType() == Material.STATIONARY_WATER) || (movedBlock.getType() == Material.WATER)){
-            if(!region.allowWaterFlow()){
+            if(!region.isWaterFlowAllowed()){
                 event.setCancelled(true);
             }
         }
         
         if((movedBlock.getType() == Material.STATIONARY_LAVA) || (movedBlock.getType() == Material.LAVA)){
-            if(!region.allowLavaFlow()){
+            if(!region.isLavaFlowAllowed()){
                 event.setCancelled(true);
             }
         }
         
         if(movedBlock.getType() == Material.DRAGON_EGG){
-            if(!region.allowDragonEggMovement()){
+            if(!region.isDragonEggMovementAllowed()){
                 event.setCancelled(true);
             }
         }
@@ -156,13 +156,13 @@ public class BlockEventListener implements Listener
         
         final Block fadedBlock = event.getBlock();
         if(fadedBlock.getType() == Material.ICE){
-            if(!region.allowIceMelting()){
+            if(!region.isIceMeltingAllowed()){
                 event.setCancelled(true);
             }
         }
         
         if(fadedBlock.getType() == Material.SNOW){
-            if(!region.allowSnowMelting()){
+            if(!region.isSnowMeltingAllowed()){
                 event.setCancelled(true);
             }
         }
@@ -177,13 +177,13 @@ public class BlockEventListener implements Listener
         
         final Block formedBlock = event.getBlock();
         if((formedBlock.getType() == Material.WATER) || (formedBlock.getType() == Material.STATIONARY_WATER)){
-            if(!region.allowIceFormation()){
+            if(!region.isIceFormationAllowed()){
                 event.setCancelled(true);
             }
         }
         
         if(formedBlock.getType() == Material.AIR){
-            if(!region.allowSnowFormation()){
+            if(!region.isSnowFormationAllowed()){
                 event.setCancelled(true);
             }
         }
@@ -197,7 +197,7 @@ public class BlockEventListener implements Listener
         }
         
         if((event.getCause() == IgniteCause.SPREAD) || (event.getCause() == IgniteCause.LAVA) || (event.getCause() == IgniteCause.LIGHTNING)){
-            if(!region.allowFireSpread()){
+            if(!region.isFireSpreadAllowed()){
                 event.setCancelled(true);
             }
         }
@@ -212,7 +212,7 @@ public class BlockEventListener implements Listener
         }
         
         if(event.getNewState().getType() == Material.FIRE){
-            if(!region.allowFireSpread()){
+            if(!region.isFireSpreadAllowed()){
                 event.setCancelled(true);
             }
         }
@@ -225,7 +225,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.allowEnchanting()){
+        if(!region.isEnchantingAllowed()){
             event.setCancelled(true);
         }
         
@@ -241,7 +241,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.allowExplosions()){
+        if(!region.isCreeperExplosionsAllowed()){
             event.setCancelled(true);
         }
     }
@@ -254,7 +254,7 @@ public class BlockEventListener implements Listener
         }
         
         if(event.getEntity() instanceof Painting){
-            if(!region.allowBreakingPaintings()){
+            if(!region.isBreakingPaintingsAllowed()){
                 event.setCancelled(true);
             }
         }

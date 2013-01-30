@@ -74,7 +74,7 @@ public class Region implements Serializable
         this.pointTwo = pointTwo;
     }
 
-    public boolean allowMobSpawn() {
+    public boolean isMobSpawnAllowed() {
         return allowMobSpawn;
     }
 
@@ -82,7 +82,7 @@ public class Region implements Serializable
         this.allowMobSpawn = allowMobSpawn;
     }
 
-    public boolean allowFireSpread() {
+    public boolean isFireSpreadAllowed() {
         return allowFireSpread;
     }
 
@@ -90,7 +90,7 @@ public class Region implements Serializable
         this.allowFireSpread = allowFireSpread;
     }
 
-    public boolean allowLeafyDecay() {
+    public boolean isLeafDecayAllowed() {
         return allowLeafDecay;
     }
 
@@ -98,7 +98,7 @@ public class Region implements Serializable
         this.allowLeafDecay = allowLeafDecay;
     }
 
-    public boolean allowBlockGrowth() {
+    public boolean isBlowGrowthAllowed() {
         return allowBlockGrowth;
     }
 
@@ -106,7 +106,7 @@ public class Region implements Serializable
         this.allowBlockGrowth = allowBlockGrowth;
     }
 
-    public boolean allowBlockSpread() {
+    public boolean isBlockSpreadAllowed() {
         return allowBlockSpread;
     }
 
@@ -114,7 +114,7 @@ public class Region implements Serializable
         this.allowBlockSpread = allowBlockSpread;
     }
 
-    public boolean allowExplosions() {
+    public boolean isCreeperExplosionsAllowed() {
         return allowCreeperExplosions;
     }
 
@@ -122,7 +122,7 @@ public class Region implements Serializable
         this.allowCreeperExplosions = allowCreeperExplosions;
     }
 
-    public boolean allowBreakingPaintings() {
+    public boolean isBreakingPaintingsAllowed() {
         return allowBreakingPaintings;
     }
 
@@ -146,7 +146,7 @@ public class Region implements Serializable
         this.bannedItems = bannedItems;
     }
 
-    public boolean allowPlayerDamage() {
+    public boolean isPlayerDamageAllowed() {
         return allowPlayerDamage;
     }
 
@@ -154,7 +154,7 @@ public class Region implements Serializable
         this.allowPlayerDamage = allowPlayerDamage;
     }
 
-    public boolean allowHunger() {
+    public boolean isPlayerHungerAllowed() {
         return allowHunger;
     }
 
@@ -166,7 +166,7 @@ public class Region implements Serializable
         return buildPermission;
     }
 
-    public boolean allowLavaFlow() {
+    public boolean isLavaFlowAllowed() {
         return allowLavaFlow;
     }
 
@@ -174,7 +174,7 @@ public class Region implements Serializable
         this.allowLavaFlow = allowLavaFlow;
     }
 
-    public boolean allowWaterFlow() {
+    public boolean isWaterFlowAllowed() {
         return allowWaterFlow;
     }
 
@@ -182,7 +182,7 @@ public class Region implements Serializable
         this.allowWaterFlow = allowWaterFlow;
     }
 
-    public boolean allowDragonEggMovement() {
+    public boolean isDragonEggMovementAllowed() {
         return allowDragonEggMovement;
     }
 
@@ -190,7 +190,7 @@ public class Region implements Serializable
         this.allowDragonEggMovement = allowDragonEggMovement;
     }
 
-    public boolean allowSnowMelting() {
+    public boolean isSnowMeltingAllowed() {
         return allowSnowMelting;
     }
 
@@ -198,7 +198,7 @@ public class Region implements Serializable
         this.allowSnowMelting = allowSnowMelting;
     }
 
-    public boolean allowIceMelting() {
+    public boolean isIceMeltingAllowed() {
         return allowIceMelting;
     }
 
@@ -206,15 +206,15 @@ public class Region implements Serializable
         this.allowIceMelting = allowIceMelting;
     }
 
-    public boolean allowSnowFormation() {
+    public boolean isSnowFormationAllowed() {
         return allowSnowFormation;
     }
 
-    public boolean allowIceFormation() {
+    public boolean isIceFormationAllowed() {
         return allowIceFormation;
     }
 
-    public boolean allowEnchanting() {
+    public boolean isEnchantingAllowed() {
         return allowEnchanting;
     }
 
