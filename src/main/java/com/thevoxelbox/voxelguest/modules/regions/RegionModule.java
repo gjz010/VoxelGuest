@@ -30,6 +30,7 @@ public class RegionModule extends GuestModule
 
     @Override
     public void onDisable(){
+        this.eventListeners.clear();
         super.onDisable();
     }
     
