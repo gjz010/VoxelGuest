@@ -20,6 +20,8 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -238,6 +240,18 @@ public class BlockEventListener implements Listener
         }
         
         if(!region.isAllowExplosions()){
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler
+    public void onPaintingBreak(HangingBreakByEntityEvent event){
+        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        if(region == null){
+            return;
+        }
+        
+        if(!region.isAllowBreakingPaintings()){
             event.setCancelled(true);
         }
     }
