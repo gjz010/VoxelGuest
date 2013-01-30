@@ -6,6 +6,9 @@ package com.thevoxelbox.voxelguest.modules.regions;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,7 +24,6 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -101,7 +103,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.isAllowLeafDecay()){
+        if(!region.allowLeafyDecay()){
             event.setCancelled(true);
         }
     }
@@ -113,7 +115,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.isAllowBlockGrowth()){
+        if(!region.allowBlockGrowth()){
             event.setCancelled(true);
         }
     }
@@ -127,19 +129,19 @@ public class BlockEventListener implements Listener
         
         final Block movedBlock = event.getBlock();
         if((movedBlock.getType() == Material.STATIONARY_WATER) || (movedBlock.getType() == Material.WATER)){
-            if(!region.isAllowWaterFlow()){
+            if(!region.allowWaterFlow()){
                 event.setCancelled(true);
             }
         }
         
         if((movedBlock.getType() == Material.STATIONARY_LAVA) || (movedBlock.getType() == Material.LAVA)){
-            if(!region.isAllowLavaFlow()){
+            if(!region.allowLavaFlow()){
                 event.setCancelled(true);
             }
         }
         
         if(movedBlock.getType() == Material.DRAGON_EGG){
-            if(!region.isAllowDragonEggMovement()){
+            if(!region.allowDragonEggMovement()){
                 event.setCancelled(true);
             }
         }
@@ -154,13 +156,13 @@ public class BlockEventListener implements Listener
         
         final Block fadedBlock = event.getBlock();
         if(fadedBlock.getType() == Material.ICE){
-            if(!region.isAllowIceMelting()){
+            if(!region.allowIceMelting()){
                 event.setCancelled(true);
             }
         }
         
         if(fadedBlock.getType() == Material.SNOW){
-            if(!region.isAllowSnowMelting()){
+            if(!region.allowSnowMelting()){
                 event.setCancelled(true);
             }
         }
@@ -175,13 +177,13 @@ public class BlockEventListener implements Listener
         
         final Block formedBlock = event.getBlock();
         if((formedBlock.getType() == Material.WATER) || (formedBlock.getType() == Material.STATIONARY_WATER)){
-            if(!region.isAllowIceFormation()){
+            if(!region.allowIceFormation()){
                 event.setCancelled(true);
             }
         }
         
         if(formedBlock.getType() == Material.AIR){
-            if(!region.isAllowSnowFormation()){
+            if(!region.allowSnowFormation()){
                 event.setCancelled(true);
             }
         }
@@ -195,7 +197,7 @@ public class BlockEventListener implements Listener
         }
         
         if((event.getCause() == IgniteCause.SPREAD) || (event.getCause() == IgniteCause.LAVA) || (event.getCause() == IgniteCause.LIGHTNING)){
-            if(!region.isAllowFireSpread()){
+            if(!region.allowFireSpread()){
                 event.setCancelled(true);
             }
         }
@@ -210,7 +212,7 @@ public class BlockEventListener implements Listener
         }
         
         if(event.getNewState().getType() == Material.FIRE){
-            if(!region.isAllowFireSpread()){
+            if(!region.allowFireSpread()){
                 event.setCancelled(true);
             }
         }
@@ -223,7 +225,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.isAllowEnchanting()){
+        if(!region.allowEnchanting()){
             event.setCancelled(true);
         }
         
@@ -239,7 +241,7 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.isAllowExplosions()){
+        if(!region.allowExplosions()){
             event.setCancelled(true);
         }
     }
@@ -251,8 +253,10 @@ public class BlockEventListener implements Listener
             return;
         }
         
-        if(!region.isAllowBreakingPaintings()){
-            event.setCancelled(true);
+        if(event.getEntity() instanceof Painting){
+            if(!region.allowBreakingPaintings()){
+                event.setCancelled(true);
+            }
         }
     }
     

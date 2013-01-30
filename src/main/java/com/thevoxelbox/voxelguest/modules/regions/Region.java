@@ -29,7 +29,6 @@ public class Region
     private boolean allowBlockSpread = false;
     private boolean allowCreeperExplosions = false;
     private boolean allowBreakingPaintings = false;
-    private boolean allowBreakingItemframes = false;
     private boolean allowLavaFlow = false;
     private boolean allowWaterFlow = false;
     private boolean allowDragonEggMovement = false;
@@ -57,8 +56,7 @@ public class Region
     public boolean isLocationInRegion(Location locationToCheck){
         return true;
     }
-
-    //These are auto generated - will refactor later
+    
     public Location getPointOne() {
         return pointOne;
     }
@@ -75,7 +73,7 @@ public class Region
         this.pointTwo = pointTwo;
     }
 
-    public boolean isAllowMobSpawn() {
+    public boolean allowMobSpawn() {
         return allowMobSpawn;
     }
 
@@ -83,7 +81,7 @@ public class Region
         this.allowMobSpawn = allowMobSpawn;
     }
 
-    public boolean isAllowFireSpread() {
+    public boolean allowFireSpread() {
         return allowFireSpread;
     }
 
@@ -91,7 +89,7 @@ public class Region
         this.allowFireSpread = allowFireSpread;
     }
 
-    public boolean isAllowLeafDecay() {
+    public boolean allowLeafyDecay() {
         return allowLeafDecay;
     }
 
@@ -99,7 +97,7 @@ public class Region
         this.allowLeafDecay = allowLeafDecay;
     }
 
-    public boolean isAllowBlockGrowth() {
+    public boolean allowBlockGrowth() {
         return allowBlockGrowth;
     }
 
@@ -107,7 +105,7 @@ public class Region
         this.allowBlockGrowth = allowBlockGrowth;
     }
 
-    public boolean isAllowBlockSpread() {
+    public boolean allowBlockSpread() {
         return allowBlockSpread;
     }
 
@@ -115,7 +113,7 @@ public class Region
         this.allowBlockSpread = allowBlockSpread;
     }
 
-    public boolean isAllowExplosions() {
+    public boolean allowExplosions() {
         return allowCreeperExplosions;
     }
 
@@ -123,20 +121,12 @@ public class Region
         this.allowCreeperExplosions = allowCreeperExplosions;
     }
 
-    public boolean isAllowBreakingPaintings() {
+    public boolean allowBreakingPaintings() {
         return allowBreakingPaintings;
     }
 
     public void setAllowBreakingPaintings(boolean allowBreakingPaintings) {
         this.allowBreakingPaintings = allowBreakingPaintings;
-    }
-
-    public boolean isAllowBreakingItemframes() {
-        return allowBreakingItemframes;
-    }
-
-    public void setAllowBreakingItemframes(boolean allowBreakingItemframes) {
-        this.allowBreakingItemframes = allowBreakingItemframes;
     }
 
     public List<Block> getBannedBlocks() {
@@ -155,7 +145,7 @@ public class Region
         this.bannedItems = bannedItems;
     }
 
-    public boolean isAllowPlayerDamage() {
+    public boolean allowPlayerDamage() {
         return allowPlayerDamage;
     }
 
@@ -163,7 +153,7 @@ public class Region
         this.allowPlayerDamage = allowPlayerDamage;
     }
 
-    public boolean isAllowHunger() {
+    public boolean allowHunger() {
         return allowHunger;
     }
 
@@ -175,7 +165,7 @@ public class Region
         return buildPermission;
     }
 
-    public boolean isAllowLavaFlow() {
+    public boolean allowLavaFlow() {
         return allowLavaFlow;
     }
 
@@ -183,7 +173,7 @@ public class Region
         this.allowLavaFlow = allowLavaFlow;
     }
 
-    public boolean isAllowWaterFlow() {
+    public boolean allowWaterFlow() {
         return allowWaterFlow;
     }
 
@@ -191,7 +181,7 @@ public class Region
         this.allowWaterFlow = allowWaterFlow;
     }
 
-    public boolean isAllowDragonEggMovement() {
+    public boolean allowDragonEggMovement() {
         return allowDragonEggMovement;
     }
 
@@ -199,7 +189,7 @@ public class Region
         this.allowDragonEggMovement = allowDragonEggMovement;
     }
 
-    public boolean isAllowSnowMelting() {
+    public boolean allowSnowMelting() {
         return allowSnowMelting;
     }
 
@@ -207,7 +197,7 @@ public class Region
         this.allowSnowMelting = allowSnowMelting;
     }
 
-    public boolean isAllowIceMelting() {
+    public boolean allowIceMelting() {
         return allowIceMelting;
     }
 
@@ -215,22 +205,29 @@ public class Region
         this.allowIceMelting = allowIceMelting;
     }
 
-    public boolean isAllowSnowFormation() {
+    public boolean allowSnowFormation() {
         return allowSnowFormation;
     }
 
-    public boolean isAllowIceFormation() {
+    public boolean allowIceFormation() {
         return allowIceFormation;
     }
 
-    public boolean isAllowEnchanting() {
+    public boolean allowEnchanting() {
         return allowEnchanting;
     }
 
     public void setAllowEnchanting(boolean allowEnchanting) {
         this.allowEnchanting = allowEnchanting;
     }
-    
+
+    public void setAllowSnowFormation(boolean allowSnowFormation) {
+        this.allowSnowFormation = allowSnowFormation;
+    }
+
+    public void setAllowIceFormation(boolean allowIceFormation) {
+        this.allowIceFormation = allowIceFormation;
+    }
     
     
     
