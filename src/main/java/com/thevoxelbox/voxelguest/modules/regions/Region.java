@@ -4,6 +4,7 @@
  */
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Joe
  */
-public class Region 
+public class Region implements Serializable
 {
     
     public final String regionName;
