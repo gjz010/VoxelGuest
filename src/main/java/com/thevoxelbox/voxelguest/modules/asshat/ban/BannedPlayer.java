@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelguest.modules.asshat.ban;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 public class BannedPlayer
 {
 	@Id
+	@GeneratedValue
 	@Column
 	private long id;
 
