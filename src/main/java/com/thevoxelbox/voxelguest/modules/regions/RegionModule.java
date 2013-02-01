@@ -48,6 +48,18 @@ public class RegionModule extends GuestModule
 		return listeners;
 	}
 
+	@Override
+	public Object getConfiguration()
+	{
+		return null;
+	}
+
+	@Override
+	public String getConfigFileName()
+	{
+		return "region";
+	}
+
 	public final Region getRegionAtLocation(final Location regionLocation)
 	{
 		for (Region region : regions)

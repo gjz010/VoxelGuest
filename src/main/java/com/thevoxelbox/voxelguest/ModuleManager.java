@@ -1,11 +1,13 @@
 package com.thevoxelbox.voxelguest;
 
 
+import com.thevoxelbox.voxelguest.configuration.Configuration;
 import com.thevoxelbox.voxelguest.modules.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -62,7 +64,12 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	{
 		checkNotNull(module, "Parameter module must not be null.");
 		checkState(this.registeredModules.containsKey(module), "Module must be registered.");
-		checkState(!module.isEnabled(), String.format("Module already enabled. (Module: %s)", module.toString()));
+		checkState(!module.isEnabled(), "Module already enabled. (Module: %s)", module.toString());
+
+		if (module.getConfiguration() != null)
+		{
+			Configuration.loadConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".cfg"), module.getConfiguration());
+		}
 
 		module.onEnable();
 
@@ -128,7 +135,12 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	{
 		checkNotNull(module, "Parameter module must not be null.");
 		checkState(this.registeredModules.containsKey(module), "Module must be registered.");
-		checkState(module.isEnabled(), String.format("Module already disabled. (Module: %s)", module.toString()));
+		checkState(module.isEnabled(), "Module already disabled. (Module: %s)", module.toString());
+
+		if (module.getConfiguration() != null)
+		{
+			Configuration.saveConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".cfg"), module.getConfiguration());
+		}
 
 		try
 		{

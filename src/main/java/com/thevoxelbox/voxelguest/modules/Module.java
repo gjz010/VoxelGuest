@@ -38,4 +38,7 @@ public interface Module
 	 * @return the module name
 	 */
 	String getName();
+
+	Object getConfiguration();
+	String getConfigFileName();
 }
