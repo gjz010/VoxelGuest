@@ -112,7 +112,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 *
 	 * @param module The type of the modules to enable.
 	 */
-	public final void enableModulesByType(final Class<? extends Module> module)
+	public final void enableModuleByType(final Class<? extends Module> module)
 	{
 		assert module != null;
 
@@ -198,7 +198,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 *
 	 * @param module The type of the modules to disable.
 	 */
-	public final void disableModulesByType(final Class<? extends Module> module)
+	public final void disableModuleByType(final Class<? extends Module> module)
 	{
 		assert module != null;
 
