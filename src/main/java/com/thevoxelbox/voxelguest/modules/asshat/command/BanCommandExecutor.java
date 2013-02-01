@@ -37,7 +37,6 @@ public class BanCommandExecutor implements CommandExecutor
 
 		for (String arg : args)
 		{
-
 			if(arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f")) {
 				forceNameFlag = true;
 			}
@@ -45,7 +44,6 @@ public class BanCommandExecutor implements CommandExecutor
 			if(arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s")) {
 				silentFlag = true;
 			}
-
 		}
 
 		if (forceNameFlag)
@@ -84,7 +82,7 @@ public class BanCommandExecutor implements CommandExecutor
 	private void safeBan(String playerName, String banReason, CommandSender commandSender, boolean silentFlag) {
 		try
 		{
-			module.ban(playerName, banReason);
+			module.getBanlist().ban(playerName, banReason);
 			Bukkit.getLogger().info(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));
 			if(!silentFlag) {
 				Bukkit.broadcastMessage(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));

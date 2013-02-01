@@ -26,12 +26,12 @@ public class BanreasonCommandExecutor implements CommandExecutor
 
 		final String playerName = args[0];
 
-		if(!module.isPlayerBanned(playerName)) {
+		if(!module.getBanlist().isPlayerBanned(playerName)) {
 			commandSender.sendMessage(String.format("Player % is not even banned.", playerName));
 			return true;
 		}
 
-		commandSender.sendMessage(String.format("%s is banned for %s", playerName, module.whyIsPlayerBanned(playerName)));
+		commandSender.sendMessage(String.format("%s is banned for %s", playerName, module.getBanlist().whyIsPlayerBanned(playerName)));
 		return true;
 	}
 }

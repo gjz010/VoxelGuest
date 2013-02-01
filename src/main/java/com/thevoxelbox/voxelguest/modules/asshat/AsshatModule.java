@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelguest.modules.asshat;
 
 import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
+import com.thevoxelbox.voxelguest.modules.asshat.ban.Banlist;
+import com.thevoxelbox.voxelguest.modules.asshat.ban.BannedPlayer;
 import com.thevoxelbox.voxelguest.modules.asshat.command.BanCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.command.BanreasonCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.command.FreezeCommandExecutor;
@@ -10,6 +12,9 @@ import com.thevoxelbox.voxelguest.modules.asshat.command.MuteCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.command.SoapboxCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.command.UnbanCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.command.UnmuteCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.asshat.mute.MutedPlayer;
+import com.thevoxelbox.voxelguest.modules.asshat.mute.Mutelist;
+import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 
@@ -21,6 +26,9 @@ import java.util.HashSet;
  */
 public class AsshatModule extends GuestModule
 {
+	public static final String SILENCE_BYPASS_PERM = "voxelguest.asshat.bypass.silence";
+	public static final String FREEZE_BYPASS_PERM = "voxelguest.asshat.bypass.freeze";
+
 	private PlayerListener playerListener;
 
 	private BanCommandExecutor banCommandExecutor;
@@ -32,8 +40,8 @@ public class AsshatModule extends GuestModule
 	private SoapboxCommandExecutor soapboxCommandExecutor;
 	private FreezeCommandExecutor freezeCommandExecutor;
 
-	private HashMap<String, String> mutedPlayers = new HashMap<>();
-	private HashMap<String, String> bannedPlayers = new HashMap<>();
+	private Mutelist mutelist = new Mutelist();
+	private Banlist banlist = new Banlist();
 	private boolean silenceEnabled = false;
 	private boolean freezeEnabled;
 
@@ -49,6 +57,27 @@ public class AsshatModule extends GuestModule
 		kickCommandExecutor = new KickCommandExecutor();
 		soapboxCommandExecutor = new SoapboxCommandExecutor(this);
 		freezeCommandExecutor = new FreezeCommandExecutor(this);
+
+		Persistence.getInstance().registerPersistentClass(BannedPlayer.class);
+		Persistence.getInstance().registerPersistentClass(MutedPlayer.class);
+	}
+
+	@Override
+	public void onEnable()
+	{
+		banlist.load();
+		mutelist.load();
+
+		super.onEnable();
+	}
+
+	@Override
+	public void onDisable()
+	{
+		banlist.save();
+		mutelist.save();
+
+		super.onDisable();
 	}
 
 	@Override
@@ -88,50 +117,14 @@ public class AsshatModule extends GuestModule
 		return commandMappings;
 	}
 
-	public boolean isPlayerMuted(String playerName)
+	public Banlist getBanlist()
 	{
-		return mutedPlayers.containsKey(playerName);
+		return banlist;
 	}
 
-	public String whyIsPlayerMuted(String playerName)
+	public Mutelist getMutelist()
 	{
-		Preconditions.checkState(isPlayerMuted(playerName), "Player %s must be muted in order to get the mute reason.", playerName);
-
-		return mutedPlayers.get(playerName);
-	}
-
-	public boolean isPlayerBanned(String playerName)
-	{
-		return bannedPlayers.containsKey(playerName);
-	}
-
-	public String whyIsPlayerBanned(String playerName)
-	{
-		Preconditions.checkState(isPlayerBanned(playerName), "Player %s must be banned in order to get the ban reason.", playerName);
-
-		return bannedPlayers.get(playerName);
-	}
-
-	public void ban(String playerName, String banReason) {
-		Preconditions.checkState(!isPlayerBanned(playerName), "Player %s already banned.", playerName);
-		bannedPlayers.put(playerName, banReason);
-	}
-
-	public void unban(String playerName) {
-		Preconditions.checkState(isPlayerBanned(playerName), "Player %s is not banned.", playerName);
-		bannedPlayers.remove(playerName);
-	}
-
-	public void mute(final String playerName, final String muteReason)
-	{
-		Preconditions.checkState(!isPlayerMuted(playerName), "Player %s already muted.", playerName);
-		mutedPlayers.put(playerName, muteReason);
-	}
-
-	public void unmute(final String playerName)
-	{
-		Preconditions.checkState(!isPlayerMuted(playerName), "Player %s is not muted.", playerName);
-		mutedPlayers.remove(playerName);
+		return mutelist;
 	}
 
 	public boolean isSilenceEnabled()

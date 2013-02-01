@@ -12,9 +12,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public class PlayerListener implements Listener
 {
-	private static final String SILENCE_BYPASS_PERM = "voxelguest.asshat.bypass.silence";
-	private static final String FREEZE_BYPASS_PERM = "voxelguest.asshat.bypass.freeze";
-
 	private AsshatModule module;
 
 	public PlayerListener(AsshatModule module)
@@ -27,17 +24,17 @@ public class PlayerListener implements Listener
 	{
 		final Player player = event.getPlayer();
 
-		if (module.isPlayerMuted(player.getName()))
+		if (module.getMutelist().isPlayerMuted(player.getName()))
 		{
 			event.setCancelled(true);
 
 			player.sendMessage("You are muted for: ");
-			player.sendMessage(module.whyIsPlayerMuted(player.getName()));
+			player.sendMessage(module.getMutelist().whyIsPlayerMuted(player.getName()));
 		}
 
 		if (module.isSilenceEnabled())
 		{
-			if (!player.hasPermission(SILENCE_BYPASS_PERM))
+			if (!player.hasPermission(AsshatModule.SILENCE_BYPASS_PERM))
 			{
 				event.setCancelled(true);
 			}
@@ -49,9 +46,9 @@ public class PlayerListener implements Listener
 	{
 		final Player player = event.getPlayer();
 
-		if (module.isPlayerBanned(player.getName()))
+		if (module.getBanlist().isPlayerBanned(player.getName()))
 		{
-			event.disallow(PlayerLoginEvent.Result.KICK_BANNED, module.whyIsPlayerBanned(player.getName()));
+			event.disallow(PlayerLoginEvent.Result.KICK_BANNED, module.getBanlist().whyIsPlayerBanned(player.getName()));
 		}
 	}
 
@@ -62,7 +59,7 @@ public class PlayerListener implements Listener
 
 		if (module.isFreezeEnabled())
 		{
-			if (!player.hasPermission(FREEZE_BYPASS_PERM))
+			if (!player.hasPermission(AsshatModule.FREEZE_BYPASS_PERM))
 			{
 				event.setCancelled(true);
 			}

@@ -83,7 +83,7 @@ public class MuteCommandExecutor implements CommandExecutor
 	private void safeMute(String playerName, String muteReason, CommandSender commandSender, boolean silentFlag) {
 		try
 		{
-			module.mute(playerName, muteReason);
+			module.getMutelist().mute(playerName, muteReason);
 			Bukkit.getLogger().info(String.format("%s got muted for %s by %s", playerName, muteReason, commandSender.getName()));
 			if(!silentFlag) {
 				Bukkit.broadcastMessage(String.format("%s got muted for %s by %s", playerName, muteReason, commandSender.getName()));

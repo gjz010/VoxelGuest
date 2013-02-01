@@ -47,7 +47,7 @@ public class UnbanCommandExecutor implements CommandExecutor
 	{
 		try
 		{
-			module.unban(playerName);
+			module.getBanlist().unban(playerName);
 			Bukkit.getLogger().info(String.format("%s got unbanned by %s", playerName, commandSender.getName()));
 			if (!silentFlag)
 			{
