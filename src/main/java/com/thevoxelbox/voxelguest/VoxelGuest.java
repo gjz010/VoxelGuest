@@ -1,49 +1,56 @@
 package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.modules.worldprotection.WorldProtectionModule;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class VoxelGuest extends JavaPlugin
 {
-	private static VoxelGuest pluginInstance = null;
-	private static ModuleManager moduleManagerInstance = null;
+    private static VoxelGuest pluginInstance = null;
+    private static ModuleManager moduleManagerInstance = null;
 
-	@Override
-	public void onEnable() {
-		VoxelGuest.setPluginInstance(this);
-		VoxelGuest.setModuleManagerInstance(new ModuleManager());
+    public static VoxelGuest getPluginInstance()
+    {
+        return VoxelGuest.pluginInstance;
+    }
 
-		VoxelGuest.getModuleManagerInstance().registerGuestModule(new WorldProtectionModule(), false);
-	}
+    private static void setPluginInstance(VoxelGuest pluginInstance)
+    {
+        if (VoxelGuest.pluginInstance != null)
+        {
+            throw new RuntimeException("Guest Plugin Instance already set.");
+        }
 
-	@Override
-	public void onDisable() {
-		VoxelGuest.getModuleManagerInstance().shutdown();
-	}
+        VoxelGuest.pluginInstance = pluginInstance;
+    }
 
-	private static void setPluginInstance(VoxelGuest pluginInstance) {
-		if(VoxelGuest.pluginInstance != null) {
-			throw new RuntimeException("Guest Plugin Instance already set.");
-		}
+    public static ModuleManager getModuleManagerInstance()
+    {
+        return moduleManagerInstance;
+    }
 
-		VoxelGuest.pluginInstance = pluginInstance;
-	}
+    public static void setModuleManagerInstance(final ModuleManager moduleManagerInstance)
+    {
+        if (VoxelGuest.moduleManagerInstance != null)
+        {
+            throw new RuntimeException("Guest Module Manger Instance already set.");
+        }
 
-	public static VoxelGuest getPluginInstance() {
-		return VoxelGuest.pluginInstance;
-	}
+        VoxelGuest.moduleManagerInstance = moduleManagerInstance;
+    }
 
-	public static ModuleManager getModuleManagerInstance()
-	{
-		return moduleManagerInstance;
-	}
+    @Override
+    public void onDisable()
+    {
+        VoxelGuest.getModuleManagerInstance().shutdown();
+    }
 
-	public static void setModuleManagerInstance(final ModuleManager moduleManagerInstance)
-	{
-		if(VoxelGuest.moduleManagerInstance != null) {
-			throw new RuntimeException("Guest Module Manger Instance already set.");
-		}
+    @Override
+    public void onEnable()
+    {
+        VoxelGuest.setPluginInstance(this);
+        VoxelGuest.setModuleManagerInstance(new ModuleManager());
 
-		VoxelGuest.moduleManagerInstance = moduleManagerInstance;
-	}
+        VoxelGuest.getModuleManagerInstance().registerGuestModule(new WorldProtectionModule(), false);
+    }
 }

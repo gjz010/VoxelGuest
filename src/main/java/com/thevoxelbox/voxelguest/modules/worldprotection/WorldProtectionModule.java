@@ -8,6 +8,10 @@ import org.omg.CORBA.SetOverrideType;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.thevoxelbox.voxelguest.modules.GuestModule;
+
+import org.bukkit.World;
+
 /**
  * @author Monofraps
  */

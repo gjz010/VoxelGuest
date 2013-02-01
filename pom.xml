@@ -69,6 +69,22 @@
             <version>1.4.7-R0.1</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.4.7-R0.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.morph</groupId>
+            <artifactId>morph</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0-rc1</version>
+        </dependency>
     </dependencies>
 
     <build>
