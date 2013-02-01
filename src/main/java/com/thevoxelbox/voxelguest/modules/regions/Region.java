@@ -51,7 +51,7 @@ public class Region implements Serializable
 	@Column
 	private boolean allowCreeperExplosions = false;
 	@Column
-	private boolean allowBreakingPaintings = false;
+	private boolean allowTntBreakingPaintings = false;
 	@Column
 	private boolean allowLavaFlow = false;
 	@Column
@@ -77,9 +77,39 @@ public class Region implements Serializable
 
 	//Player
 	@Column
-	private boolean allowPlayerDamage;
+	private boolean allowPvPDamage = false;
 	@Column
-	private boolean allowHunger;
+	private boolean allowLavaDamage = false;
+        @Column
+        private boolean allowCactusDamage = false;
+	@Column
+        private boolean allowTnTDamage = false;
+        @Column
+        private boolean allowDrowningDamage = false;
+        @Column
+        private boolean allowExplosiveDamage = false;
+        @Column
+        private boolean allowFallDamage = false;
+        @Column
+        private boolean allowFireDamage = false;
+        @Column
+        private boolean allowPoisonDamage = false;
+        @Column
+        private boolean allowMagicDamage = false;
+        @Column
+        private boolean allowProjectileDamage = false;
+        @Column
+	private boolean allowHungerDamage = false;
+        @Column
+        private boolean allowVoidDamage = false;
+        @Column
+        private boolean allowFireTickDamage = false;
+        @Column
+        private boolean allowLightningDamage = false;
+        @Column
+        private boolean allowSuffocationDamage = false;
+        @Column
+        private boolean allowFoodChange = false;
 
 	public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName, final String buildPermission)
 	{
@@ -186,14 +216,14 @@ public class Region implements Serializable
 		this.allowCreeperExplosions = allowCreeperExplosions;
 	}
 
-	public boolean isBreakingPaintingsAllowed()
+	public boolean isTntBreakingPaintingsAllowed()
 	{
-		return allowBreakingPaintings;
+		return allowTntBreakingPaintings;
 	}
 
 	public void setAllowBreakingPaintings(boolean allowBreakingPaintings)
 	{
-		this.allowBreakingPaintings = allowBreakingPaintings;
+		this.allowTntBreakingPaintings = allowBreakingPaintings;
 	}
 
 	public List<Material> getBannedBlocks()
@@ -218,22 +248,12 @@ public class Region implements Serializable
 
 	public boolean isPlayerDamageAllowed()
 	{
-		return allowPlayerDamage;
+		return allowPvPDamage;
 	}
 
 	public void setAllowPlayerDamage(final boolean allowPlayerDamage)
 	{
-		this.allowPlayerDamage = allowPlayerDamage;
-	}
-
-	public boolean isPlayerHungerAllowed()
-	{
-		return allowHunger;
-	}
-
-	public void setAllowHunger(final boolean allowHunger)
-	{
-		this.allowHunger = allowHunger;
+		this.allowPvPDamage = allowPlayerDamage;
 	}
 
 	public String getBuildPermission()
@@ -320,5 +340,188 @@ public class Region implements Serializable
 	{
 		this.allowIceFormation = allowIceFormation;
 	}
+
+        public boolean isAllowPvPDamage() 
+        {
+                return allowPvPDamage;
+        }
+
+        public void setAllowPvPDamage(boolean allowPvPDamage) 
+        {
+                this.allowPvPDamage = allowPvPDamage;
+        }
+
+        public boolean isAllowLavaDamage() 
+        {
+                return allowLavaDamage;
+        }
+
+        public void setAllowLavaDamage(boolean allowLavaDamage) 
+        {
+                this.allowLavaDamage = allowLavaDamage;
+        }
+
+        public boolean isAllowCactusDamage() 
+        {
+                return allowCactusDamage;
+        }
+
+        public void setAllowCactusDamage(boolean allowCactusDamage) 
+        {
+                this.allowCactusDamage = allowCactusDamage;
+        }
+
+        public boolean isAllowTnTDamage() 
+        {
+                return allowTnTDamage;
+        }
+
+        public void setAllowTnTDamage(boolean allowTnTDamage) 
+        {
+                this.allowTnTDamage = allowTnTDamage;
+        }
+
+        public boolean isAllowDrowningDamage() 
+        {
+                return allowDrowningDamage;
+        }
+
+        public void setAllowDrowningDamage(boolean allowDrowningDamage) 
+        {
+                this.allowDrowningDamage = allowDrowningDamage;
+        }
+
+        public boolean isAllowExplosiveDamage() 
+        {
+                return allowExplosiveDamage;
+        }
+
+        public void setAllowExplosiveDamage(boolean allowExplosiveDamage) 
+        {
+                this.allowExplosiveDamage = allowExplosiveDamage;
+        }
+
+        public boolean isAllowFallDamage() 
+        {
+                return allowFallDamage;
+        }
+
+        public void setAllowFallDamage(boolean allowFallDamage) 
+        {
+                this.allowFallDamage = allowFallDamage;
+        }
+
+        public boolean isAllowFireDamage() 
+        {
+                return allowFireDamage;
+        }
+
+        public void setAllowFireDamage(boolean allowFireDamage) 
+        {
+                this.allowFireDamage = allowFireDamage;
+        }
+
+        public boolean isAllowPoisonDamage() 
+        {
+                return allowPoisonDamage;
+        }
+
+        public void setAllowPoisonDamage(boolean allowPoisonDamage) 
+        {
+                this.allowPoisonDamage = allowPoisonDamage;
+        }
+
+        public boolean isAllowMagicDamage() 
+        {
+                return allowMagicDamage;
+        }
+
+        public void setAllowMagicDamage(boolean allowMagicDamage)
+        {
+                this.allowMagicDamage = allowMagicDamage;
+        }
+
+        public boolean isAllowProjectileDamage() 
+        {
+                return allowProjectileDamage;
+        }
+
+        public void setAllowProjectileDamage(boolean allowProjectileDamage) 
+        {
+                this.allowProjectileDamage = allowProjectileDamage;
+        }
+
+        public boolean isAllowHungerDamage() 
+        {
+                return allowHungerDamage;
+        }
+
+        public void setAllowHungerDamage(boolean allowHungerDamage) 
+        {
+                this.allowHungerDamage = allowHungerDamage;
+        }
+
+        public boolean isAllowVoidDamage() 
+        {
+                return allowVoidDamage;
+        }
+
+        public void setAllowVoidDamage(boolean allowVoidDamage) 
+        {
+                this.allowVoidDamage = allowVoidDamage;
+        }
+
+        public boolean isAllowFoodChange() 
+        {
+                return allowFoodChange;
+        }
+
+        public void setAllowFoodChange(boolean allowFoodChange) 
+        {
+                this.allowFoodChange = allowFoodChange;
+        }
+
+        public boolean isAllowTntBreakingPaintings() 
+        {
+                return allowTntBreakingPaintings;
+        }
+
+        public void setAllowTntBreakingPaintings(boolean allowTntBreakingPaintings) 
+        {
+                this.allowTntBreakingPaintings = allowTntBreakingPaintings;
+        }
+
+        public boolean isAllowFireTickDamage() 
+        {
+                return allowFireTickDamage;
+        }
+
+        public void setAllowFireTickDamage(boolean allowFireTickDamage) 
+        {
+                this.allowFireTickDamage = allowFireTickDamage;
+        }
+
+        public boolean isAllowLightningDamage() 
+        {
+                return allowLightningDamage;
+        }
+
+        public void setAllowLightningDamage(boolean allowLightningDamage) 
+        {
+                this.allowLightningDamage = allowLightningDamage;
+        }
+
+        public boolean isAllowSuffocationDamage() 
+        {
+                return allowSuffocationDamage;
+        }
+
+        public void setAllowSuffocationDamage(boolean allowSuffocationDamage)
+        {
+                this.allowSuffocationDamage = allowSuffocationDamage;
+        }
+
+        
+        
 
 }
