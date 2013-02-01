@@ -33,13 +33,13 @@ public class BlockEventListener implements Listener
 	private final String CANT_BUILD_HERE = "&4You cannot build here";
 	private RegionModule regionModule;
 
-	public BlockEventListener(RegionModule regionModule)
+	public BlockEventListener(final RegionModule regionModule)
 	{
 		this.regionModule = regionModule;
 	}
 
 	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event)
+	public final void onBlockBreak(final BlockBreakEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -59,7 +59,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event)
+	public final void onBlockPlace(final BlockPlaceEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -84,7 +84,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event)
+	public final void onPlayerInteract(final PlayerInteractEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getClickedBlock().getLocation());
 		if (region == null)
@@ -109,7 +109,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onLeafDecay(LeavesDecayEvent event)
+	public final void onLeafDecay(final LeavesDecayEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -124,7 +124,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onBlowGrow(BlockGrowEvent event)
+	public final void onBlowGrow(final BlockGrowEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -139,7 +139,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onFromTo(BlockFromToEvent event)
+	public final void onFromTo(final BlockFromToEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -174,7 +174,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onBlockFade(BlockFadeEvent event)
+	public final void onBlockFade(final BlockFadeEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -201,7 +201,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onBlockForm(BlockFormEvent event)
+	public final void onBlockForm(final BlockFormEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -228,7 +228,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onBlockIgnite(BlockIgniteEvent event)
+	public final void onBlockIgnite(final BlockIgniteEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -247,7 +247,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onBlockSpread(BlockSpreadEvent event)
+	public final void onBlockSpread(final BlockSpreadEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
 		if (region == null)
@@ -265,7 +265,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onEnchant(EnchantItemEvent event)
+	public final void onEnchant(final EnchantItemEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getEnchanter().getLocation());
 		if (region == null)
@@ -285,7 +285,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onEntityExplode(EntityExplodeEvent event)
+	public final void onEntityExplode(final EntityExplodeEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getLocation());
 		if (region == null)
@@ -300,7 +300,7 @@ public class BlockEventListener implements Listener
 	}
 
 	@EventHandler
-	public void onPaintingBreak(HangingBreakByEntityEvent event)
+	public final void onPaintingBreak(final HangingBreakByEntityEvent event)
 	{
 		Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
 		if (region == null)

@@ -48,7 +48,7 @@ public class RegionModule extends GuestModule
 		return listeners;
 	}
 
-	public final Region getRegionAtLocation(Location regionLocation)
+	public final Region getRegionAtLocation(final Location regionLocation)
 	{
 		for (Region region : regions)
 		{
