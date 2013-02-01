@@ -1,7 +1,3 @@
-/*
-* To change this template, choose Tools | Templates
-* and open the template in the editor.
-*/
 package com.thevoxelbox.voxelguest.modules.regions;
 
 import org.bukkit.entity.Entity;
@@ -17,211 +13,210 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 /**
-*
-* @author Joe
-*/
-public class PlayerEventListener implements Listener 
+ * @author Joe
+ */
+public class PlayerEventListener implements Listener
 {
 
-        private RegionModule regionModule;
+    private RegionModule regionModule;
 
-        public PlayerEventListener(RegionModule regionModule) 
+    public PlayerEventListener(RegionModule regionModule)
+    {
+        this.regionModule = regionModule;
+    }
+
+    @EventHandler
+    public final void onDamageByBlock(EntityDamageByBlockEvent event)
+    {
+        if (!(event.getEntityType() == EntityType.PLAYER))
         {
-                this.regionModule = regionModule;
+            return;
         }
 
-        @EventHandler
-        public final void onDamageByBlock(EntityDamageByBlockEvent event)
+        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        if (region == null)
         {
-            if(!(event.getEntityType() == EntityType.PLAYER))
-            {
-                    return;
-            }
+            return;
+        }
 
-            Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
-            if(region == null)
-            {
-                    return;
-            }
+        DamageCause cause = event.getCause();
 
-            DamageCause cause = event.getCause();
-
-            if(cause == DamageCause.CONTACT)
+        if (cause == DamageCause.CONTACT)
+        {
+            if (!region.isAllowCactusDamage())
             {
-                if(!region.isAllowCactusDamage())
-                {
-                        event.setCancelled(true);
-                }
-            }
-
-            if(cause == DamageCause.LAVA)
-            {
-                if(!region.isAllowLavaDamage())
-                {
-                        event.setCancelled(true);
-                }
+                event.setCancelled(true);
             }
         }
 
-        @EventHandler
-        public final void onDamageByEntity(EntityDamageByEntityEvent event)
+        if (cause == DamageCause.LAVA)
         {
-            Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
-            if(region == null)
+            if (!region.isAllowLavaDamage())
             {
-                    return;
-            }
-
-            Entity entity = event.getEntity();
-            DamageCause cause = event.getCause();
-
-            if(entity instanceof Player)
-            {
-                if(cause == DamageCause.ENTITY_ATTACK)
-                {
-                    if(!region.isAllowPvPDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.ENTITY_EXPLOSION)
-                {
-                    if(!region.isAllowExplosiveDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.PROJECTILE)
-                {
-                    if(!region.isAllowProjectileDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.BLOCK_EXPLOSION)
-                {
-                    if(!region.isAllowTnTDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-            }
-            else if(entity instanceof Painting)
-            {
-                if(cause == DamageCause.BLOCK_EXPLOSION)
-                {
-                    if(!region.isTntBreakingPaintingsAllowed())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-            }
-
-
-        }
-
-        @EventHandler
-        public final void onEntityDamage(EntityDamageEvent event)
-        {
-            Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
-            if(region == null)
-            {
-                    return;
-            }
-
-            Entity entity = event.getEntity();
-            DamageCause cause = event.getCause();
-
-            if(entity instanceof Player)
-            {
-                if(cause == DamageCause.DROWNING)
-                {
-                    if(!region.isAllowDrowningDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.FALL)
-                {
-                    if(!region.isAllowFallDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.FIRE)
-                {
-                    if(!region.isAllowFireDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.FIRE_TICK)
-                {
-                    if(!region.isAllowFireTickDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.LIGHTNING)
-                {
-                    if(!region.isAllowLightningDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.MAGIC)
-                {
-                    if(!region.isAllowMagicDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.POISON)
-                {
-                    if(!region.isAllowPoisonDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.STARVATION)
-                {
-                    if(!region.isAllowHungerDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.SUFFOCATION)
-                {
-                    if(!region.isAllowSuffocationDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-                else if(cause == DamageCause.VOID)
-                {
-                    if(!region.isAllowVoidDamage())
-                    {
-                            event.setCancelled(true);
-                    }
-                }
-
+                event.setCancelled(true);
             }
         }
+    }
 
-        @EventHandler
-        public final void onFoodChange(FoodLevelChangeEvent event)
+    @EventHandler
+    public final void onDamageByEntity(EntityDamageByEntityEvent event)
+    {
+        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        if (region == null)
         {
-            Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
-            if(region == null)
-            {
-                    return;
-            }
+            return;
+        }
 
-            if(event.getFoodLevel() < 20)
+        Entity entity = event.getEntity();
+        DamageCause cause = event.getCause();
+
+        if (entity instanceof Player)
+        {
+            if (cause == DamageCause.ENTITY_ATTACK)
             {
-                    event.setFoodLevel(20);
+                if (!region.isAllowPvPDamage())
+                {
                     event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.ENTITY_EXPLOSION)
+            {
+                if (!region.isAllowExplosiveDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.PROJECTILE)
+            {
+                if (!region.isAllowProjectileDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.BLOCK_EXPLOSION)
+            {
+                if (!region.isAllowTnTDamage())
+                {
+                    event.setCancelled(true);
+                }
             }
         }
+        else if (entity instanceof Painting)
+        {
+            if (cause == DamageCause.BLOCK_EXPLOSION)
+            {
+                if (!region.isTntBreakingPaintingsAllowed())
+                {
+                    event.setCancelled(true);
+                }
+            }
+        }
+
+
+    }
+
+    @EventHandler
+    public final void onEntityDamage(EntityDamageEvent event)
+    {
+        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        if (region == null)
+        {
+            return;
+        }
+
+        Entity entity = event.getEntity();
+        DamageCause cause = event.getCause();
+
+        if (entity instanceof Player)
+        {
+            if (cause == DamageCause.DROWNING)
+            {
+                if (!region.isAllowDrowningDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.FALL)
+            {
+                if (!region.isAllowFallDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.FIRE)
+            {
+                if (!region.isAllowFireDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.FIRE_TICK)
+            {
+                if (!region.isAllowFireTickDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.LIGHTNING)
+            {
+                if (!region.isAllowLightningDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.MAGIC)
+            {
+                if (!region.isAllowMagicDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.POISON)
+            {
+                if (!region.isAllowPoisonDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.STARVATION)
+            {
+                if (!region.isAllowHungerDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.SUFFOCATION)
+            {
+                if (!region.isAllowSuffocationDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+            else if (cause == DamageCause.VOID)
+            {
+                if (!region.isAllowVoidDamage())
+                {
+                    event.setCancelled(true);
+                }
+            }
+
+        }
+    }
+
+    @EventHandler
+    public final void onFoodChange(FoodLevelChangeEvent event)
+    {
+        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        if (region == null)
+        {
+            return;
+        }
+
+        if (event.getFoodLevel() < 20)
+        {
+            event.setFoodLevel(20);
+            event.setCancelled(true);
+        }
+    }
 
 }
