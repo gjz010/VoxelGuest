@@ -5,50 +5,84 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Joe
+ * @author Monofraps
  */
+@Entity
+@Table(name = "regions")
 public class Region implements Serializable
 {
+	@Id
+	@Column
+	private long id;
 
+	@Column
 	public final String regionName;
-	public final String worldName;
+	@Column
 	private Location pointOne;
+	@Column
 	private Location pointTwo;
+
 	//World
+	@Column
 	private boolean allowMobSpawn = false;
+	@Column
 	private boolean allowFireSpread = false;
+	@Column
 	private boolean allowLeafDecay = false;
+	@Column
 	private boolean allowBlockGrowth = false;
+	@Column
 	private boolean allowBlockSpread = false;
+	@Column
 	private boolean allowCreeperExplosions = false;
+	@Column
 	private boolean allowBreakingPaintings = false;
+	@Column
 	private boolean allowLavaFlow = false;
+	@Column
 	private boolean allowWaterFlow = false;
+	@Column
 	private boolean allowDragonEggMovement = false;
+	@Column
 	private boolean allowSnowMelting = false;
+	@Column
 	private boolean allowIceMelting = false;
+	@Column
 	private boolean allowSnowFormation = false;
+	@Column
 	private boolean allowIceFormation = false;
+	@Column
 	private boolean allowEnchanting = false;
-	private List<Block> bannedBlocks = new ArrayList<>();
-	private List<ItemStack> bannedItems = new ArrayList<>();
+	@Column
+	private List<Material> bannedBlocks = new ArrayList<>();
+	@Column
+	private List<Material> bannedItems = new ArrayList<>();
+	@Column
 	private String buildPermission;
+
 	//Player
+	@Column
 	private boolean allowPlayerDamage;
+	@Column
 	private boolean allowHunger;
 
 	public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName, final String buildPermission)
 	{
-		this.worldName = worldName;
 		this.pointOne = pointOne;
 		this.pointTwo = pointTwo;
 		this.regionName = regionName;
@@ -57,7 +91,7 @@ public class Region implements Serializable
 
 	public final boolean isLocationInRegion(final Location locationToCheck)
 	{
-		if (!locationToCheck.getWorld().getName().equalsIgnoreCase(worldName))
+		if (!locationToCheck.getWorld().equals(this.pointOne.getWorld()))
 		{
 			return false;
 		}
@@ -162,22 +196,22 @@ public class Region implements Serializable
 		this.allowBreakingPaintings = allowBreakingPaintings;
 	}
 
-	public final List<Block> getBannedBlocks()
+	public final List<Material> getBannedBlocks()
 	{
 		return bannedBlocks;
 	}
 
-	public final void setBannedBlocks(List<Block> bannedBlocks)
+	public final void setBannedBlocks(List<Material> bannedBlocks)
 	{
 		this.bannedBlocks = bannedBlocks;
 	}
 
-	public final List<ItemStack> getBannedItems()
+	public final List<Material> getBannedItems()
 	{
 		return bannedItems;
 	}
 
-	public final void setBannedItems(final List<ItemStack> bannedItems)
+	public final void setBannedItems(final List<Material> bannedItems)
 	{
 		this.bannedItems = bannedItems;
 	}
