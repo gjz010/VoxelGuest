@@ -110,7 +110,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	}
 
 	/**
-	 * Enables all registered modules of type [module]
+	 * Enables all registered modules of type [module].
 	 *
 	 * @param module The type of the modules to enable.
 	 */

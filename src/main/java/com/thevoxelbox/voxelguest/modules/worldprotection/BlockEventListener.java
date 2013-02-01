@@ -11,22 +11,22 @@ import org.bukkit.event.block.BlockBreakEvent;
  */
 public class BlockEventListener implements Listener
 {
-    private WorldProtectionModule protectionModule;
+	private WorldProtectionModule protectionModule;
 
-    public BlockEventListener(WorldProtectionModule protectionModule)
-    {
+	public BlockEventListener(WorldProtectionModule protectionModule)
+	{
 
-        this.protectionModule = protectionModule;
-    }
+		this.protectionModule = protectionModule;
+	}
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event)
-    {
-        if (!protectionModule.isProtectedWorld(event.getBlock().getWorld()))
-        {
-            return;
-        }
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event)
+	{
+		if (!protectionModule.isProtectedWorld(event.getBlock().getWorld()))
+		{
+			return;
+		}
 
 
-    }
+	}
 }

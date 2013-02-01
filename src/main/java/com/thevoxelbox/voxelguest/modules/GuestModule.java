@@ -1,10 +1,5 @@
 package com.thevoxelbox.voxelguest.modules;
 
-import org.bukkit.event.Listener;
-
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * @author MikeMatrix
  */
@@ -14,31 +9,37 @@ public abstract class GuestModule implements Module
 	private boolean enabled = false;
 
 	@Override
-	public void onEnable() {
+	public void onEnable()
+	{
 		enabled = true;
 	}
 
 	@Override
-	public void onDisable() {
+	public void onDisable()
+	{
 		enabled = false;
 	}
 
 	@Override
-	public boolean isEnabled() {
+	public boolean isEnabled()
+	{
 		return enabled;
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	protected void setName(String name) {
+	protected void setName(String name)
+	{
 		this.name = name;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return getName();
 	}
 }
