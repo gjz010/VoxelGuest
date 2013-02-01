@@ -55,8 +55,6 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 		}
 	}
 
-	//TODO: Could be made private ...?
-
 	/**
 	 * Enables a give module.
 	 *
