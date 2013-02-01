@@ -117,4 +117,15 @@ public class Persistence
 
         return result;
     }
+
+    public void delete(final Object greylistee)
+    {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        session.delete(greylistee);
+
+        session.getTransaction().commit();
+        session.close();
+    }
 }
