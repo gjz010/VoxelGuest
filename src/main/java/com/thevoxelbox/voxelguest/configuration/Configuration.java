@@ -17,11 +17,15 @@ import net.sf.morph.transform.transformers.SimpleDelegatingTransformer;
 /**
  * @author MikeMatrix
  */
-public class Configuration
+public final class Configuration
 {
     private static SimpleDelegatingTransformer transformer = new SimpleDelegatingTransformer();
 
-    public static boolean loadConfiguration(File configurationFile, Object targetObject)
+    private Configuration()
+    {
+    }
+
+    public static boolean loadConfiguration(final File configurationFile, final Object targetObject)
     {
         Preconditions.checkNotNull(configurationFile, "Configuration File cannot be null.");
         Preconditions.checkNotNull(targetObject, "Target Object cannot be null.");
@@ -73,7 +77,7 @@ public class Configuration
         return false;
     }
 
-    public static boolean saveConfiguration(File configurationFile, Object sourceObject)
+    public static boolean saveConfiguration(final File configurationFile, final Object sourceObject)
     {
         Preconditions.checkNotNull(configurationFile, "Configuration File cannot be null.");
         Preconditions.checkNotNull(sourceObject, "Source Object cannot be null.");
