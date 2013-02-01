@@ -1,5 +1,13 @@
 package com.thevoxelbox.voxelguest.modules;
 
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.Listener;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Implements all primitive basic functions to simplify module creation.
  *
@@ -44,5 +52,29 @@ public abstract class GuestModule implements Module
 	public String toString()
 	{
 		return getName();
+	}
+
+	@Override
+	public String getConfigFileName()
+	{
+		return null;
+	}
+
+	@Override
+	public Object getConfiguration()
+	{
+		return null;
+	}
+
+	@Override
+	public Set<Listener> getListeners()
+	{
+		return new HashSet<>();
+	}
+
+	@Override
+	public Map<String, CommandExecutor> getCommandMappings()
+	{
+		return new HashMap<>();
 	}
 }

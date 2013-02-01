@@ -1,8 +1,11 @@
 package com.thevoxelbox.voxelguest.modules;
 
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,7 +34,7 @@ public interface Module
 	 * Returns a HashSet of listeners the module wants the module manager to register.
 	 * @return HashSet of listeners to register
 	 */
-	HashSet<Listener> getListeners();
+	Set<Listener> getListeners();
 
 	/**
 	 * Returns the name of the module.
@@ -41,4 +44,5 @@ public interface Module
 
 	Object getConfiguration();
 	String getConfigFileName();
+	Map<String, CommandExecutor> getCommandMappings();
 }

@@ -4,12 +4,14 @@ package com.thevoxelbox.voxelguest;
 import com.thevoxelbox.voxelguest.configuration.Configuration;
 import com.thevoxelbox.voxelguest.modules.Module;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.*;
@@ -78,6 +80,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 		try
 		{
 			final Set<Listener> moduleListeners = module.getListeners();
+			checkNotNull(moduleListeners, "Module %s returned null when asked for a list of listeners.", module.toString());
 
 			if (!moduleListeners.isEmpty())
 			{
@@ -98,6 +101,16 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 			Bukkit.getLogger().severe(String.format("Exception while enabling module: %s", ex.getMessage()));
 			ex.printStackTrace();
 			disableModuleByInstance(module);
+		}
+
+		final Map<String, CommandExecutor> commandExecutors = module.getCommandMappings();
+		checkNotNull(commandExecutors, "Module %s returned null when asked for command executor mappings.", module.toString());
+		if (!commandExecutors.isEmpty())
+		{
+			for (String command : commandExecutors.keySet())
+			{
+				VoxelGuest.getPluginInstance().getCommand(command).setExecutor(commandExecutors.get(command));
+			}
 		}
 	}
 
@@ -142,6 +155,16 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 			Configuration.saveConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".cfg"), module.getConfiguration());
 		}
 
+		final Map<String, CommandExecutor> commandExecutors = module.getCommandMappings();
+		checkNotNull(commandExecutors, "Module %s returned null when asked for command executor mappings.", module.toString());
+		if (!commandExecutors.isEmpty())
+		{
+			for (String command : commandExecutors.keySet())
+			{
+				VoxelGuest.getPluginInstance().getCommand(command).setExecutor(null);
+			}
+		}
+
 		try
 		{
 			// unregister the module listeners
@@ -150,6 +173,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 				// get listeners from module (eventually contains self registered listeners)
 				// and merge stored listeners to make sure we don't forget any listener
 				final Set<Listener> moduleListeners = module.getListeners();
+				checkNotNull(moduleListeners, "Module %s returned null when asked for a list of listeners.", module.toString());
 				moduleListeners.addAll(this.registeredModules.get(module));
 				this.registeredModules.get(module).clear();
 
