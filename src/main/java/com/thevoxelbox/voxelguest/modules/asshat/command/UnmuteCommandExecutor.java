@@ -11,8 +11,12 @@ import org.bukkit.command.CommandSender;
  */
 public class UnmuteCommandExecutor implements CommandExecutor
 {
-	AsshatModule module;
+	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public UnmuteCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;

@@ -22,6 +22,11 @@ public class BannedPlayer
 	@Column
 	private String banReason;
 
+	/**
+	 *
+	 * @param playerName The name of the banned player.
+	 * @param banReason The reason the player is banned for.
+	 */
 	public BannedPlayer(final String playerName, final String banReason)
 	{
 
@@ -29,23 +34,21 @@ public class BannedPlayer
 		this.banReason = banReason;
 	}
 
+	/**
+	 *
+	 * @return Returns the name of the banned player.
+	 */
 	public final String getPlayerName()
 	{
 		return playerName;
 	}
 
-	public final void setPlayerName(final String playerName)
-	{
-		this.playerName = playerName;
-	}
-
+	/**
+	 *
+	 * @return Returns the reason the player is banned for.
+	 */
 	public final String getBanReason()
 	{
 		return banReason;
-	}
-
-	public final void setBanReason(final String banReason)
-	{
-		this.banReason = banReason;
 	}
 }

@@ -13,16 +13,25 @@ public class Banlist
 {
 	private List<BannedPlayer> bannedPlayers = new ArrayList<>();
 
+	/**
+	 * Bans the player named playerName and stores the ban reason.
+	 * @param playerName The name of the player to ban.
+	 * @param banReason The reason the player is banned for.
+	 */
 	public final void ban(final String playerName, final String banReason)
 	{
 		Preconditions.checkState(!isPlayerBanned(playerName), "Player %s already banned.", playerName);
 		bannedPlayers.add(new BannedPlayer(playerName, banReason));
 	}
 
+	/**
+	 * Unbans the player named playerName.
+	 * @param playerName The name of the player to unban.
+	 */
 	public final void unban(final String playerName)
 	{
 		Preconditions.checkState(isPlayerBanned(playerName), "Player %s is not banned.", playerName);
-		bannedPlayers.remove(playerName);
+		bannedPlayers.remove(getBannedPlayer(playerName));
 	}
 
 	private BannedPlayer getBannedPlayer(final String playerName)
@@ -38,12 +47,22 @@ public class Banlist
 		return null;
 	}
 
+	/**
+	 * Checks if a player is banned.
+	 * @param playerName The name of the player to check.
+	 * @return Returns true if the player is banned, otherwise false.
+	 */
 	public final boolean isPlayerBanned(final String playerName)
 	{
 		return getBannedPlayer(playerName) != null;
 
 	}
 
+	/**
+	 * Gets the reason why a player is banned.
+	 * @param playerName The name of the player to check.
+	 * @return Returns the reason the player is banned for.
+	 */
 	public final String whyIsPlayerBanned(final String playerName)
 	{
 		Preconditions.checkState(isPlayerBanned(playerName), "Player %s must be banned in order to get the ban reason.", playerName);
@@ -51,16 +70,9 @@ public class Banlist
 		return getBannedPlayer(playerName).getBanReason();
 	}
 
-	public final List<BannedPlayer> getBannedPlayers()
-	{
-		return bannedPlayers;
-	}
-
-	public final void setBannedPlayers(final List<BannedPlayer> bannedPlayers)
-	{
-		this.bannedPlayers = bannedPlayers;
-	}
-
+	/**
+	 * Loads banned players list from persistence system.
+	 */
 	public final void load()
 	{
 		bannedPlayers.clear();
@@ -72,6 +84,9 @@ public class Banlist
 		}
 	}
 
+	/**
+	 * Saves banned players list to persistence system.
+	 */
 	public final void save()
 	{
 		List<Object> protoList = new ArrayList<>();

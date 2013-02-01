@@ -12,6 +12,10 @@ public class FreezeCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public FreezeCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;

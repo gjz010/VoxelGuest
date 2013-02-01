@@ -16,6 +16,10 @@ public class BanCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public BanCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;

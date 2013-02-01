@@ -22,29 +22,32 @@ public class MutedPlayer
 	@Column
 	private String muteReason;
 
+	/**
+	 *
+	 * @param playerName The name of the muted player.
+	 * @param muteReason The reason the player is muted for.
+	 */
 	public MutedPlayer(final String playerName, final String muteReason)
 	{
 		this.playerName = playerName;
 		this.muteReason = muteReason;
 	}
 
+	/**
+	 *
+	 * @return Returns the name of the muted player.
+	 */
 	public final String getPlayerName()
 	{
 		return playerName;
 	}
 
-	public final void setPlayerName(final String playerName)
-	{
-		this.playerName = playerName;
-	}
-
+	/**
+	 *
+	 * @return Returns the reason the player is muted for.
+	 */
 	public final String getMuteReason()
 	{
 		return muteReason;
-	}
-
-	public final void setMuteReason(final String muteReason)
-	{
-		this.muteReason = muteReason;
 	}
 }

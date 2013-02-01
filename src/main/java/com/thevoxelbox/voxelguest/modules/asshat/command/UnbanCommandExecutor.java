@@ -11,8 +11,12 @@ import org.bukkit.command.CommandSender;
  */
 public class UnbanCommandExecutor implements CommandExecutor
 {
-	AsshatModule module;
+	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public UnbanCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;

@@ -10,8 +10,12 @@ import org.bukkit.command.CommandSender;
  */
 public class BanreasonCommandExecutor implements CommandExecutor
 {
-	AsshatModule module;
+	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public BanreasonCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;

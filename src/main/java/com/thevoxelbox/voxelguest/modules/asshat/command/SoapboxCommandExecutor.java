@@ -12,6 +12,10 @@ public class SoapboxCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public SoapboxCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;

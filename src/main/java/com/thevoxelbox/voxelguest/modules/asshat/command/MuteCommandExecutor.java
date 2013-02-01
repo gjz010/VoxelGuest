@@ -16,6 +16,10 @@ public class MuteCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The owning module.
+	 */
 	public MuteCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
