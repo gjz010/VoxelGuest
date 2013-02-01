@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelguest;
 
 
-import static com.google.common.base.Preconditions.*;
 import com.thevoxelbox.voxelguest.modules.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -10,6 +9,8 @@ import org.bukkit.event.Listener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * @author Monofraps
@@ -51,6 +52,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	}
 
 	//TODO: Could be made private ...?
+
 	/**
 	 * Enables a give module.
 	 *
@@ -59,18 +61,8 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	public final void enableModuleByInstance(final Module module)
 	{
 		checkNotNull(module, "Parameter module must not be null.");
-
-		final boolean isRegisteredModule = this.registeredModules.containsKey(module);
-		if (!isRegisteredModule)
-		{
-			Bukkit.getLogger().warning("Guest module manager was asked to activate a non-registered module. I will activate the module but cannot keep track of its state and listeners.");
-		}
-
-		if (module.isEnabled())
-		{
-			Bukkit.getLogger().warning(String.format("Module already enabled. (Module: %s)", module.toString()));
-			return;
-		}
+		checkState(this.registeredModules.containsKey(module), "Module must be registered.");
+		checkState(!module.isEnabled(), String.format("Module already enabled. (Module: %s)", module.toString()));
 
 		module.onEnable();
 
@@ -82,20 +74,13 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
 			if (!moduleListeners.isEmpty())
 			{
-				Set<Listener> internalListenerTracker = null;
-				if (isRegisteredModule)
-				{
-					internalListenerTracker = this.registeredModules.get(module);
-				}
+				Set<Listener> internalListenerTracker = this.registeredModules.get(module);
 
 				int numRegisteredListeners = 0;
 				for (Listener listener : moduleListeners)
 				{
 					Bukkit.getPluginManager().registerEvents(listener, VoxelGuest.getPluginInstance());
-					if (isRegisteredModule)
-					{
-						internalListenerTracker.add(listener);
-					}
+					internalListenerTracker.add(listener);
 					numRegisteredListeners++;
 				}
 
@@ -142,18 +127,8 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	public final void disableModuleByInstance(final Module module)
 	{
 		checkNotNull(module, "Parameter module must not be null.");
-
-		final boolean isRegisteredModule = this.registeredModules.containsKey(module);
-		if (!isRegisteredModule)
-		{
-			Bukkit.getLogger().warning("Guest module manager was asked to disable a non-registered module. I will disable the module but cannot keep track of its state and listeners.");
-		}
-
-		if (!module.isEnabled())
-		{
-			Bukkit.getLogger().warning(String.format("Module already disabled. (Module: %s)", module.toString()));
-			return;
-		}
+		checkState(this.registeredModules.containsKey(module), "Module must be registered.");
+		checkState(module.isEnabled(), String.format("Module already disabled. (Module: %s)", module.toString()));
 
 		try
 		{
@@ -163,11 +138,8 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 				// get listeners from module (eventually contains self registered listeners)
 				// and merge stored listeners to make sure we don't forget any listener
 				final Set<Listener> moduleListeners = module.getListeners();
-				if (isRegisteredModule)
-				{
-					moduleListeners.addAll(this.registeredModules.get(module));
-					this.registeredModules.get(module).clear();
-				}
+				moduleListeners.addAll(this.registeredModules.get(module));
+				this.registeredModules.get(module).clear();
 
 				if (!moduleListeners.isEmpty())
 				{
@@ -183,10 +155,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 				ex.printStackTrace();
 			} finally
 			{
-				if (isRegisteredModule)
-				{
-					registeredModules.get(module).clear();
-				}
+				registeredModules.get(module).clear();
 			}
 
 			module.onDisable();
@@ -224,6 +193,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
 	/**
 	 * Restarts or just enables a give module. It calls disableModuleByInstance and enableModuleByInstance internally.
+	 *
 	 * @param module The instance of the module to restart.
 	 */
 	public final void restartModule(final Module module)
