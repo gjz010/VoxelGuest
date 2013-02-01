@@ -12,7 +12,6 @@ public abstract class GuestModule implements Module
 {
 	private String name = "Default Module Name (Yell at the developer if you see this!)";
 	protected boolean enabled = false;
-	protected Set<Listener> eventListeners = new HashSet<>();
 
 	@Override
 	public void onEnable() {
@@ -36,11 +35,6 @@ public abstract class GuestModule implements Module
 
 	protected void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public Set<Listener> getListeners() {
-		return eventListeners;
 	}
 
 	@Override

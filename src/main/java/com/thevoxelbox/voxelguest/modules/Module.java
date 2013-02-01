@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelguest.modules;
 
 import org.bukkit.event.Listener;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,6 +14,6 @@ public interface Module
 	void onDisable();
 
 	boolean isEnabled();
-	Set<Listener> getListeners();
+	HashSet<Listener> getListeners();
 	String getName();
 }

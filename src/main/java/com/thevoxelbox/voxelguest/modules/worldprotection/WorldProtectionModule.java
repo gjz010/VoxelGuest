@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelguest.modules.worldprotection;
 
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import org.bukkit.World;
+import org.bukkit.event.Listener;
+import org.omg.CORBA.SetOverrideType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,22 +15,31 @@ public class WorldProtectionModule extends GuestModule
 {
 	private Set<String> protectedWorlds = new HashSet<>();
 
+	BlockEventListener blockListener;
+
 	public WorldProtectionModule() {
 		setName("World Protection");
+
+		blockListener = new BlockEventListener(this);
 	}
 
 	@Override
 	public void onEnable() {
-		this.eventListeners.add(new BlockEventListener(this));
-
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-		this.eventListeners.clear();
-
 		super.onDisable();
+	}
+
+	@Override
+	public HashSet<Listener> getListeners()
+	{
+		final HashSet<Listener> listeners = new HashSet<>();
+		listeners.add(blockListener);
+
+		return listeners;
 	}
 
 	public boolean isProtectedWorld(World world) {
