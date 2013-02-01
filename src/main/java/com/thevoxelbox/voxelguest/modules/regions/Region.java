@@ -31,7 +31,7 @@ public class Region implements Serializable
 	private long id;
 
 	@Column
-	public final String regionName;
+	private final String regionName;
 	@Column
 	private Location pointOne;
 	@Column
@@ -106,217 +106,217 @@ public class Region implements Serializable
 
 	}
 
-	public final Location getPointOne()
+	public Location getPointOne()
 	{
 		return pointOne;
 	}
 
-	public final void setPointOne(final Location pointOne)
+	public void setPointOne(final Location pointOne)
 	{
 		this.pointOne = pointOne;
 	}
 
-	public final Location getPointTwo()
+	public Location getPointTwo()
 	{
 		return pointTwo;
 	}
 
-	public final void setPointTwo(final Location pointTwo)
+	public void setPointTwo(final Location pointTwo)
 	{
 		this.pointTwo = pointTwo;
 	}
 
-	public final boolean isMobSpawnAllowed()
+	public boolean isMobSpawnAllowed()
 	{
 		return allowMobSpawn;
 	}
 
-	public final void setAllowMobSpawn(final boolean allowMobSpawn)
+	public void setAllowMobSpawn(final boolean allowMobSpawn)
 	{
 		this.allowMobSpawn = allowMobSpawn;
 	}
 
-	public final boolean isFireSpreadAllowed()
+	public boolean isFireSpreadAllowed()
 	{
 		return allowFireSpread;
 	}
 
-	public final void setAllowFireSpread(final boolean allowFireSpread)
+	public void setAllowFireSpread(final boolean allowFireSpread)
 	{
 		this.allowFireSpread = allowFireSpread;
 	}
 
-	public final boolean isLeafDecayAllowed()
+	public boolean isLeafDecayAllowed()
 	{
 		return allowLeafDecay;
 	}
 
-	public final void setAllowLeafDecay(final boolean allowLeafDecay)
+	public void setAllowLeafDecay(final boolean allowLeafDecay)
 	{
 		this.allowLeafDecay = allowLeafDecay;
 	}
 
-	public final boolean isBlowGrowthAllowed()
+	public boolean isBlowGrowthAllowed()
 	{
 		return allowBlockGrowth;
 	}
 
-	public final void setAllowBlockGrowth(final boolean allowBlockGrowth)
+	public void setAllowBlockGrowth(final boolean allowBlockGrowth)
 	{
 		this.allowBlockGrowth = allowBlockGrowth;
 	}
 
-	public final boolean isBlockSpreadAllowed()
+	public boolean isBlockSpreadAllowed()
 	{
 		return allowBlockSpread;
 	}
 
-	public final void setAllowBlockSpread(final boolean allowBlockSpread)
+	public void setAllowBlockSpread(final boolean allowBlockSpread)
 	{
 		this.allowBlockSpread = allowBlockSpread;
 	}
 
-	public final boolean isCreeperExplosionsAllowed()
+	public boolean isCreeperExplosionsAllowed()
 	{
 		return allowCreeperExplosions;
 	}
 
-	public final void setAllowCreeperExplosions(final boolean allowCreeperExplosions)
+	public void setAllowCreeperExplosions(final boolean allowCreeperExplosions)
 	{
 		this.allowCreeperExplosions = allowCreeperExplosions;
 	}
 
-	public final boolean isBreakingPaintingsAllowed()
+	public boolean isBreakingPaintingsAllowed()
 	{
 		return allowBreakingPaintings;
 	}
 
-	public final void setAllowBreakingPaintings(boolean allowBreakingPaintings)
+	public void setAllowBreakingPaintings(boolean allowBreakingPaintings)
 	{
 		this.allowBreakingPaintings = allowBreakingPaintings;
 	}
 
-	public final List<Material> getBannedBlocks()
+	public List<Material> getBannedBlocks()
 	{
 		return bannedBlocks;
 	}
 
-	public final void setBannedBlocks(List<Material> bannedBlocks)
+	public void setBannedBlocks(List<Material> bannedBlocks)
 	{
 		this.bannedBlocks = bannedBlocks;
 	}
 
-	public final List<Material> getBannedItems()
+	public List<Material> getBannedItems()
 	{
 		return bannedItems;
 	}
 
-	public final void setBannedItems(final List<Material> bannedItems)
+	public void setBannedItems(final List<Material> bannedItems)
 	{
 		this.bannedItems = bannedItems;
 	}
 
-	public final boolean isPlayerDamageAllowed()
+	public boolean isPlayerDamageAllowed()
 	{
 		return allowPlayerDamage;
 	}
 
-	public final void setAllowPlayerDamage(final boolean allowPlayerDamage)
+	public void setAllowPlayerDamage(final boolean allowPlayerDamage)
 	{
 		this.allowPlayerDamage = allowPlayerDamage;
 	}
 
-	public final boolean isPlayerHungerAllowed()
+	public boolean isPlayerHungerAllowed()
 	{
 		return allowHunger;
 	}
 
-	public final void setAllowHunger(final boolean allowHunger)
+	public void setAllowHunger(final boolean allowHunger)
 	{
 		this.allowHunger = allowHunger;
 	}
 
-	public final String getBuildPermission()
+	public String getBuildPermission()
 	{
 		return buildPermission;
 	}
 
-	public final boolean isLavaFlowAllowed()
+	public boolean isLavaFlowAllowed()
 	{
 		return allowLavaFlow;
 	}
 
-	public final void setAllowLavaFlow(final boolean allowLavaFlow)
+	public void setAllowLavaFlow(final boolean allowLavaFlow)
 	{
 		this.allowLavaFlow = allowLavaFlow;
 	}
 
-	public final boolean isWaterFlowAllowed()
+	public boolean isWaterFlowAllowed()
 	{
 		return allowWaterFlow;
 	}
 
-	public final void setAllowWaterFlow(final boolean allowWaterFlow)
+	public void setAllowWaterFlow(final boolean allowWaterFlow)
 	{
 		this.allowWaterFlow = allowWaterFlow;
 	}
 
-	public final boolean isDragonEggMovementAllowed()
+	public boolean isDragonEggMovementAllowed()
 	{
 		return allowDragonEggMovement;
 	}
 
-	public final void setAllowDragonEggMovement(final boolean allowDragonEggMovement)
+	public void setAllowDragonEggMovement(final boolean allowDragonEggMovement)
 	{
 		this.allowDragonEggMovement = allowDragonEggMovement;
 	}
 
-	public final boolean isSnowMeltingAllowed()
+	public boolean isSnowMeltingAllowed()
 	{
 		return allowSnowMelting;
 	}
 
-	public final void setAllowSnowMelting(final boolean allowSnowMelting)
+	public void setAllowSnowMelting(final boolean allowSnowMelting)
 	{
 		this.allowSnowMelting = allowSnowMelting;
 	}
 
-	public final boolean isIceMeltingAllowed()
+	public boolean isIceMeltingAllowed()
 	{
 		return allowIceMelting;
 	}
 
-	public final void setAllowIceMelting(final boolean allowIceMelting)
+	public void setAllowIceMelting(final boolean allowIceMelting)
 	{
 		this.allowIceMelting = allowIceMelting;
 	}
 
-	public final boolean isSnowFormationAllowed()
+	public boolean isSnowFormationAllowed()
 	{
 		return allowSnowFormation;
 	}
 
-	public final boolean isIceFormationAllowed()
+	public boolean isIceFormationAllowed()
 	{
 		return allowIceFormation;
 	}
 
-	public final boolean isEnchantingAllowed()
+	public boolean isEnchantingAllowed()
 	{
 		return allowEnchanting;
 	}
 
-	public final void setAllowEnchanting(final boolean allowEnchanting)
+	public void setAllowEnchanting(final boolean allowEnchanting)
 	{
 		this.allowEnchanting = allowEnchanting;
 	}
 
-	public final void setAllowSnowFormation(final boolean allowSnowFormation)
+	public void setAllowSnowFormation(final boolean allowSnowFormation)
 	{
 		this.allowSnowFormation = allowSnowFormation;
 	}
 
-	public final void setAllowIceFormation(final boolean allowIceFormation)
+	public void setAllowIceFormation(final boolean allowIceFormation)
 	{
 		this.allowIceFormation = allowIceFormation;
 	}
