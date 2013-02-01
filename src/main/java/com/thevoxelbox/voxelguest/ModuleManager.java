@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest;
 
+
 import com.thevoxelbox.voxelguest.modules.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -9,13 +10,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.*;
+
 /**
  * @author Monofraps
  */
 public class ModuleManager      // implements ModuleManager -- TODO: export API stuff
 {
 	// maps module <-> registered event listeners
-	private HashMap<Module, Set<Listener>> registeredModules = new HashMap<>();
+	private HashMap<Module, HashSet<Listener>> registeredModules = new HashMap<>();
 
 	/**
 	 * Registers a guest module and enables it immediately if parameter enable is true.
@@ -25,7 +28,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void registerGuestModule(final Module module, final boolean enable)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		if (this.registeredModules.containsKey(module))
 		{
@@ -49,6 +52,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	}
 
 	//TODO: Could be made private ...?
+
 	/**
 	 * Enables a give module.
 	 *
@@ -56,19 +60,9 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void enableModuleByInstance(final Module module)
 	{
-		assert module != null;
-
-		final boolean isRegisteredModule = this.registeredModules.containsKey(module);
-		if (!isRegisteredModule)
-		{
-			Bukkit.getLogger().warning("Guest module manager was asked to activate a non-registered module. I will activate the module but cannot keep track of its state and listeners.");
-		}
-
-		if (module.isEnabled())
-		{
-			Bukkit.getLogger().warning(String.format("Module already enabled. (Module: %s)", module.toString()));
-			return;
-		}
+		checkNotNull(module, "Parameter module must not be null.");
+		checkState(this.registeredModules.containsKey(module), "Module must be registered.");
+		checkState(!module.isEnabled(), String.format("Module already enabled. (Module: %s)", module.toString()));
 
 		module.onEnable();
 
@@ -80,20 +74,13 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
 			if (!moduleListeners.isEmpty())
 			{
-				Set<Listener> internalListenerTracker = null;
-				if (isRegisteredModule)
-				{
-					internalListenerTracker = this.registeredModules.get(module);
-				}
+				Set<Listener> internalListenerTracker = this.registeredModules.get(module);
 
 				int numRegisteredListeners = 0;
 				for (Listener listener : moduleListeners)
 				{
 					Bukkit.getPluginManager().registerEvents(listener, VoxelGuest.getPluginInstance());
-					if (isRegisteredModule)
-					{
-						internalListenerTracker.add(listener);
-					}
+					internalListenerTracker.add(listener);
 					numRegisteredListeners++;
 				}
 
@@ -108,13 +95,13 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	}
 
 	/**
-	 * Enables all registered modules of type [module]
+	 * Enables all registered modules of type [module].
 	 *
 	 * @param module The type of the modules to enable.
 	 */
-	public final void enableModulesByType(final Class<? extends Module> module)
+	public final void enableModuleByType(final Class<? extends Module> module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		for (Module registeredModule : this.registeredModules.keySet())
 		{
@@ -139,31 +126,20 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void disableModuleByInstance(final Module module)
 	{
-		assert module != null;
-
-		final boolean isRegisteredModule = this.registeredModules.containsKey(module);
-		if (!isRegisteredModule)
-		{
-			Bukkit.getLogger().warning("Guest module manager was asked to disable a non-registered module. I will disable the module but cannot keep track of its state and listeners.");
-		}
-
-		if (!module.isEnabled())
-		{
-			Bukkit.getLogger().warning(String.format("Module already disabled. (Module: %s)", module.toString()));
-			return;
-		}
+		checkNotNull(module, "Parameter module must not be null.");
+		checkState(this.registeredModules.containsKey(module), "Module must be registered.");
+		checkState(module.isEnabled(), String.format("Module already disabled. (Module: %s)", module.toString()));
 
 		try
 		{
 			// unregister the module listeners
 			try
 			{
+				// get listeners from module (eventually contains self registered listeners)
+				// and merge stored listeners to make sure we don't forget any listener
 				final Set<Listener> moduleListeners = module.getListeners();
-				if (isRegisteredModule)
-				{
-					moduleListeners.addAll(this.registeredModules.get(module));
-					this.registeredModules.get(module).clear();
-				}
+				moduleListeners.addAll(this.registeredModules.get(module));
+				this.registeredModules.get(module).clear();
 
 				if (!moduleListeners.isEmpty())
 				{
@@ -179,10 +155,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 				ex.printStackTrace();
 			} finally
 			{
-				if (isRegisteredModule)
-				{
-					registeredModules.get(module).clear();
-				}
+				registeredModules.get(module).clear();
 			}
 
 			module.onDisable();
@@ -198,9 +171,9 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 *
 	 * @param module The type of the modules to disable.
 	 */
-	public final void disableModulesByType(final Class<? extends Module> module)
+	public final void disableModuleByType(final Class<? extends Module> module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		for (Module registeredModule : this.registeredModules.keySet())
 		{
@@ -220,11 +193,12 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
 	/**
 	 * Restarts or just enables a give module. It calls disableModuleByInstance and enableModuleByInstance internally.
+	 *
 	 * @param module The instance of the module to restart.
 	 */
-	public void restartModule(final Module module)
+	public final void restartModule(final Module module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		if (!module.isEnabled())
 		{
