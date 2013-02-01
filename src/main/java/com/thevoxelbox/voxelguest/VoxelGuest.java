@@ -1,6 +1,9 @@
 package com.thevoxelbox.voxelguest;
 
+import java.io.File;
+
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
+import com.thevoxelbox.voxelguest.persistence.Persistence;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -56,5 +59,11 @@ public class VoxelGuest extends JavaPlugin
 		VoxelGuest.setModuleManagerInstance(new ModuleManager());
 
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new RegionModule(), false);
+    }
+
+    @Override
+    public void onLoad()
+    {
+        Persistence.getInstance().initialize(new File(getDataFolder(), "persistence.db"));
     }
 }
