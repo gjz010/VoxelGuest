@@ -17,7 +17,6 @@ public class BannedPlayer
 	@GeneratedValue
 	@Column
 	private long id;
-
 	@Column
 	private String playerName;
 	@Column
@@ -30,22 +29,22 @@ public class BannedPlayer
 		this.banReason = banReason;
 	}
 
-	public String getPlayerName()
+	public final String getPlayerName()
 	{
 		return playerName;
 	}
 
-	public void setPlayerName(final String playerName)
+	public final void setPlayerName(final String playerName)
 	{
 		this.playerName = playerName;
 	}
 
-	public String getBanReason()
+	public final String getBanReason()
 	{
 		return banReason;
 	}
 
-	public void setBanReason(final String banReason)
+	public final void setBanReason(final String banReason)
 	{
 		this.banReason = banReason;
 	}

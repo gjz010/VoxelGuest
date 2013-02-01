@@ -13,13 +13,13 @@ public class UnbanCommandExecutor implements CommandExecutor
 {
 	AsshatModule module;
 
-	public UnbanCommandExecutor(AsshatModule module)
+	public UnbanCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
 	}
 
 	@Override
-	public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
+	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
 		if (args.length < 1)
 		{
@@ -43,7 +43,7 @@ public class UnbanCommandExecutor implements CommandExecutor
 		return true;
 	}
 
-	private void safeUnban(String playerName, CommandSender commandSender, boolean silentFlag)
+	private void safeUnban(final String playerName, final CommandSender commandSender, final boolean silentFlag)
 	{
 		try
 		{

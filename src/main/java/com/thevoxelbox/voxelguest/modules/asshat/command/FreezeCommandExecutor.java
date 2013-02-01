@@ -18,7 +18,7 @@ public class FreezeCommandExecutor implements CommandExecutor
 	}
 
 	@Override
-	public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings)
+	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings)
 	{
 		module.setFreezeEnabled(!module.isFreezeEnabled());
 

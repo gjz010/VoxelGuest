@@ -14,13 +14,13 @@ public class PlayerListener implements Listener
 {
 	private AsshatModule module;
 
-	public PlayerListener(AsshatModule module)
+	public PlayerListener(final AsshatModule module)
 	{
 		this.module = module;
 	}
 
 	@EventHandler
-	public void onChatEvent(AsyncPlayerChatEvent event)
+	public final void onChatEvent(final AsyncPlayerChatEvent event)
 	{
 		final Player player = event.getPlayer();
 
@@ -42,7 +42,7 @@ public class PlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void onPlayerLogin(PlayerLoginEvent event)
+	public final void onPlayerLogin(final PlayerLoginEvent event)
 	{
 		final Player player = event.getPlayer();
 
@@ -53,7 +53,7 @@ public class PlayerListener implements Listener
 	}
 
 	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event)
+	public final void onPlayerMove(final PlayerMoveEvent event)
 	{
 		final Player player = event.getPlayer();
 

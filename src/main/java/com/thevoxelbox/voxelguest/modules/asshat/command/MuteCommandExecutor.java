@@ -16,13 +16,13 @@ public class MuteCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
 
-	public MuteCommandExecutor(AsshatModule module)
+	public MuteCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
 	}
 
 	@Override
-	public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
+	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
 		if (args.length < 1)
 		{
@@ -38,11 +38,13 @@ public class MuteCommandExecutor implements CommandExecutor
 		for (String arg : args)
 		{
 
-			if(arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f")) {
+			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
+			{
 				forceNameFlag = true;
 			}
 
-			if(arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s")) {
+			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
+			{
 				silentFlag = true;
 			}
 
@@ -80,12 +82,14 @@ public class MuteCommandExecutor implements CommandExecutor
 		return true;
 	}
 
-	private void safeMute(String playerName, String muteReason, CommandSender commandSender, boolean silentFlag) {
+	private void safeMute(final String playerName, final String muteReason, final CommandSender commandSender, final boolean silentFlag)
+	{
 		try
 		{
 			module.getMutelist().mute(playerName, muteReason);
 			Bukkit.getLogger().info(String.format("%s got muted for %s by %s", playerName, muteReason, commandSender.getName()));
-			if(!silentFlag) {
+			if (!silentFlag)
+			{
 				Bukkit.broadcastMessage(String.format("%s got muted for %s by %s", playerName, muteReason, commandSender.getName()));
 			}
 		} catch (Exception ex)

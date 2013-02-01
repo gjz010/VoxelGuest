@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.asshat;
 
-import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.asshat.ban.Banlist;
 import com.thevoxelbox.voxelguest.modules.asshat.ban.BannedPlayer;
@@ -20,6 +19,8 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Monofraps
@@ -28,9 +29,7 @@ public class AsshatModule extends GuestModule
 {
 	public static final String SILENCE_BYPASS_PERM = "voxelguest.asshat.bypass.silence";
 	public static final String FREEZE_BYPASS_PERM = "voxelguest.asshat.bypass.freeze";
-
 	private PlayerListener playerListener;
-
 	private BanCommandExecutor banCommandExecutor;
 	private UnbanCommandExecutor unbanCommandExecutor;
 	private BanreasonCommandExecutor banreasonCommandExecutor;
@@ -39,11 +38,10 @@ public class AsshatModule extends GuestModule
 	private KickCommandExecutor kickCommandExecutor;
 	private SoapboxCommandExecutor soapboxCommandExecutor;
 	private FreezeCommandExecutor freezeCommandExecutor;
-
 	private Mutelist mutelist = new Mutelist();
 	private Banlist banlist = new Banlist();
 	private boolean silenceEnabled = false;
-	private boolean freezeEnabled;
+	private boolean freezeEnabled = false;
 
 	public AsshatModule()
 	{
@@ -57,14 +55,14 @@ public class AsshatModule extends GuestModule
 		kickCommandExecutor = new KickCommandExecutor();
 		soapboxCommandExecutor = new SoapboxCommandExecutor(this);
 		freezeCommandExecutor = new FreezeCommandExecutor(this);
-
-		Persistence.getInstance().registerPersistentClass(BannedPlayer.class);
-		Persistence.getInstance().registerPersistentClass(MutedPlayer.class);
 	}
 
 	@Override
-	public void onEnable()
+	public final void onEnable()
 	{
+		Persistence.getInstance().registerPersistentClass(BannedPlayer.class);
+		Persistence.getInstance().registerPersistentClass(MutedPlayer.class);
+
 		banlist.load();
 		mutelist.load();
 
@@ -72,7 +70,7 @@ public class AsshatModule extends GuestModule
 	}
 
 	@Override
-	public void onDisable()
+	public final void onDisable()
 	{
 		banlist.save();
 		mutelist.save();
@@ -81,7 +79,19 @@ public class AsshatModule extends GuestModule
 	}
 
 	@Override
-	public HashSet<Listener> getListeners()
+	public final String getConfigFileName()
+	{
+		return "asshat";
+	}
+
+	@Override
+	public final Object getConfiguration()
+	{
+		return null;
+	}
+
+	@Override
+	public final Set<Listener> getListeners()
 	{
 		final HashSet<Listener> listeners = new HashSet<>();
 		listeners.add(playerListener);
@@ -90,19 +100,7 @@ public class AsshatModule extends GuestModule
 	}
 
 	@Override
-	public Object getConfiguration()
-	{
-		return null;
-	}
-
-	@Override
-	public String getConfigFileName()
-	{
-		return "asshat";
-	}
-
-	@Override
-	public HashMap<String, CommandExecutor> getCommandMappings()
+	public Map<String, CommandExecutor> getCommandMappings()
 	{
 		HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
 		commandMappings.put("ban", banCommandExecutor);
@@ -117,32 +115,32 @@ public class AsshatModule extends GuestModule
 		return commandMappings;
 	}
 
-	public Banlist getBanlist()
+	public final Banlist getBanlist()
 	{
 		return banlist;
 	}
 
-	public Mutelist getMutelist()
+	public final Mutelist getMutelist()
 	{
 		return mutelist;
 	}
 
-	public boolean isSilenceEnabled()
+	public final boolean isSilenceEnabled()
 	{
 		return silenceEnabled;
 	}
 
-	public void setSilenceEnabled(final boolean silenceEnabled)
+	public final void setSilenceEnabled(final boolean silenceEnabled)
 	{
 		this.silenceEnabled = silenceEnabled;
 	}
 
-	public boolean isFreezeEnabled()
+	public final boolean isFreezeEnabled()
 	{
 		return freezeEnabled;
 	}
 
-	public void setFreezeEnabled(final boolean freezeEnabled)
+	public final void setFreezeEnabled(final boolean freezeEnabled)
 	{
 		this.freezeEnabled = freezeEnabled;
 	}

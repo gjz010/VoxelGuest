@@ -16,13 +16,13 @@ public class BanCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
 
-	public BanCommandExecutor(AsshatModule module)
+	public BanCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
 	}
 
 	@Override
-	public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
+	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
 		if (args.length < 1)
 		{
@@ -37,11 +37,13 @@ public class BanCommandExecutor implements CommandExecutor
 
 		for (String arg : args)
 		{
-			if(arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f")) {
+			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
+			{
 				forceNameFlag = true;
 			}
 
-			if(arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s")) {
+			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
+			{
 				silentFlag = true;
 			}
 		}
@@ -79,12 +81,14 @@ public class BanCommandExecutor implements CommandExecutor
 		return true;
 	}
 
-	private void safeBan(String playerName, String banReason, CommandSender commandSender, boolean silentFlag) {
+	private void safeBan(final String playerName, final String banReason, final CommandSender commandSender, final boolean silentFlag)
+	{
 		try
 		{
 			module.getBanlist().ban(playerName, banReason);
 			Bukkit.getLogger().info(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));
-			if(!silentFlag) {
+			if (!silentFlag)
+			{
 				Bukkit.broadcastMessage(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));
 			}
 		} catch (Exception ex)

@@ -12,21 +12,24 @@ public class BanreasonCommandExecutor implements CommandExecutor
 {
 	AsshatModule module;
 
-	public BanreasonCommandExecutor(AsshatModule module) {
+	public BanreasonCommandExecutor(final AsshatModule module)
+	{
 		this.module = module;
 	}
 
 	@Override
-	public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
+	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
-		if(args.length < 1) {
+		if (args.length < 1)
+		{
 			commandSender.sendMessage("Invalid number of parameters.");
 			return false;
 		}
 
 		final String playerName = args[0];
 
-		if(!module.getBanlist().isPlayerBanned(playerName)) {
+		if (!module.getBanlist().isPlayerBanned(playerName))
+		{
 			commandSender.sendMessage(String.format("Player % is not even banned.", playerName));
 			return true;
 		}

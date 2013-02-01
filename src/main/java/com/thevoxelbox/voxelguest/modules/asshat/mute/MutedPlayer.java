@@ -17,7 +17,6 @@ public class MutedPlayer
 	@GeneratedValue
 	@Column
 	private long id;
-
 	@Column
 	private String playerName;
 	@Column
@@ -25,27 +24,26 @@ public class MutedPlayer
 
 	public MutedPlayer(final String playerName, final String muteReason)
 	{
-
 		this.playerName = playerName;
 		this.muteReason = muteReason;
 	}
 
-	public String getPlayerName()
+	public final String getPlayerName()
 	{
 		return playerName;
 	}
 
-	public void setPlayerName(final String playerName)
+	public final void setPlayerName(final String playerName)
 	{
 		this.playerName = playerName;
 	}
 
-	public String getMuteReason()
+	public final String getMuteReason()
 	{
 		return muteReason;
 	}
 
-	public void setMuteReason(final String muteReason)
+	public final void setMuteReason(final String muteReason)
 	{
 		this.muteReason = muteReason;
 	}

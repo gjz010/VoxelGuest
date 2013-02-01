@@ -14,7 +14,7 @@ import java.util.List;
 public class KickCommandExecutor implements CommandExecutor
 {
 	@Override
-	public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
+	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
 		if (args.length < 1)
 		{
@@ -30,11 +30,13 @@ public class KickCommandExecutor implements CommandExecutor
 		for (String arg : args)
 		{
 
-			if(arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f")) {
+			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
+			{
 				forceNameFlag = true;
 			}
 
-			if(arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s")) {
+			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
+			{
 				silentFlag = true;
 			}
 
@@ -42,10 +44,13 @@ public class KickCommandExecutor implements CommandExecutor
 
 		if (forceNameFlag)
 		{
-			if(Bukkit.getPlayerExact(playerName) != null) {
+			if (Bukkit.getPlayerExact(playerName) != null)
+			{
 				safeKick(Bukkit.getPlayerExact(playerName), kickReason, commandSender, silentFlag);
 				return true;
-			} else {
+			}
+			else
+			{
 				commandSender.sendMessage("Could not find any player named like " + playerName);
 				return true;
 			}
@@ -77,11 +82,13 @@ public class KickCommandExecutor implements CommandExecutor
 		return true;
 	}
 
-	private void safeKick(Player player, String reason, CommandSender sender, boolean silentFlag) {
+	private void safeKick(final Player player, final String reason, final CommandSender sender, final boolean silentFlag)
+	{
 		player.kickPlayer(reason);
 
 		Bukkit.getLogger().info(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
-		if(!silentFlag) {
+		if (!silentFlag)
+		{
 			Bukkit.broadcastMessage(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
 		}
 	}

@@ -13,19 +13,24 @@ public class Banlist
 {
 	private List<BannedPlayer> bannedPlayers = new ArrayList<>();
 
-	public void ban(String playerName, String banReason) {
+	public final void ban(final String playerName, final String banReason)
+	{
 		Preconditions.checkState(!isPlayerBanned(playerName), "Player %s already banned.", playerName);
 		bannedPlayers.add(new BannedPlayer(playerName, banReason));
 	}
 
-	public void unban(String playerName) {
+	public final void unban(final String playerName)
+	{
 		Preconditions.checkState(isPlayerBanned(playerName), "Player %s is not banned.", playerName);
 		bannedPlayers.remove(playerName);
 	}
 
-	private BannedPlayer getBannedPlayer(String playerName) {
-		for(BannedPlayer player : bannedPlayers) {
-			if(player.getPlayerName().equalsIgnoreCase(playerName)) {
+	private BannedPlayer getBannedPlayer(final String playerName)
+	{
+		for (BannedPlayer player : bannedPlayers)
+		{
+			if (player.getPlayerName().equalsIgnoreCase(playerName))
+			{
 				return player;
 			}
 		}
@@ -33,42 +38,45 @@ public class Banlist
 		return null;
 	}
 
-	public boolean isPlayerBanned(String playerName)
+	public final boolean isPlayerBanned(final String playerName)
 	{
 		return getBannedPlayer(playerName) != null;
 
 	}
 
-	public String whyIsPlayerBanned(String playerName)
+	public final String whyIsPlayerBanned(final String playerName)
 	{
 		Preconditions.checkState(isPlayerBanned(playerName), "Player %s must be banned in order to get the ban reason.", playerName);
 
 		return getBannedPlayer(playerName).getBanReason();
 	}
 
-	public List<BannedPlayer> getBannedPlayers()
+	public final List<BannedPlayer> getBannedPlayers()
 	{
 		return bannedPlayers;
 	}
 
-	public void setBannedPlayers(final List<BannedPlayer> bannedPlayers)
+	public final void setBannedPlayers(final List<BannedPlayer> bannedPlayers)
 	{
 		this.bannedPlayers = bannedPlayers;
 	}
 
-	public void load()
+	public final void load()
 	{
 		bannedPlayers.clear();
 
-		List<Object> protoList =  Persistence.getInstance().loadAll(BannedPlayer.class);
-		for(Object protoPlayer : protoList) {
+		List<Object> protoList = Persistence.getInstance().loadAll(BannedPlayer.class);
+		for (Object protoPlayer : protoList)
+		{
 			bannedPlayers.add((BannedPlayer) protoPlayer);
 		}
 	}
 
-	public void save() {
+	public final void save()
+	{
 		List<Object> protoList = new ArrayList<>();
-		for(BannedPlayer protoPlayer : bannedPlayers) {
+		for (BannedPlayer protoPlayer : bannedPlayers)
+		{
 			protoList.add(protoPlayer);
 		}
 
