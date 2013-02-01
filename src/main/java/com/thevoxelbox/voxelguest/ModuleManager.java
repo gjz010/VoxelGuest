@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelguest;
 
+
+import static com.google.common.base.Preconditions.*;
 import com.thevoxelbox.voxelguest.modules.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -25,7 +27,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void registerGuestModule(final Module module, final boolean enable)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		if (this.registeredModules.containsKey(module))
 		{
@@ -56,7 +58,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void enableModuleByInstance(final Module module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		final boolean isRegisteredModule = this.registeredModules.containsKey(module);
 		if (!isRegisteredModule)
@@ -114,7 +116,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void enableModuleByType(final Class<? extends Module> module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		for (Module registeredModule : this.registeredModules.keySet())
 		{
@@ -139,7 +141,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void disableModuleByInstance(final Module module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		final boolean isRegisteredModule = this.registeredModules.containsKey(module);
 		if (!isRegisteredModule)
@@ -200,7 +202,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public final void disableModuleByType(final Class<? extends Module> module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		for (Module registeredModule : this.registeredModules.keySet())
 		{
@@ -224,7 +226,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 */
 	public void restartModule(final Module module)
 	{
-		assert module != null;
+		checkNotNull(module, "Parameter module must not be null.");
 
 		if (!module.isEnabled())
 		{
