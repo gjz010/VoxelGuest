@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelguest;
 
-import com.thevoxelbox.voxelguest.modules.worldprotection.WorldProtectionModule;
+import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,6 +51,6 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.setPluginInstance(this);
         VoxelGuest.setModuleManagerInstance(new ModuleManager());
 
-        VoxelGuest.getModuleManagerInstance().registerGuestModule(new WorldProtectionModule(), false);
+        VoxelGuest.getModuleManagerInstance().registerGuestModule(new RegionModule(), false);
     }
 }
