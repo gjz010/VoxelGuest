@@ -1,7 +1,10 @@
 package com.thevoxelbox.voxelguest.modules;
 
 /**
+ * Implements all primitive basic functions to simplify module creation.
+ *
  * @author MikeMatrix
+ * @author Monofraps
  */
 public abstract class GuestModule implements Module
 {

@@ -3,6 +3,10 @@ package com.thevoxelbox.voxelguest;
 import com.thevoxelbox.voxelguest.modules.worldprotection.WorldProtectionModule;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * @author MikeMatrix
+ * @author Monofraps
+ */
 public class VoxelGuest extends JavaPlugin
 {
 	private static VoxelGuest pluginInstance = null;

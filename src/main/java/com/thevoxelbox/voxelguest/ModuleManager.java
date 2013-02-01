@@ -17,7 +17,7 @@ import java.util.Set;
 public class ModuleManager      // implements ModuleManager -- TODO: export API stuff
 {
 	// maps module <-> registered event listeners
-	private HashMap<Module, Set<Listener>> registeredModules = new HashMap<>();
+	private HashMap<Module, HashSet<Listener>> registeredModules = new HashMap<>();
 
 	/**
 	 * Registers a guest module and enables it immediately if parameter enable is true.
@@ -160,6 +160,8 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 			// unregister the module listeners
 			try
 			{
+				// get listeners from module (eventually contains self registered listeners)
+				// and merge stored listeners to make sure we don't forget any listener
 				final Set<Listener> moduleListeners = module.getListeners();
 				if (isRegisteredModule)
 				{
@@ -224,7 +226,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 	 * Restarts or just enables a give module. It calls disableModuleByInstance and enableModuleByInstance internally.
 	 * @param module The instance of the module to restart.
 	 */
-	public void restartModule(final Module module)
+	public final void restartModule(final Module module)
 	{
 		checkNotNull(module, "Parameter module must not be null.");
 
