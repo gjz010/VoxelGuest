@@ -61,7 +61,7 @@ public class MuteCommandExecutor implements CommandExecutor
 		}
 
 		if(muteReason.isEmpty()) {
-			muteReason = "You got muted.";
+			muteReason = "Asshat";
 		}
 
 		if (forceNameFlag)

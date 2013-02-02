@@ -61,7 +61,7 @@ public class BanCommandExecutor implements CommandExecutor
 		}
 
 		if(banReason.isEmpty()) {
-			banReason = "You got banned.";
+			banReason = "Asshat";
 		}
 
 		if (forceNameFlag)
