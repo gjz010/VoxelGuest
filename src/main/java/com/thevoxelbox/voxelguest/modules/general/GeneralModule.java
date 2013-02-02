@@ -25,13 +25,15 @@ public class GeneralModule extends GuestModule {
 	private static final String VANISH_PERM = "voxelguest.general.vanish";
 	private static final String FAKEQUIT_PERM = "voxelguest.general.fakequit";
 	public static final String ENTITY_PURGE_PERM = "voxelguest.general.ep";
-	private static final String JOIN_FORMAT = ChatColor.DARK_GRAY + "(" + ChatColor.GOLD + "$no" + ChatColor.DARK_GRAY + ") " 
+	
+	protected static final String JOIN_FORMAT = ChatColor.DARK_GRAY + "(" + ChatColor.GOLD + "$no" + ChatColor.DARK_GRAY + ") " 
 			+ ChatColor.DARK_AQUA + "$n" + ChatColor.GRAY + " joined";
-	private static final String LEAVE_FORMAT = ChatColor.DARK_GRAY + "(" + ChatColor.GOLD + "$no" + ChatColor.DARK_GRAY + ") " 
+	protected static final String LEAVE_FORMAT = ChatColor.DARK_GRAY + "(" + ChatColor.GOLD + "$no" + ChatColor.DARK_GRAY + ") " 
 			+ ChatColor.DARK_AQUA + "$n" + ChatColor.GRAY + " left";
-	private static final String FAKEQUIT_PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.RED + "FQ" + ChatColor.DARK_GRAY + "]";
-	
-	
+	protected static final String KICK_FORMAT = ChatColor.DARK_GRAY + "(" + ChatColor.GOLD + "$no" + ChatColor.DARK_GRAY + ") " 
+			+ ChatColor.DARK_AQUA + "$n" + ChatColor.DARK_RED + " was kicked out";
+
+	private static final String FAKEQUIT_PREFIX = ChatColor.DARK_GRAY + "[" + ChatColor.RED + "FQ" + ChatColor.DARK_GRAY + "]";	
 	private static final ChatColor ADMIN_COLOUR = ChatColor.GOLD;
 	private static final ChatColor CURATOR_COLOUR = ChatColor.DARK_PURPLE;
 	private static final ChatColor SNIPER_COLOUR = ChatColor.DARK_GREEN;
