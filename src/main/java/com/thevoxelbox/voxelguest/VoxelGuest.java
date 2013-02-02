@@ -7,8 +7,13 @@ import java.util.logging.Logger;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
+import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 
+import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -19,6 +24,8 @@ public class VoxelGuest extends JavaPlugin
 {
     private static VoxelGuest pluginInstance = null;
     private static ModuleManager moduleManagerInstance = null;
+	
+	private static Permission perms = null; //vault perms
 
     public static VoxelGuest getPluginInstance()
     {
@@ -71,6 +78,23 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new RegionModule(), true);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new AsshatModule(), true);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), true);
+		VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(perms), true);
+		
+		 /*
+         * Vault
+         */
+        if(!setupPermissions()) {
+        	Bukkit.getLogger().severe("Failed to setup Vault, due to no dependency found!"); //Should stop?
+        }
+    }
+	
+	/*
+     * Setup Vault Permissions
+     */
+    private boolean setupPermissions() {
+    	RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+    	perms = rsp.getProvider();
+    	return perms != null;
     }
 
     static
