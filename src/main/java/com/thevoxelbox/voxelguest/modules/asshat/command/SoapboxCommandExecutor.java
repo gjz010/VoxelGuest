@@ -30,6 +30,7 @@ public class SoapboxCommandExecutor implements CommandExecutor
 		}
 
 		module.setSilenceEnabled(!module.isSilenceEnabled());
+		commandSender.sendMessage(String.format("Soapbox is %s", module.isSilenceEnabled() ? "enabled" : "disabled"));
 
 		return true;
 	}

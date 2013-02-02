@@ -31,7 +31,7 @@ public class Mutelist
 	public final void unmute(final String playerName)
 	{
 		Preconditions.checkState(isPlayerMuted(playerName), "Player %s is not muted.", playerName);
-		mutedPlayers.remove(playerName);
+		mutedPlayers.remove(getMutedPlayer(playerName));
 	}
 
 	private MutedPlayer getMutedPlayer(final String playerName)
@@ -55,7 +55,6 @@ public class Mutelist
 	public final boolean isPlayerMuted(final String playerName)
 	{
 		return getMutedPlayer(playerName) != null;
-
 	}
 
 	/**

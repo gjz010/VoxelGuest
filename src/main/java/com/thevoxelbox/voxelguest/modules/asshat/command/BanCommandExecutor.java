@@ -91,6 +91,11 @@ public class BanCommandExecutor implements CommandExecutor
 			return true;
 		}
 
+		if(module.getBanlist().isPlayerBanned(playerName)) {
+			commandSender.sendMessage(String.format("Player %s is already banned.", playerName));
+			return true;
+		}
+
 		players.get(0).kickPlayer(banReason);
 		safeBan(players.get(0).getName(), banReason, commandSender, silentFlag);
 

@@ -91,6 +91,11 @@ public class MuteCommandExecutor implements CommandExecutor
 			return true;
 		}
 
+		if(module.getMutelist().isPlayerMuted(playerName)) {
+			commandSender.sendMessage(String.format("Player %s is already muted.", playerName));
+			return true;
+		}
+
 		safeMute(players.get(0).getName(), muteReason, commandSender, silentFlag);
 
 		return true;
