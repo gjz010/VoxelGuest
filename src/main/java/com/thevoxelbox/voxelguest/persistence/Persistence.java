@@ -20,6 +20,7 @@ public class Persistence
     private static Persistence instance = new Persistence();
     private Configuration configuration = new Configuration();
     private SessionFactory sessionFactory;
+	private Session session;
 
     private Persistence()
     {
@@ -51,13 +52,17 @@ public class Persistence
 
     private void rebuildSessionFactory()
     {
+	    if(sessionFactory != null) {
+	    sessionFactory.close();
+	    }
+	    
         ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
     }
 
     public void save(Object object)
     {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
         session.beginTransaction();
 
         session.saveOrUpdate(object);
@@ -68,7 +73,7 @@ public class Persistence
 
     public void saveAll(List<Object> objects)
     {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
         session.beginTransaction();
 
         for (Object object : objects)
@@ -82,7 +87,7 @@ public class Persistence
 
     public Object load(Class<?> clazz, Serializable id)
     {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
 
         Object result = session.load(clazz, id);
 
@@ -93,7 +98,7 @@ public class Persistence
 
     public List<Object> loadAll(Class<?> clazz)
     {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
 
         final List result = session.createCriteria(clazz).list();
 
@@ -104,7 +109,7 @@ public class Persistence
 
     public List<Object> loadAll(Class<?> clazz, Criterion... criterion)
     {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
 
         final Criteria criteria = session.createCriteria(clazz);
         for (Criterion currentCriterion : criterion)
@@ -120,7 +125,7 @@ public class Persistence
 
     public void delete(final Object greylistee)
     {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
         session.beginTransaction();
 
         session.delete(greylistee);
