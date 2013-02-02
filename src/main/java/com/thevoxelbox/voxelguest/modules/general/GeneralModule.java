@@ -135,7 +135,7 @@ public class GeneralModule extends GuestModule {
 			if(groups.containsKey(group)) {
 				names = groups.get(group);
 			}
-			names.add(fq? FAKEQUIT_PREFIX + ((Player)sender).getDisplayName() : ((Player)sender).getDisplayName());
+			names.add(fq? FAKEQUIT_PREFIX + p.getDisplayName() : p.getDisplayName());
 			groups.put(group, names);
 			
 		}

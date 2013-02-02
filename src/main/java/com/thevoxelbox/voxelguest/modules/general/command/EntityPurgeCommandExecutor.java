@@ -35,7 +35,12 @@ public class EntityPurgeCommandExecutor implements CommandExecutor {
 						e.remove();
 					}
 				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Unknown world name " + world.getName());
 			}
+		}
+		if(args.length == 0) {
+			sender.sendMessage(ChatColor.RED + "Please enter a world name");
 		}
 		
 		return true;
