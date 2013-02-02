@@ -27,6 +27,11 @@ public class RegionCommand implements CommandExecutor
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmnd, final String string, final String[] args)
 	{
+                if(!(cs.hasPermission("voxelguest.regions.modifyregion"))){
+                    cs.sendMessage(ChatColor.RED + "Invalid permissions");
+                    return false;
+                }
+                
 		if (args.length == 0)
 		{
 			cs.sendMessage("/vgregion <option>");
