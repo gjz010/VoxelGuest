@@ -30,7 +30,27 @@ public class KickCommandExecutor implements CommandExecutor
 		final String playerName = args[0].toLowerCase();
 		boolean forceNameFlag = false;
 		boolean silentFlag = false;
-		String kickReason = "Asshat";
+		String kickReason = "";
+
+		for(int i = 1; i < args.length; i++) {
+			final String arg = args[i];
+
+			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
+			{
+				forceNameFlag = true;
+			}
+
+			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
+			{
+				silentFlag = true;
+			}
+
+			kickReason += arg + " ";
+		}
+
+		if(kickReason.isEmpty()) {
+			kickReason = "Asshat";
+		}
 
 		for (String arg : args)
 		{
