@@ -61,9 +61,9 @@ public class Region implements Serializable
 	@Column
 	private boolean allowEnchanting = false;
 	@Column
-	private List<Material> bannedBlocks = new ArrayList<>();
+	private List<Integer> bannedBlocks = new ArrayList<>();
 	@Column
-	private List<Material> bannedItems = new ArrayList<>();
+	private List<Integer> bannedItems = new ArrayList<>();
 	@Column
 	private String buildPermission;
 	//Player
@@ -217,22 +217,22 @@ public class Region implements Serializable
 		this.allowTntBreakingPaintings = allowBreakingPaintings;
 	}
 
-	public List<Material> getBannedBlocks()
+	public List<Integer> getBannedBlocks()
 	{
 		return bannedBlocks;
 	}
 
-	public void setBannedBlocks(List<Material> bannedBlocks)
+	public void setBannedBlocks(List<Integer> bannedBlocks)
 	{
 		this.bannedBlocks = bannedBlocks;
 	}
 
-	public List<Material> getBannedItems()
+	public List<Integer> getBannedItems()
 	{
 		return bannedItems;
 	}
 
-	public void setBannedItems(final List<Material> bannedItems)
+	public void setBannedItems(final List<Integer> bannedItems)
 	{
 		this.bannedItems = bannedItems;
 	}
