@@ -60,6 +60,11 @@
             <id>tvpt-repo</id>
             <url>http://repo.thevoxelbox.com/content/repositories/public</url>
         </repository>
+		
+		<repository>
+			<id>vault-repo</id>
+			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+		</repository>
     </repositories>
 
     <dependencies>
@@ -89,6 +94,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>4.1.9.Final</version>
+        </dependency>
+        <dependency>
+        	<groupId>net.milkbowl.vault</groupId>
+        	<artifactId>Vault</artifactId>
+        	<version>1.2.23-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
