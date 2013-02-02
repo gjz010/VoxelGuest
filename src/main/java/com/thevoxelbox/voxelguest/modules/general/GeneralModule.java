@@ -206,7 +206,7 @@ public class GeneralModule extends GuestModule {
 			fakequit.remove(sender.getName());
 
 			String online = Bukkit.getOnlinePlayers().length - fakequit.size() + "";
-			String s = JOIN_FORMAT.replaceAll("$n", sender.getName()).replaceAll("$no", online);
+			String s = JOIN_FORMAT.replace("$n", sender.getName()).replace("$no", online);
 			Bukkit.broadcastMessage(s);
 		} else {
 			sender.sendMessage(ChatColor.AQUA + "You have fakequit!");
@@ -218,7 +218,7 @@ public class GeneralModule extends GuestModule {
 			}
 			
 			String online = Bukkit.getOnlinePlayers().length - fakequit.size() + "";
-			String s = LEAVE_FORMAT.replaceAll("$n", sender.getName()).replaceAll("$no", online);
+			String s = LEAVE_FORMAT.replace("$n", sender.getName()).replace("$no", online);
 			Bukkit.broadcastMessage(s);
 		}
 	}
