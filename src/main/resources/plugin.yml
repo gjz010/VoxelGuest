@@ -6,10 +6,10 @@ website: ${project.url}
 description: ${project.description}
 commands:
   greylist:
-    aliases: [graylist]
+    aliases: [graylist, gl]
     permission: voxelguest.greylist.greylist
   ungreylist:
-    aliases: [ungraylist]
+    aliases: [ungraylist, ugl]
     permission: voxelguest.greylist.ungreylist
   vgregion:
     permission: voxelguest.regions.modifyregion
@@ -37,3 +37,15 @@ commands:
   unmute:
     aliases: [vunmute]
     permission: voxelguest.asshat.unmute
+  who:
+    aliases: [who, vwho, list]
+    permission: voxelguest.general.who
+  fakequit:
+    aliases: [fakequit, fq]
+    permission: voxelguest.general.fakequit
+  vanish:
+    aliases: [vanish, vvanish, van]
+    permission: voxelguest.general.vanish
+  ep:
+    aliases: [ep]
+    permission: voxelguest.general.ep
