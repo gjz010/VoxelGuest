@@ -22,6 +22,11 @@ public class BannedPlayer
 	@Column
 	private String banReason;
 
+	public BannedPlayer() {
+		this.playerName = "";
+		this.banReason = "";
+	}
+
 	/**
 	 *
 	 * @param playerName The name of the banned player.
