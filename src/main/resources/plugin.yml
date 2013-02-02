@@ -11,3 +11,5 @@ commands:
   ungreylist:
     aliases: [ungraylist]
     permission: voxelguest.greylist.ungreylist
+  vgregion:
+    permission: voxelguest.regions.modifyregion
