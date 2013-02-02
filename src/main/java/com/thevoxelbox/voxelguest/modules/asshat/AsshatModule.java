@@ -29,6 +29,8 @@ public class AsshatModule extends GuestModule
 {
 	public static final String SILENCE_BYPASS_PERM = "voxelguest.asshat.bypass.silence";
 	public static final String FREEZE_BYPASS_PERM = "voxelguest.asshat.bypass.freeze";
+
+
 	private PlayerListener playerListener;
 	private BanCommandExecutor banCommandExecutor;
 	private UnbanCommandExecutor unbanCommandExecutor;

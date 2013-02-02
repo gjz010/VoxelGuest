@@ -14,11 +14,19 @@ public class PlayerListener implements Listener
 {
 	private AsshatModule module;
 
+	/**
+	 *
+	 * @param module The parent module.
+	 */
 	public PlayerListener(final AsshatModule module)
 	{
 		this.module = module;
 	}
 
+	/**
+	 * Handles muted players and global silence.
+	 * @param event
+	 */
 	@EventHandler
 	public final void onChatEvent(final AsyncPlayerChatEvent event)
 	{
@@ -41,6 +49,10 @@ public class PlayerListener implements Listener
 		}
 	}
 
+	/**
+	 * Handles banned players.
+	 * @param event
+	 */
 	@EventHandler
 	public final void onPlayerLogin(final PlayerLoginEvent event)
 	{
@@ -52,6 +64,10 @@ public class PlayerListener implements Listener
 		}
 	}
 
+	/**
+	 * Handles global freeze.
+	 * @param event
+	 */
 	@EventHandler
 	public final void onPlayerMove(final PlayerMoveEvent event)
 	{
