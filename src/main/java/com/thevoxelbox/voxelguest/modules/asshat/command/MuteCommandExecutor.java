@@ -42,10 +42,10 @@ public class MuteCommandExecutor implements CommandExecutor
 		final String playerName = args[0].toLowerCase();
 		boolean forceNameFlag = false;
 		boolean silentFlag = false;
-		String muteReason = "You got muted.";
+		String muteReason = "";
 
-		for (String arg : args)
-		{
+		for(int i = 1; i < args.length; i++) {
+			final String arg = args[i];
 
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
 			{
@@ -57,6 +57,11 @@ public class MuteCommandExecutor implements CommandExecutor
 				silentFlag = true;
 			}
 
+			muteReason += arg + " ";
+		}
+
+		if(muteReason.isEmpty()) {
+			muteReason = "You got muted.";
 		}
 
 		if (forceNameFlag)

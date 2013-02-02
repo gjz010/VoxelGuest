@@ -42,10 +42,11 @@ public class BanCommandExecutor implements CommandExecutor
 		final String playerName = args[0].toLowerCase();
 		boolean forceNameFlag = false;
 		boolean silentFlag = false;
-		String banReason = "You got banned.";
+		String banReason = "";
 
-		for (String arg : args)
-		{
+		for(int i = 1; i < args.length; i++) {
+			final String arg = args[i];
+
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
 			{
 				forceNameFlag = true;
@@ -55,6 +56,12 @@ public class BanCommandExecutor implements CommandExecutor
 			{
 				silentFlag = true;
 			}
+
+			banReason += arg + " ";
+		}
+
+		if(banReason.isEmpty()) {
+			banReason = "You got banned.";
 		}
 
 		if (forceNameFlag)
