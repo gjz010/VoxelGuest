@@ -1,5 +1,10 @@
 package com.thevoxelbox.voxelguest.modules.asshat;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.asshat.ban.Banlist;
 import com.thevoxelbox.voxelguest.modules.asshat.ban.BannedPlayer;
@@ -14,13 +19,9 @@ import com.thevoxelbox.voxelguest.modules.asshat.command.UnmuteCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.mute.MutedPlayer;
 import com.thevoxelbox.voxelguest.modules.asshat.mute.Mutelist;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Monofraps
@@ -47,6 +48,7 @@ public class AsshatModule extends GuestModule
 
 	public AsshatModule()
 	{
+        setName("Asshat Module");
 		playerListener = new PlayerListener(this);
 
 		banCommandExecutor = new BanCommandExecutor(this);

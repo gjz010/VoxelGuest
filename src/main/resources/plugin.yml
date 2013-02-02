@@ -4,3 +4,10 @@ authors: [MikeMatrix, Monofraps, thedeadlybutter]
 version: ${project.version}
 website: ${project.url}
 description: ${project.description}
+commands:
+  greylist:
+    aliases: [graylist]
+    permission: voxelguest.greylist.greylist
+  ungreylist:
+    aliases: [ungraylist]
+    permission: voxelguest.greylist.ungreylist
