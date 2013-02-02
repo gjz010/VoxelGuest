@@ -42,7 +42,7 @@ public class BanCommandExecutor implements CommandExecutor
 		final String playerName = args[0].toLowerCase();
 		boolean forceNameFlag = false;
 		boolean silentFlag = false;
-		String banReason = "TODO!";
+		String banReason = "You got banned.";
 
 		for (String arg : args)
 		{

@@ -16,6 +16,9 @@ commands:
   ban:
     aliases: [vban]
     permission: voxelguest.asshat.ban
+  banreason:
+    aliases: [vbanreason]
+    permission: voxelguest.asshat.banreason
   freeze:
     aliases: [vfreeze]
     permission: voxelguest.asshat.freeze
