@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.ElementCollection;
 
 /**
  * @author Butters
@@ -61,8 +62,10 @@ public class Region implements Serializable
 	@Column
 	private boolean allowEnchanting = false;
 	@Column
+        @ElementCollection
 	private List<Integer> bannedBlocks = new ArrayList<>();
 	@Column
+        @ElementCollection
 	private List<Integer> bannedItems = new ArrayList<>();
 	@Column
 	private String buildPermission;

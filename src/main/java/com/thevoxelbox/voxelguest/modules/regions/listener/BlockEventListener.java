@@ -74,7 +74,7 @@ public class BlockEventListener implements Listener
 			}
 		}
 
-		if (region.getBannedBlocks().contains(event.getBlockPlaced()))
+		if (region.getBannedBlocks().contains(event.getBlockPlaced().getTypeId()))
 		{
 			event.getPlayer().sendMessage(CANT_BUILD_HERE);
 			event.setCancelled(true);
@@ -99,7 +99,7 @@ public class BlockEventListener implements Listener
 			}
 		}
 
-		if (region.getBannedItems().contains(event.getItem()))
+		if (region.getBannedItems().contains(event.getItem().getTypeId()))
 		{
 			event.getPlayer().sendMessage(CANT_BUILD_HERE);
 			event.setCancelled(true);
