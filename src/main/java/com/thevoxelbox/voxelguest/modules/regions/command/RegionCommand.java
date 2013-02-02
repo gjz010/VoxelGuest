@@ -27,6 +27,11 @@ public class RegionCommand implements CommandExecutor
 	@Override
 	public boolean onCommand(final CommandSender cs, final Command cmnd, final String string, final String[] args)
 	{
+                if(!(cs.hasPermission("voxelguest.regions.modifyregion"))){
+                    cs.sendMessage(ChatColor.RED + "Invalid permissions");
+                    return false;
+                }
+                
 		if (args.length == 0)
 		{
 			cs.sendMessage("/vgregion <option>");
@@ -68,7 +73,7 @@ public class RegionCommand implements CommandExecutor
 
 	private void createRegion(final CommandSender cs, final String[] args)
 	{
-		if (args.length <= 9)
+		if (args.length <= 2)
 		{
 			cs.sendMessage(ChatColor.RED + "Invalid paramaters - Use /vgregion <create> [point1x] [point1z] [point2x] [point2z] [build perm.] [region name] [world name | Not needed for players]");
 			return;
