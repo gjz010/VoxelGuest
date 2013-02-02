@@ -27,7 +27,7 @@ public class Region implements Serializable
 	private long id;
 
 	@Column
-	public final String regionName;
+	private final String regionName;
 	@Column
 	private Location pointOne;
 	@Column
@@ -517,6 +517,10 @@ public class Region implements Serializable
                 this.allowSuffocationDamage = allowSuffocationDamage;
         }
 
+        public String getRegionName()
+        {
+                return regionName;
+        }        
         
         
 

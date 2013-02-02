@@ -79,7 +79,7 @@ public class RegionModule extends GuestModule
             if(region != null)
             {
                 regions.add(region);
-                Bukkit.getLogger().info("Created region: " + region.regionName);
+                Bukkit.getLogger().info("Created region: " + region.getRegionName());
                 return true;
             }
             return false;

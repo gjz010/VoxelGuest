@@ -204,7 +204,7 @@ public class RegionCommand implements CommandExecutor
     
     private void printRegionInfo(CommandSender cs, Region region)
     {
-            cs.sendMessage(ChatColor.GRAY + "| Region info for: " + ChatColor.BLACK + region.regionName + ChatColor.GRAY + " |");
+            cs.sendMessage(ChatColor.GRAY + "| Region info for: " + ChatColor.BLACK + region.getRegionName() + ChatColor.GRAY + " |");
             cs.sendMessage(ChatColor.GRAY + "World: " + ChatColor.BLACK + region.getPointOne().getWorld().getName());
             cs.sendMessage(ChatColor.GRAY + "Point one: " + ChatColor.BLACK + region.getPointOne().getX() + ", " + region.getPointOne().getZ());
             cs.sendMessage(ChatColor.GRAY + "Point two: " + ChatColor.BLACK + region.getPointTwo().getX() + ", " + region.getPointTwo().getZ());
