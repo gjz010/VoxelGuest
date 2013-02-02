@@ -59,7 +59,6 @@ public class RegionCommand implements CommandExecutor
                 return true;
         }
         
-        cs.sendMessage(ChatColor.RED  + "Invalid option, refer to /vgregion help");
         return false;
     }
     
@@ -149,13 +148,13 @@ public class RegionCommand implements CommandExecutor
             }
             else
             {
-                    cs.sendMessage(ChatColor.RED + "Invalid region world");
+                    cs.sendMessage(ChatColor.RED + "No region world provided");
                     return;
             }
         }
         
         if(regionName == null){
-                cs.sendMessage(ChatColor.RED + "Invalid region name");
+                cs.sendMessage(ChatColor.RED + "No region name provided");
                 return;
         }
         
@@ -188,7 +187,7 @@ public class RegionCommand implements CommandExecutor
         }
         
         Location pointOne = new Location(regionWorld, point1X.intValue(), 0, point1Z);
-        Location pointTwo = new Location(regionWorld, point2X.intValue(), 256, point2Z.intValue());
+        Location pointTwo = new Location(regionWorld, point2X.intValue(), regionWorld.getMaxHeight(), point2Z.intValue());
         Region region = new Region(regionWorld.getName(), pointOne, pointTwo, regionName, buildPerm);
         
         boolean regionMade = regionModule.addRegion(region);
