@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.ElementCollection;
+import org.bukkit.Bukkit;
 
 /**
  * @author Butters
@@ -21,15 +22,27 @@ import javax.persistence.ElementCollection;
 @Table(name = "regions")
 public class Region implements Serializable
 {
+    
 	@Column
 	private final String regionName;
+        @Column
+        private String worldName;
 	@Id
 	@Column
 	private long id;
 	@Column
-	private Location pointOne;
-	@Column
-	private Location pointTwo;
+	private int pointOneX;
+        @Column
+        private int pointOneY;
+        @Column
+        private int pointOneZ;
+        @Column
+        private int pointTwoX;
+        @Column
+        private int pointTwoY;
+        @Column
+        private int pointTwoZ;
+        
 	//World
 	@Column
 	private boolean allowMobSpawn = false;
@@ -107,47 +120,58 @@ public class Region implements Serializable
 
 	public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName, final String buildPermission)
 	{
-		this.pointOne = pointOne;
-		this.pointTwo = pointTwo;
+                this.worldName = pointOne.getWorld().getName();
+                this.pointOneX = pointOne.getBlockX();
+                this.pointOneY = pointOne.getBlockY();
+                this.pointOneZ = pointOne.getBlockZ();
+                this.pointTwoX = pointTwo.getBlockX();
+                this.pointTwoY = pointTwo.getBlockY();
+                this.pointTwoZ = pointTwo.getBlockZ();
 		this.regionName = regionName;
 		this.buildPermission = buildPermission;
 	}
 
 	public final boolean isLocationInRegion(final Location locationToCheck)
 	{
-		if (!locationToCheck.getWorld().equals(this.pointOne.getWorld()))
+		if (!locationToCheck.getWorld().equals(getPointOne().getWorld()))
 		{
 			return false;
 		}
 
 		//For open worlds that do not have specified points
-		if (pointOne == null && pointTwo == null)
+		if (getPointOne() == null && getPointTwo() == null)
 		{
 			return true;
 		}
 
-		return locationToCheck.toVector().isInAABB(Vector.getMinimum(pointOne.toVector(), pointTwo.toVector()), Vector.getMaximum(pointOne.toVector(), pointTwo.toVector()));
+		return locationToCheck.toVector().isInAABB(Vector.getMinimum(getPointOne().toVector(), getPointTwo().toVector()), Vector.getMaximum(getPointOne().toVector(), getPointTwo().toVector()));
 
 	}
 
 	public Location getPointOne()
 	{
-		return pointOne;
+		return new Location(Bukkit.getWorld(worldName), pointOneX, pointOneY, pointOneZ);
 	}
 
 	public void setPointOne(final Location pointOne)
 	{
-		this.pointOne = pointOne;
+		this.worldName = pointOne.getWorld().getName();
+                this.pointOneX = pointOne.getBlockX();
+                this.pointOneY = pointOne.getBlockY();
+                this.pointOneZ = pointOne.getBlockZ();
 	}
 
 	public Location getPointTwo()
 	{
-		return pointTwo;
+		return new Location(Bukkit.getWorld(worldName), pointTwoX, pointTwoY, pointTwoZ);
 	}
 
 	public void setPointTwo(final Location pointTwo)
 	{
-		this.pointTwo = pointTwo;
+		this.worldName = pointTwo.getWorld().getName();
+                this.pointTwoX = pointTwo.getBlockX();
+                this.pointTwoY = pointTwo.getBlockY();
+                this.pointTwoZ = pointTwo.getBlockZ();
 	}
 
 	public boolean isMobSpawnAllowed()
