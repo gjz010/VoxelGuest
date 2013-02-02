@@ -116,7 +116,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
             for (String command : commandExecutors.keySet())
             {
                 final PluginCommand pluginCommand = VoxelGuest.getPluginInstance().getCommand(command);
-                checkNotNull(pluginCommand);
+                checkNotNull(pluginCommand, "You need to put %s into the plugin.yml", command);
                 pluginCommand.setExecutor(commandExecutors.get(command));
             }
         }
