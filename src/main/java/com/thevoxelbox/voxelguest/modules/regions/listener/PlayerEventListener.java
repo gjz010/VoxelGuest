@@ -2,8 +2,10 @@
 * To change this template, choose Tools | Templates
 * and open the template in the editor.
 */
-package com.thevoxelbox.voxelguest.modules.regions;
+package com.thevoxelbox.voxelguest.modules.regions.listener;
 
+import com.thevoxelbox.voxelguest.modules.regions.Region;
+import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;

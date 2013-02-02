@@ -1,24 +1,27 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import com.thevoxelbox.voxelguest.modules.regions.listener.PlayerEventListener;
+import com.thevoxelbox.voxelguest.modules.regions.listener.BlockEventListener;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
+import com.thevoxelbox.voxelguest.modules.regions.command.RegionCommand;
 import org.bukkit.event.Listener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandExecutor;
 
 /**
- * @author Joe
+ * @author Butters
  */
 public class RegionModule extends GuestModule
 {
 	private List<Region> regions = new ArrayList<>();
 	private BlockEventListener blockEventListener;
         private PlayerEventListener playerEventListener;
+        private RegionCommand regionCommand;
 
 	public RegionModule()
 	{
@@ -26,6 +29,7 @@ public class RegionModule extends GuestModule
 
 		blockEventListener = new BlockEventListener(this);
                 playerEventListener = new PlayerEventListener(this);
+                regionCommand = new RegionCommand(this);
 	}
 
 	@Override
@@ -61,6 +65,25 @@ public class RegionModule extends GuestModule
 	{
 		return "region";
 	}
+        
+        @Override
+        public HashMap<String, CommandExecutor> getCommandMappings()
+        {
+                HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
+                commandMappings.put("vgregion", regionCommand);
+                return commandMappings;
+        }
+        
+        public boolean addRegion(Region region)
+        {
+            if(region != null)
+            {
+                regions.add(region);
+                Bukkit.getLogger().info("Created region: " + region.regionName);
+                return true;
+            }
+            return false;
+        }
 
 	public final Region getRegionAtLocation(final Location regionLocation)
 	{

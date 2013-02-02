@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thevoxelbox.voxelguest.modules.regions;
 
 import org.bukkit.Location;
@@ -19,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Joe
+ * @author Butters
  * @author Monofraps
  */
 @Entity
@@ -31,7 +27,7 @@ public class Region implements Serializable
 	private long id;
 
 	@Column
-	private final String regionName;
+	public final String regionName;
 	@Column
 	private Location pointOne;
 	@Column
