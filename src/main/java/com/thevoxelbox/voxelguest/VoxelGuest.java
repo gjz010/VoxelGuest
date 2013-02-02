@@ -72,6 +72,10 @@ public class VoxelGuest extends JavaPlugin
     @Override
     public void onEnable()
     {
+	    //if(!setupPermissions()) {
+		//    Bukkit.getLogger().severe("Failed to setup Vault, due to no dependency found!"); //Should stop?
+	    //}
+
         VoxelGuest.setPluginInstance(this);
         VoxelGuest.setModuleManagerInstance(new ModuleManager());
 
@@ -85,6 +89,12 @@ public class VoxelGuest extends JavaPlugin
 	    VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
 	    VoxelGuest.getModuleManagerInstance().enableModuleByType(GreylistModule.class);
     }
+
+	private boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+		perms = rsp.getProvider();
+		return perms != null;
+	}
 
     static
     {

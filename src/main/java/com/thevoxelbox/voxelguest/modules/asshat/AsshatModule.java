@@ -51,6 +51,9 @@ public class AsshatModule extends GuestModule
         setName("Asshat Module");
 		playerListener = new PlayerListener(this);
 
+		Persistence.getInstance().registerPersistentClass(BannedPlayer.class);
+		Persistence.getInstance().registerPersistentClass(MutedPlayer.class);
+
 		banCommandExecutor = new BanCommandExecutor(this);
 		unbanCommandExecutor = new UnbanCommandExecutor(this);
 		banreasonCommandExecutor = new BanreasonCommandExecutor(this);
@@ -64,8 +67,7 @@ public class AsshatModule extends GuestModule
 	@Override
 	public final void onEnable()
 	{
-		Persistence.getInstance().registerPersistentClass(BannedPlayer.class);
-		Persistence.getInstance().registerPersistentClass(MutedPlayer.class);
+
 
 		banlist.load();
 		mutelist.load();

@@ -35,6 +35,8 @@ public class GreylistModule extends GuestModule
         greylistListener = new GreylistListener(this);
         greylistCommandExecutor = new GreylistCommandExecutor(this);
         ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
+
+	    Persistence.getInstance().registerPersistentClass(Greylistee.class);
     }
 
     @Override
@@ -46,7 +48,7 @@ public class GreylistModule extends GuestModule
     @Override
     public void onEnable()
     {
-        Persistence.getInstance().registerPersistentClass(Greylistee.class);
+
         super.onEnable();
     }
 
