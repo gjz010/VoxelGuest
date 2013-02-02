@@ -42,7 +42,7 @@ public class MuteCommandExecutor implements CommandExecutor
 		final String playerName = args[0].toLowerCase();
 		boolean forceNameFlag = false;
 		boolean silentFlag = false;
-		String muteReason = "TODO!";
+		String muteReason = "You got muted.";
 
 		for (String arg : args)
 		{
