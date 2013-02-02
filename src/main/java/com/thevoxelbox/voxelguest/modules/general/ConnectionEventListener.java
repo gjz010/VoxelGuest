@@ -74,6 +74,6 @@ public class ConnectionEventListener implements Listener {
     }
     
     public String formatJoinLeaveMessage(String msg, String playerName) {
-        return msg.replace("$no", Integer.toString(Bukkit.getOnlinePlayers().length).replace("$n", playerName));
+        return msg.replace("$no", Integer.toString(Bukkit.getOnlinePlayers().length)).replace("$n", playerName);
     }
 }
