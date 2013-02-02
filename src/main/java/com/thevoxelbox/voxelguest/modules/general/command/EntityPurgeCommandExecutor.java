@@ -29,7 +29,7 @@ public class EntityPurgeCommandExecutor implements CommandExecutor {
 			if(world != null) {
 				sender.sendMessage(ChatColor.RED + "Purging entities from " + world.getName());
 				for(Entity e: world.getEntities()) {
-					if(e.getType().equals(EntityType.ITEM_FRAME) || e.getType().equals(EntityType.PAINTING) || e.getType().equals(EntityType.PLAYER)) {
+					if(e.getType().equals(EntityType.ITEM_FRAME) || e.getType().equals(EntityType.PAINTING) || e.getType().equals(EntityType.PLAYER) || e.getType().equals(EntityType.WOLF)) {
 						//skip
 					} else {
 						e.remove();
