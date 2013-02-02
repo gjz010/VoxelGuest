@@ -1,5 +1,7 @@
-package com.thevoxelbox.voxelguest.modules.regions;
+package com.thevoxelbox.voxelguest.modules.regions.listener;
 
+import com.thevoxelbox.voxelguest.modules.regions.Region;
+import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;
@@ -13,7 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 /**
- * @author Joe
+ * @author Butters
  */
 public class PlayerEventListener implements Listener
 {

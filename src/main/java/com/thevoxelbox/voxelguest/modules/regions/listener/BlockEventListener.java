@@ -1,5 +1,7 @@
-package com.thevoxelbox.voxelguest.modules.regions;
+package com.thevoxelbox.voxelguest.modules.regions.listener;
 
+import com.thevoxelbox.voxelguest.modules.regions.Region;
+import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Painting;
@@ -21,7 +23,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
- * @author Joe
+ * @author Butters
  */
 public class BlockEventListener implements Listener
 {

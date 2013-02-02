@@ -14,7 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
 /**
- * @author Joe
+ * @author Butters
  * @author Monofraps
  */
 @Entity
@@ -26,10 +26,14 @@ public class Region implements Serializable
     @Id
     @Column
     private long id;
+
+	@Column
+	private final String regionName;
     @Column
     private Location pointOne;
     @Column
     private Location pointTwo;
+
     //World
     @Column
     private boolean allowMobSpawn = false;
@@ -67,6 +71,7 @@ public class Region implements Serializable
     private List<Material> bannedItems = new ArrayList<>();
     @Column
     private String buildPermission;
+
     //Player
     @Column
     private boolean allowPvPDamage = false;
@@ -513,5 +518,11 @@ public class Region implements Serializable
         this.allowSuffocationDamage = allowSuffocationDamage;
     }
 
+        public String getRegionName()
+        {
+                return regionName;
+        }        
+        
+        
 
 }
