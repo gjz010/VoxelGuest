@@ -73,12 +73,6 @@ public class RegionCommand implements CommandExecutor
 
 	private void createRegion(final CommandSender cs, final String[] args)
 	{
-		if (args.length <= 2)
-		{
-			cs.sendMessage(ChatColor.RED + "Invalid paramaters - Use /vgregion <create> [point1x] [point1z] [point2x] [point2z] [build perm.] [region name] [world name | Not needed for players]");
-			return;
-		}
-
 		String regionName = null;
 		String buildPerm = null;
 		World regionWorld = null;

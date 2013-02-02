@@ -121,12 +121,16 @@ public class Region implements Serializable
 	public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName, final String buildPermission)
 	{
                 this.worldName = pointOne.getWorld().getName();
-                this.pointOneX = pointOne.getBlockX();
-                this.pointOneY = pointOne.getBlockY();
-                this.pointOneZ = pointOne.getBlockZ();
-                this.pointTwoX = pointTwo.getBlockX();
-                this.pointTwoY = pointTwo.getBlockY();
-                this.pointTwoZ = pointTwo.getBlockZ();
+                if(pointOne != null){
+                        this.pointOneX = pointOne.getBlockX();
+                        this.pointOneY = pointOne.getBlockY();
+                        this.pointOneZ = pointOne.getBlockZ();
+                }
+                if(pointTwo != null){
+                        this.pointTwoX = pointTwo.getBlockX();
+                        this.pointTwoY = pointTwo.getBlockY();
+                        this.pointTwoZ = pointTwo.getBlockZ();                    
+                }
 		this.regionName = regionName;
 		this.buildPermission = buildPermission;
 	}
