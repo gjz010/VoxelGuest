@@ -68,7 +68,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
 		if (module.getConfiguration() != null)
 		{
-			Configuration.loadConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".cfg"), module.getConfiguration());
+			Configuration.loadConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".properties"), module.getConfiguration());
 		}
 
 		module.onEnable();
@@ -150,7 +150,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
 		if (module.getConfiguration() != null)
 		{
-			Configuration.saveConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".cfg"), module.getConfiguration());
+			Configuration.saveConfiguration(new File(VoxelGuest.getPluginInstance().getDataFolder() + File.separator + module.getConfigFileName() + ".properties"), module.getConfiguration());
 		}
 
 		final Map<String, CommandExecutor> commandExecutors = module.getCommandMappings();
@@ -179,7 +179,6 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 				{
 					for (Listener listener : moduleListeners)
 					{
-						Bukkit.getPluginManager().registerEvents(listener, VoxelGuest.getPluginInstance());
 						HandlerList.unregisterAll(listener);
 					}
 				}
@@ -251,6 +250,9 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 		}
 	}
 
+	/**
+	 * Shuts down the module manager by disabling all modules.
+	 */
 	public final void shutdown()
 	{
 		for (Module module : registeredModules.keySet())

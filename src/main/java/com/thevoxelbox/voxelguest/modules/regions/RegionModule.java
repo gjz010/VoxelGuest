@@ -1,13 +1,13 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import com.thevoxelbox.voxelguest.modules.GuestModule;
+import com.thevoxelbox.voxelguest.persistence.Persistence;
+import org.bukkit.Location;
+import org.bukkit.event.Listener;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
-import com.thevoxelbox.voxelguest.modules.GuestModule;
-
-import org.bukkit.Location;
-import org.bukkit.event.Listener;
 
 /**
  * @author Joe
@@ -30,11 +30,27 @@ public class RegionModule extends GuestModule
     public final void onEnable()
     {
         super.onEnable();
+
+	    Persistence.getInstance().registerPersistentClass(Region.class);
+
+	    regions.clear();
+	    List<Object> protoList = Persistence.getInstance().loadAll(Region.class);
+	    for (Object protoRegion : protoList)
+	    {
+		    regions.add((Region) protoRegion);
+	    }
     }
 
     @Override
     public final void onDisable()
     {
+	    regions.clear();
+	    List<Object> protoList = new ArrayList<>();
+	    for (Region region : regions)
+	    {
+		    protoList.add(region);
+	    }
+
         super.onDisable();
     }
 
@@ -55,7 +71,7 @@ public class RegionModule extends GuestModule
     {
         final HashSet<Listener> listeners = new HashSet<>();
         listeners.add(blockEventListener);
-        listeners.add(blockEventListener);
+        listeners.add(playerEventListener);
 
         return listeners;
     }
