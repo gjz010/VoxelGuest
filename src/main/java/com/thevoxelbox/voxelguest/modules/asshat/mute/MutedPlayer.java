@@ -22,6 +22,11 @@ public class MutedPlayer
 	@Column
 	private String muteReason;
 
+	public MutedPlayer() {
+		this.playerName = "";
+		this.muteReason = "";
+	}
+
 	/**
 	 *
 	 * @param playerName The name of the muted player.
