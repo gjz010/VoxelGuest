@@ -70,6 +70,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.4.7-R0.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>net.sf.morph</groupId>
             <artifactId>morph</artifactId>
             <version>1.1.1</version>
@@ -83,11 +89,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>4.1.9.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.7.2</version>
         </dependency>
     </dependencies>
 
@@ -138,6 +139,40 @@
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>false</minimizeJar>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.bukkit:craftbukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>com.google.guava:guava</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>com.thevoxelbox.voxelguest.libs.com.google.gson</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.persistence</pattern>
+                                    <shadedPattern>com.thevoxelbox.voxelguest.libs.javax.persistence</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
