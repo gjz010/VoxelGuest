@@ -46,7 +46,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
         }
 
         this.registeredModules.put(module, new HashSet<Listener>());
-`
+
         if (enable)
         {
             try
