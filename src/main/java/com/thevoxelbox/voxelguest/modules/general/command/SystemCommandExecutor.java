@@ -33,6 +33,13 @@ public class SystemCommandExecutor implements CommandExecutor
         if (args.length == 0)
         {
             this.printSpecs(sender);
+            return true;
+        }
+        else if (args.length == 1)
+        {
+            if (args[0].equalsIgnoreCase("gc")) {
+                System.gc();
+            }
         }
         return false;
     }

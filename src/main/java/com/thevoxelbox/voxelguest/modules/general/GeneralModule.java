@@ -67,11 +67,11 @@ public class GeneralModule extends GuestModule {
 
     
     //CommandExecuters
-    private EntityPurgeCommandExecutor entityPurgeCommandExecutor;
-    private VanishCommandExecutor vanishCommandExecutor;
-    private FakequitCommandExecutor fakequitCommandExecutor;
-    private WhoCommandExecutor whoCommandExecutor;
-    private SystemCommandExecutor systemCommandExecutor;
+    private final EntityPurgeCommandExecutor entityPurgeCommandExecutor;
+    private final VanishCommandExecutor vanishCommandExecutor;
+    private final FakequitCommandExecutor fakequitCommandExecutor;
+    private final WhoCommandExecutor whoCommandExecutor;
+    private final SystemCommandExecutor systemCommandExecutor;
     
     //Listener
     private ConnectionEventListener connectionEventListener;
@@ -81,14 +81,15 @@ public class GeneralModule extends GuestModule {
     
     private Permission perms = null;
 	
-	public GeneralModule(Permission p) {
+	public GeneralModule(Permission perms) {
 		setName("General Module");
 		entityPurgeCommandExecutor = new EntityPurgeCommandExecutor(this);
 		vanishCommandExecutor = new VanishCommandExecutor(this);
 		connectionEventListener = new ConnectionEventListener(this);
 		fakequitCommandExecutor = new FakequitCommandExecutor(this);
 		whoCommandExecutor = new WhoCommandExecutor(this);
-		this.perms = p;
+		systemCommandExecutor = new SystemCommandExecutor(this);
+		this.perms = perms;
 	}
 
 	@Override
