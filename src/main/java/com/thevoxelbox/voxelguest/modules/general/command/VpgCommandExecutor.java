@@ -1,0 +1,52 @@
+package com.thevoxelbox.voxelguest.modules.general.command;
+
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
+
+public class VpgCommandExecutor implements CommandExecutor
+{
+    @SuppressWarnings("unused")
+    private GeneralModule module;
+    
+    public VpgCommandExecutor(final GeneralModule generalModule)
+    {
+        this.module = generalModule;
+    }
+
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    {
+        if (args.length == 2)
+        {
+            List<Player> matchPlayer = Bukkit.matchPlayer(args[0]);
+            if (matchPlayer.size() == 1)
+            {
+                Player match = matchPlayer.get(0);
+                for (String groupName : VoxelGuest.getPerms().getGroups())
+                {
+                    if (groupName.equalsIgnoreCase(args[1]))
+                    {
+                        for(String oldGroupName : VoxelGuest.getPerms().getPlayerGroups(match))
+                        {
+                            VoxelGuest.getPerms().playerRemoveGroup(match, oldGroupName);
+                        }
+
+                        VoxelGuest.getPerms().playerAddGroup(match, groupName);
+                        sender.sendMessage(ChatColor.GREEN + "Group Sucessfully Changed!");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}

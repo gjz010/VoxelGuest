@@ -20,6 +20,7 @@ import com.thevoxelbox.voxelguest.modules.general.command.EntityPurgeCommandExec
 import com.thevoxelbox.voxelguest.modules.general.command.FakequitCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.SystemCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VanishCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.general.command.VpgCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.WhoCommandExecutor;
 
 public class GeneralModule extends GuestModule {
@@ -72,6 +73,7 @@ public class GeneralModule extends GuestModule {
     private final FakequitCommandExecutor fakequitCommandExecutor;
     private final WhoCommandExecutor whoCommandExecutor;
     private final SystemCommandExecutor systemCommandExecutor;
+    private final VpgCommandExecutor vpgCommandExecutor;
     
     //Listener
     private ConnectionEventListener connectionEventListener;
@@ -89,6 +91,7 @@ public class GeneralModule extends GuestModule {
 		fakequitCommandExecutor = new FakequitCommandExecutor(this);
 		whoCommandExecutor = new WhoCommandExecutor(this);
 		systemCommandExecutor = new SystemCommandExecutor(this);
+		vpgCommandExecutor = new VpgCommandExecutor(this);
 		this.perms = perms;
 	}
 
@@ -130,6 +133,7 @@ public class GeneralModule extends GuestModule {
         commandMappings.put("fakequit", fakequitCommandExecutor);
         commandMappings.put("who", whoCommandExecutor);
         commandMappings.put("sys", systemCommandExecutor);
+        commandMappings.put("vpg", vpgCommandExecutor);
 
         return commandMappings;
     }
