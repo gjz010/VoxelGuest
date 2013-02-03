@@ -172,7 +172,12 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
         {
             for (String command : commandExecutors.keySet())
             {
-                VoxelGuest.getPluginInstance().getCommand(command).setExecutor(null);
+	            try {
+                    VoxelGuest.getPluginInstance().getCommand(command).setExecutor(null);
+	            } catch (Exception ex) {
+		            Bukkit.getLogger().warning("Failed to unregister module command: " + command);
+		            ex.printStackTrace();
+	            }
             }
         }
 
