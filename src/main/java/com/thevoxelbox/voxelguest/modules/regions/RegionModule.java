@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.regions.command.RegionCommand;
 import com.thevoxelbox.voxelguest.modules.regions.listener.BlockEventListener;
@@ -39,14 +40,12 @@ public class RegionModule extends GuestModule
 	@Override
 	public final void onEnable()
 	{
+		List<Object> regionObjects = Persistence.getInstance().loadAll(Region.class);
+		for(Object regionObject : regionObjects) {
+			Preconditions.checkState(regionObject instanceof Region);
 
-
-
-		regions.clear();
-		List<Object> protoList = Persistence.getInstance().loadAll(Region.class);
-		for (Object protoRegion : protoList)
-		{
-			regions.add((Region) protoRegion);
+			Region region = (Region)regionObject;
+			regions.add(region);
 		}
 
 		super.onEnable();
@@ -56,12 +55,6 @@ public class RegionModule extends GuestModule
 	public final void onDisable()
 	{
 		regions.clear();
-		List<Object> protoList = new ArrayList<>();
-		for (Region region : regions)
-		{
-			protoList.add(region);
-		}
-
 		super.onDisable();
 	}
 
@@ -100,6 +93,7 @@ public class RegionModule extends GuestModule
 		if (region != null)
 		{
 			regions.add(region);
+			Persistence.getInstance().save(region);
 			Bukkit.getLogger().info("Created region: " + region.getRegionName());
 			return true;
 		}
