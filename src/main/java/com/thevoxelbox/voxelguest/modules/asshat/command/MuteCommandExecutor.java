@@ -63,7 +63,7 @@ public class MuteCommandExecutor implements CommandExecutor
 		}
 
 		if(muteReason.isEmpty()) {
-			muteReason = "Asshat";
+			muteReason = null;
 		}
 
 		if (forceNameFlag)
@@ -94,7 +94,7 @@ public class MuteCommandExecutor implements CommandExecutor
 		}
 
 		if(module.getMutelist().isPlayerMuted(playerName)) {
-			commandSender.sendMessage(String.format("Player %s is already muted.", playerName));
+			commandSender.sendMessage(String.format("Player %s is already gagged.", playerName));
 			return true;
 		}
 
@@ -108,12 +108,13 @@ public class MuteCommandExecutor implements CommandExecutor
 		try
 		{
 			module.getMutelist().mute(playerName, muteReason);
-			Bukkit.getLogger().info(String.format("%s got muted for %s by %s", playerName, muteReason, commandSender.getName()));
+			Bukkit.getLogger().info(String.format("%s got gagged for %s by %s", playerName, muteReason, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(String.format("%s got muted for %s by %s", playerName, muteReason, commandSender.getName()));
+				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getGagBroadcastMsg(), playerName, commandSender.getName(), muteReason));
 			}
-		} catch (Exception ex)
+		}
+		catch (Exception ex)
 		{
 			ex.printStackTrace();
 			commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));

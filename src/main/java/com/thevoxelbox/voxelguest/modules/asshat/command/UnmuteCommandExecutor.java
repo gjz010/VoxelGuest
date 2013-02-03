@@ -65,7 +65,7 @@ public class UnmuteCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got unmuted by %s", playerName, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(String.format("%s got unmuted by %s", playerName, commandSender.getName()));
+				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getUngagBroadcastMsg(), playerName, commandSender.getName(), ""));
 			}
 		} catch (Exception ex)
 		{

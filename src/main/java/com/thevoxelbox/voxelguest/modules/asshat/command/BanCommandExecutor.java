@@ -112,7 +112,7 @@ public class BanCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));
+				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getBanBroadcastMsg(), playerName, commandSender.getName(), banReason));
 			}
 		} catch (Exception ex)
 		{

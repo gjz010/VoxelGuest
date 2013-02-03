@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+
 import java.util.List;
 
 /**
@@ -13,6 +15,11 @@ import java.util.List;
  */
 public class KickCommandExecutor implements CommandExecutor
 {
+    private final AsshatModule module;
+    
+    public KickCommandExecutor(AsshatModule asshatModule) {
+        this.module = asshatModule;
+    }
 	@Override
 	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
@@ -51,7 +58,7 @@ public class KickCommandExecutor implements CommandExecutor
 		}
 
 		if(kickReason.isEmpty()) {
-			kickReason = "Asshat";
+			kickReason = null;
 		}
 
 		for (String arg : args)
@@ -116,7 +123,7 @@ public class KickCommandExecutor implements CommandExecutor
 		Bukkit.getLogger().info(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
 		if (!silentFlag)
 		{
-			Bukkit.broadcastMessage(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
+			Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getKickBroadcastMsg(), player.getName(), sender.getName(), reason));
 		}
 	}
 }
