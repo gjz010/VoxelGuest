@@ -7,9 +7,9 @@ import com.thevoxelbox.voxelguest.modules.general.command.FakequitCommandExecuto
 import com.thevoxelbox.voxelguest.modules.general.command.SystemCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VanishCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VpgCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.general.command.VtpCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.WhoCommandExecutor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -33,6 +33,7 @@ public class GeneralModule extends GuestModule
 	private final VanishCommandExecutor vanishCommandExecutor;
 	private final FakequitCommandExecutor fakequitCommandExecutor;
 	private final WhoCommandExecutor whoCommandExecutor;
+	
 	/*
 	 * these will be used to persist vanished and fakequit players through reloads and restarts
 	private String[] reloadVanishedList;
@@ -41,6 +42,7 @@ public class GeneralModule extends GuestModule
 	*/
 	private final SystemCommandExecutor systemCommandExecutor;
 	private final VpgCommandExecutor vpgCommandExecutor;
+    private final VtpCommandExecutor vtpCommandExecutor;
 	private List<String> vanished = new ArrayList<>();
 	private List<String> oVanished = new ArrayList<>();
 	private List<String> fakequit = new ArrayList<>();
@@ -63,6 +65,7 @@ public class GeneralModule extends GuestModule
 		whoCommandExecutor = new WhoCommandExecutor(this);
 		systemCommandExecutor = new SystemCommandExecutor();
 		vpgCommandExecutor = new VpgCommandExecutor();
+	    vtpCommandExecutor = new VtpCommandExecutor();
 	}
 
 	@Override

@@ -55,3 +55,6 @@ commands:
   vpg:
     aliases: [vpg, vpromote]
     permission: voxelguest.general.vpg
+  vtp:
+    aliases: [vtp, vteleport]
+    permission: voxelguest.general.vtp
