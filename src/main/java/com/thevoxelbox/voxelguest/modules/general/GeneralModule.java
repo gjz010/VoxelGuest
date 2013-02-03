@@ -106,6 +106,7 @@ public class GeneralModule extends GuestModule
 		commandMappings.put("who", whoCommandExecutor);
 		commandMappings.put("sys", systemCommandExecutor);
 		commandMappings.put("vpg", vpgCommandExecutor);
+	    commandMappings.put("vtp", vtpCommandExecutor);
 
 		return commandMappings;
 	}
