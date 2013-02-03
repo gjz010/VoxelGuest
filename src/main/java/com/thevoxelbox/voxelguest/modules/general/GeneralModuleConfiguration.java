@@ -171,7 +171,7 @@ public class GeneralModuleConfiguration
 		return fakequitPrefix;
 	}
 
-	@ConfigurationGetter("fakequit-prefix")
+	@ConfigurationSetter("fakequit-prefix")
 	public final void setFakequitPrefix(final String fakequitPrefix)
 	{
 		this.fakequitPrefix = fakequitPrefix;
