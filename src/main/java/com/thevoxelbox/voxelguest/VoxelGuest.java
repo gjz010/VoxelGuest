@@ -47,7 +47,7 @@ public class VoxelGuest extends JavaPlugin
         return moduleManagerInstance;
     }
 
-    public static void setModuleManagerInstance(final ModuleManager moduleManagerInstance)
+    private static void setModuleManagerInstance(final ModuleManager moduleManagerInstance)
     {
         if (VoxelGuest.moduleManagerInstance != null)
         {
@@ -57,7 +57,17 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.moduleManagerInstance = moduleManagerInstance;
     }
 
-    @Override
+	public static Permission getPerms()
+	{
+		return perms;
+	}
+
+	private static void setPerms(final Permission perms)
+	{
+		VoxelGuest.perms = perms;
+	}
+
+	@Override
     public void onLoad()
     {
         Persistence.getInstance().initialize(new File(getDataFolder(), "persistence.db"));
@@ -94,8 +104,8 @@ public class VoxelGuest extends JavaPlugin
 
 	private boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
+		setPerms(rsp.getProvider());
+		return VoxelGuest.getPerms() != null;
 	}
 
     static
