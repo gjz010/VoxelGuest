@@ -37,7 +37,8 @@ public class Persistence
 				.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
 				.setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
 				.setProperty("hibernate.connection.url", "jdbc:sqlite:" + file.getPath())
-				.setProperty("hibernate.hbm2ddl.auto", "update");
+				.setProperty("hibernate.hbm2ddl.auto", "update")
+				.setProperty("hibernate.connection.pool_size", "1");
 	}
 
 	public void registerPersistentClass(Class<?> persistentClass)
