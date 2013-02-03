@@ -15,7 +15,7 @@ public class VpgCommandExecutor implements CommandExecutor
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
 	{
-		if (args.length == 2)
+		if (args.length >= 2)
 		{
 			List<Player> matchPlayer = Bukkit.matchPlayer(args[0]);
 			if (matchPlayer.size() == 1)
@@ -35,8 +35,24 @@ public class VpgCommandExecutor implements CommandExecutor
 						return true;
 					}
 				}
+				sender.sendMessage("No group found by name \"" + args[1] + "\"");
+                return true;
+			}
+			else if (matchPlayer.size() > 1)
+			{
+			    sender.sendMessage("Multiple Player matches for \"" + args[0] + "\"");
+                return true;
+			}
+			else
+			{
+			    sender.sendMessage("No player matches found for \"" + args [0] + "\"");
+                return true;
 			}
 		}
-		return false;
+		else
+		{
+		    sender.sendMessage("Incorect syntax proper syntax is /vpg <Player name> <New rank>");
+            return true;
+		}
 	}
 }
