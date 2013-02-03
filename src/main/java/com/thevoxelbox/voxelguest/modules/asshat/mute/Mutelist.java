@@ -1,7 +1,9 @@
 package com.thevoxelbox.voxelguest.modules.asshat.mute;
 
 import com.google.common.base.Preconditions;
+import com.thevoxelbox.voxelguest.modules.asshat.ban.BannedPlayer;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +13,6 @@ import java.util.List;
  */
 public class Mutelist
 {
-	private List<MutedPlayer> mutedPlayers = new ArrayList<>();
-
 	/**
 	 * Mutes a player and stores the reason he was muted for.
 	 * @param playerName The name of the player to mute.
@@ -21,7 +21,7 @@ public class Mutelist
 	public final void mute(final String playerName, final String banReason)
 	{
 		Preconditions.checkState(!isPlayerMuted(playerName), "Player %s already muted.", playerName);
-		mutedPlayers.add(new MutedPlayer(playerName, banReason));
+		Persistence.getInstance().save(new MutedPlayer(playerName, banReason));
 	}
 
 	/**
@@ -31,16 +31,20 @@ public class Mutelist
 	public final void unmute(final String playerName)
 	{
 		Preconditions.checkState(isPlayerMuted(playerName), "Player %s is not muted.", playerName);
-		mutedPlayers.remove(getMutedPlayer(playerName));
+		Persistence.getInstance().delete(getMutedPlayer(playerName));
 	}
 
 	private MutedPlayer getMutedPlayer(final String playerName)
 	{
-		for (MutedPlayer player : mutedPlayers)
+		final List<Object> mutedPlayers = Persistence.getInstance().loadAll(MutedPlayer.class, Restrictions.like("playerName", playerName.toLowerCase()));
+		for (Object mutedPlayerObject : mutedPlayers)
 		{
-			if (player.getPlayerName().equalsIgnoreCase(playerName))
+			Preconditions.checkState(mutedPlayerObject instanceof MutedPlayer);
+
+			MutedPlayer mutedPlayer = (MutedPlayer) mutedPlayerObject;
+			if (mutedPlayer.getPlayerName().equalsIgnoreCase(playerName))
 			{
-				return player;
+				return mutedPlayer;
 			}
 		}
 
@@ -67,33 +71,5 @@ public class Mutelist
 		Preconditions.checkState(isPlayerMuted(playerName), "Player %s must be muted in order to get the mute reason.", playerName);
 
 		return getMutedPlayer(playerName).getMuteReason();
-	}
-
-	/**
-	 * Loads the muted players from the persistence system.
-	 */
-	public final void load()
-	{
-		mutedPlayers.clear();
-
-		List<Object> protoList = Persistence.getInstance().loadAll(MutedPlayer.class);
-		for (Object protoPlayer : protoList)
-		{
-			mutedPlayers.add((MutedPlayer) protoPlayer);
-		}
-	}
-
-	/**
-	 * Saves the muted player to the persistence system.
-	 */
-	public final void save()
-	{
-		List<Object> protoList = new ArrayList<>();
-		for (MutedPlayer protoPlayer : mutedPlayers)
-		{
-			protoList.add(protoPlayer);
-		}
-
-		Persistence.getInstance().saveAll(protoList);
 	}
 }

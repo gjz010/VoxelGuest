@@ -47,7 +47,7 @@ public class UnmuteCommandExecutor implements CommandExecutor
 			}
 		}
 
-		if(module.getMutelist().isPlayerMuted(playerName)) {
+		if(!module.getMutelist().isPlayerMuted(playerName)) {
 			commandSender.sendMessage(String.format("Player %s is not muted.", playerName));
 			return true;
 		}

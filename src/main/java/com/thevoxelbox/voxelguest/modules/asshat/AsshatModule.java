@@ -67,20 +67,12 @@ public class AsshatModule extends GuestModule
 	@Override
 	public final void onEnable()
 	{
-
-
-		banlist.load();
-		mutelist.load();
-
 		super.onEnable();
 	}
 
 	@Override
 	public final void onDisable()
 	{
-		banlist.save();
-		mutelist.save();
-
 		super.onDisable();
 	}
 

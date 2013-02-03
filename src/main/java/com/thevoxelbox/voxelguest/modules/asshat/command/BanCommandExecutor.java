@@ -50,11 +50,13 @@ public class BanCommandExecutor implements CommandExecutor
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
 			{
 				forceNameFlag = true;
+				continue;
 			}
 
 			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
 			{
 				silentFlag = true;
+				continue;
 			}
 
 			banReason += arg + " ";
@@ -71,7 +73,7 @@ public class BanCommandExecutor implements CommandExecutor
 		}
 
 		final List<Player> players = Bukkit.matchPlayer(playerName);
-		if (players.size() < 0)
+		if (players.size() < 1)
 		{
 			commandSender.sendMessage("Could not find any player named like " + playerName);
 			return true;

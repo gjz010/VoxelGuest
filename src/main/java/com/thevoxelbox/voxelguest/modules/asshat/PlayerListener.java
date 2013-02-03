@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -54,13 +55,13 @@ public class PlayerListener implements Listener
 	 * @param event
 	 */
 	@EventHandler
-	public final void onPlayerLogin(final PlayerLoginEvent event)
+	public final void onPlayerLogin(final AsyncPlayerPreLoginEvent event)
 	{
-		final Player player = event.getPlayer();
+		final String playerName = event.getName();
 
-		if (module.getBanlist().isPlayerBanned(player.getName()))
+		if (module.getBanlist().isPlayerBanned(playerName))
 		{
-			event.disallow(PlayerLoginEvent.Result.KICK_BANNED, module.getBanlist().whyIsPlayerBanned(player.getName()));
+			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, module.getBanlist().whyIsPlayerBanned(playerName));
 		}
 	}
 

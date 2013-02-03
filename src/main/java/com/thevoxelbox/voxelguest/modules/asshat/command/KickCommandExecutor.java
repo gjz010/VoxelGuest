@@ -38,11 +38,13 @@ public class KickCommandExecutor implements CommandExecutor
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
 			{
 				forceNameFlag = true;
+				continue;
 			}
 
 			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
 			{
 				silentFlag = true;
+				continue;
 			}
 
 			kickReason += arg + " ";

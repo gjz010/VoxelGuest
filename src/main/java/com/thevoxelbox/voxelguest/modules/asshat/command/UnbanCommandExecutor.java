@@ -47,7 +47,7 @@ public class UnbanCommandExecutor implements CommandExecutor
 			}
 		}
 
-		if(module.getBanlist().isPlayerBanned(playerName)) {
+		if(!module.getBanlist().isPlayerBanned(playerName)) {
 			commandSender.sendMessage(String.format("Player %s is not banned.", playerName));
 			return true;
 		}

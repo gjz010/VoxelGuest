@@ -50,11 +50,13 @@ public class MuteCommandExecutor implements CommandExecutor
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
 			{
 				forceNameFlag = true;
+				continue;
 			}
 
 			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
 			{
 				silentFlag = true;
+				continue;
 			}
 
 			muteReason += arg + " ";
