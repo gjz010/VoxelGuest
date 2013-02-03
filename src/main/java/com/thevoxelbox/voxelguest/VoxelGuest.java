@@ -92,7 +92,7 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new RegionModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new AsshatModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), false);
-	    VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(perms), false);
+	    VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
 
 	    Persistence.getInstance().rebuildSessionFactory();
 
