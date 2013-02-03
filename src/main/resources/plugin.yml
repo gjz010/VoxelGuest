@@ -52,3 +52,6 @@ commands:
   sys:
     aliases: [sys, system]
     permission: voxelguest.general.sys
+  vpg:
+    aliases: [vpg, vpromote]
+    permission: voxelguest.general.vpg
