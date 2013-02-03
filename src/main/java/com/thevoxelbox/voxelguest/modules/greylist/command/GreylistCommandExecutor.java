@@ -32,15 +32,25 @@ public class GreylistCommandExecutor implements CommandExecutor
             if (args.length == 1)
             {
                 String greylistee = Strings.nullToEmpty(args[0]);
+                if (greylistModule.isOnPersistentGreylist(greylistee))
+                {
+                    sender.sendMessage(String.format("%s is already on the greylist.", greylistee));
+                    return true; 
+                }
                 greylistModule.greylist(greylistee);
                 sender.sendMessage(String.format("Added %s to greylist.", greylistee));
                 return true;
             }
             else
             {
-                return false;
+                sender.sendMessage("Please supply a player name to be graylisted.");
+                return true;
             }
         }
-        return false;
+        else
+        {
+            sender.sendMessage("You do not have permission to perform this command");
+            return true;
+        }
     }
 }

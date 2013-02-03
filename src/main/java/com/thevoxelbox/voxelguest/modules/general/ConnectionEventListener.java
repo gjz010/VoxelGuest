@@ -22,15 +22,15 @@ public class ConnectionEventListener implements Listener {
         
         event.setJoinMessage(this.formatJoinLeaveMessage(GeneralModule.JOIN_FORMAT, player.getName()));
         
-        if(module.ovanished.contains(player.getName())) {
+        if (module.oVanished.contains(player.getName())) {
             module.vanished.add(player.getName());
-            module.ovanished.remove(player.getName());
+            module.oVanished.remove(player.getName());
             module.hidePlayerForAll(player);
         }
         
         module.hideAllForPlayer(player);
         
-        if(module.ofakequit.contains(player.getName())) {
+        if (module.ofakequit.contains(player.getName())) {
             module.fakequit.add(player.getName());
             module.ofakequit.remove(player.getName());
             event.setJoinMessage("");
@@ -43,12 +43,12 @@ public class ConnectionEventListener implements Listener {
         
         event.setQuitMessage(this.formatJoinLeaveMessage(GeneralModule.LEAVE_FORMAT, player.getName()));
         
-        if(module.vanished.contains(player.getName())) {
-            module.ovanished.add(player.getName());
+        if (module.vanished.contains(player.getName())) {
+            module.oVanished.add(player.getName());
             module.vanished.remove(player.getName());
         }
         
-        if(module.fakequit.contains(player.getName())) {
+        if (module.fakequit.contains(player.getName())) {
             module.ofakequit.add(player.getName());
             module.fakequit.remove(player.getName());
             event.setQuitMessage("");
@@ -61,12 +61,12 @@ public class ConnectionEventListener implements Listener {
         
         event.setLeaveMessage(this.formatJoinLeaveMessage(GeneralModule.KICK_FORMAT, player.getName()));
         
-        if(module.vanished.contains(player.getName())) {
-            module.ovanished.add(player.getName());
+        if (module.vanished.contains(player.getName())) {
+            module.oVanished.add(player.getName());
             module.vanished.remove(player.getName());
         }
         
-        if(module.fakequit.contains(player.getName())) {
+        if (module.fakequit.contains(player.getName())) {
             module.ofakequit.add(player.getName());
             module.fakequit.remove(player.getName());
             event.setLeaveMessage("");

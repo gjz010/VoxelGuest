@@ -49,3 +49,6 @@ commands:
   ep:
     aliases: [ep]
     permission: voxelguest.general.ep
+  sys:
+    aliases: [sys, system]
+    permission: voxelguest.general.sys
