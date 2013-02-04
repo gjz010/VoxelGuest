@@ -150,7 +150,7 @@ public class AsshatModule extends GuestModule
 			reason = this.config.getDefaultAsshatReason();
 		}
 
-		if (hasReason)
+		if (!hasReason)
 		{
 			return msg.replace("%playername%", target).replace("%admin%", adminName);
 		}
