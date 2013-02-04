@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
-import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
@@ -27,6 +26,9 @@ public class GreylistModule extends GuestModule
     private boolean explorationMode = false;
     private String notGreylistedKickMessage = "You are not greylisted.";
 
+    /**
+     *
+     */
     public GreylistModule()
     {
         setName("Greylist Module");
@@ -36,20 +38,20 @@ public class GreylistModule extends GuestModule
     }
 
     @Override
-    public void onEnable()
+    public final void onEnable()
     {
 
         super.onEnable();
     }
 
     @Override
-    public Object getConfiguration()
+    public final Object getConfiguration()
     {
         return this;
     }
 
     @Override
-    public HashSet<Listener> getListeners()
+    public final HashSet<Listener> getListeners()
     {
         final HashSet<Listener> listeners = new HashSet<>();
         listeners.add(greylistListener);
@@ -57,7 +59,7 @@ public class GreylistModule extends GuestModule
     }
 
     @Override
-    public HashMap<String, CommandExecutor> getCommandMappings()
+    public final HashMap<String, CommandExecutor> getCommandMappings()
     {
         HashMap<String, CommandExecutor> commandMapping = new HashMap<>();
         commandMapping.put("greylist", greylistCommandExecutor);
@@ -66,25 +68,25 @@ public class GreylistModule extends GuestModule
     }
 
     @ConfigurationGetter("exploration-mode")
-    public boolean isExplorationMode()
+    public final boolean isExplorationMode()
     {
         return explorationMode;
     }
 
     @ConfigurationSetter("exploration-mode")
-    public void setExplorationMode(final boolean explorationMode)
+    public final void setExplorationMode(final boolean explorationMode)
     {
         this.explorationMode = explorationMode;
     }
 
     @ConfigurationGetter("not-greylisted-kick-message")
-    public String getNotGreylistedKickMessage()
+    public final String getNotGreylistedKickMessage()
     {
         return notGreylistedKickMessage;
     }
 
     @ConfigurationSetter("not-greylisted-kick-message")
-    public void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
+    public final void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
     {
         this.notGreylistedKickMessage = notGreylistedKickMessage;
     }
@@ -95,24 +97,21 @@ public class GreylistModule extends GuestModule
 
         try
         {
-            greylistees = Persistence.getInstance().loadAll(Greylistee.class, new HashMap<String, Object>()
-            {{
-                    put("name", name);
-                }});
+            final HashMap<String, Object> selectRestrictions = new HashMap<>();
+            selectRestrictions.put("name", name.toLowerCase());
+
+            greylistees = Persistence.getInstance().loadAll(Greylistee.class, selectRestrictions);
         } catch (Exception ex)
         {
             ex.printStackTrace();
             return false;
         }
 
-        for (Object greylisteeObject : greylistees)
+        for (Greylistee greylistee : greylistees)
         {
-            if (greylisteeObject instanceof Greylistee)
+            if (greylistee.getName().equalsIgnoreCase(name))
             {
-                if (((Greylistee) greylisteeObject).getName().equalsIgnoreCase(name))
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -120,10 +119,9 @@ public class GreylistModule extends GuestModule
 
     public void greylist(final String name)
     {
-        final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, new HashMap<String, Object>()
-        {{
-                put("name", name);
-            }});
+        final HashMap<String, Object> selectRestrictions = new HashMap<>();
+        selectRestrictions.put("name", name.toLowerCase());
+        final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, selectRestrictions);
 
         for (Greylistee greylistee : greylistees)
         {
@@ -132,23 +130,19 @@ public class GreylistModule extends GuestModule
                 return;
             }
         }
-        Persistence.getInstance().save(new Greylistee(name));
+        Persistence.getInstance().save(new Greylistee(name.toLowerCase()));
 
 
     }
 
     public void ungreylist(final String name)
     {
-        final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, new HashMap<String, Object>()
-        {{
-                put("name", name);
-            }});
+        HashMap<String, Object> selectRestrictions = new HashMap<>();
+        selectRestrictions.put("name", name.toLowerCase());
+        final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, selectRestrictions);
 
-        for (Object greylisteeObject : greylistees)
+        for (Greylistee greylistee : greylistees)
         {
-            Preconditions.checkState(greylisteeObject instanceof Greylistee);
-
-            Greylistee greylistee = (Greylistee) greylisteeObject;
             if (greylistee.getName().equalsIgnoreCase(name))
             {
                 Persistence.getInstance().delete(greylistee);
