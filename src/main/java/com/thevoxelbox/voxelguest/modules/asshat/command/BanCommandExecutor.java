@@ -67,6 +67,10 @@ public class BanCommandExecutor implements CommandExecutor
 			banReason += arg + " ";
 		}
 
+		if(banReason.isEmpty()) {
+			banReason = configuration.getDefaultAsshatReason();
+		}
+
 		if (forceNameFlag)
 		{
 			safeBan(playerName, banReason, commandSender, silentFlag);

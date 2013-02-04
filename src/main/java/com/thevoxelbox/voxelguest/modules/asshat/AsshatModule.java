@@ -145,11 +145,6 @@ public class AsshatModule extends GuestModule
 
 	public final String formatBroadcastMessage(final String msg, final String target, final String adminName, String reason, final boolean hasReason)
 	{
-		if (reason.isEmpty())
-		{
-			reason = this.config.getDefaultAsshatReason();
-		}
-
 		if (!hasReason)
 		{
 			return msg.replace("%playername%", target).replace("%admin%", adminName);

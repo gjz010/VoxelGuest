@@ -64,6 +64,10 @@ public class KickCommandExecutor implements CommandExecutor
 			kickReason += arg + " ";
 		}
 
+		if(kickReason.isEmpty()) {
+			kickReason = configuration.getDefaultAsshatReason();
+		}
+
 		for (String arg : args)
 		{
 

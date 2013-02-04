@@ -66,6 +66,10 @@ public class MuteCommandExecutor implements CommandExecutor
 			muteReason += arg + " ";
 		}
 
+		if(muteReason.isEmpty()) {
+			muteReason = configuration.getDefaultAsshatReason();
+		}
+
 		if (forceNameFlag)
 		{
 			safeMute(playerName, muteReason, commandSender, silentFlag);
