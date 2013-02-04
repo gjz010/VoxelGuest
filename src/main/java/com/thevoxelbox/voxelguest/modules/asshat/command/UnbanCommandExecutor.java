@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,21 +13,23 @@ import org.bukkit.command.CommandSender;
  */
 public class UnbanCommandExecutor implements CommandExecutor
 {
-	private AsshatModule module;
+	private final AsshatModuleConfiguration configuration;
+	private final AsshatModule module;
 
 	/**
-	 *
 	 * @param module The owning module.
 	 */
 	public UnbanCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
+		configuration = (AsshatModuleConfiguration) module.getConfiguration();
 	}
 
 	@Override
 	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
-		if(!commandSender.hasPermission("voxelguest.asshat.unban")) {
+		if (!commandSender.hasPermission("voxelguest.asshat.unban"))
+		{
 			commandSender.sendMessage("You don't have permissions.");
 			return true;
 		}
@@ -47,7 +51,8 @@ public class UnbanCommandExecutor implements CommandExecutor
 			}
 		}
 
-		if(!module.getBanlist().isPlayerBanned(playerName)) {
+		if (!module.getBanlist().isPlayerBanned(playerName))
+		{
 			commandSender.sendMessage(String.format("Player %s is not banned.", playerName));
 			return true;
 		}
@@ -65,7 +70,7 @@ public class UnbanCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got unbanned by %s", playerName, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getUnbanBroadcastMsg(), playerName, commandSender.getName(), "", false));
+				Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getUnbanBroadcastMsg(), playerName, commandSender.getName(), "", false));
 			}
 		} catch (Exception ex)
 		{

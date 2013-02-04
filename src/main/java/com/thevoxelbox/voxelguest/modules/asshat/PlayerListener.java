@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public class PlayerListener implements Listener
 {
-	private AsshatModule module;
+	private final AsshatModule module;
 
 	/**
 	 *

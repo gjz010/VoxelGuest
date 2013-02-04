@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,7 +12,7 @@ import org.bukkit.command.CommandSender;
  */
 public class FreezeCommandExecutor implements CommandExecutor
 {
-	private AsshatModule module;
+	private final AsshatModule module;
 
 	/**
 	 *
@@ -30,6 +32,7 @@ public class FreezeCommandExecutor implements CommandExecutor
 		}
 
 		module.setFreezeEnabled(!module.isFreezeEnabled());
+		commandSender.sendMessage("Freeze mode has been " + (module.isFreezeEnabled() ? "enabled" : "disabled"));
 
 		return true;
 	}

@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,21 +16,23 @@ import java.util.List;
  */
 public class BanCommandExecutor implements CommandExecutor
 {
-	private AsshatModule module;
+	private final AsshatModule module;
+	private final AsshatModuleConfiguration configuration;
 
 	/**
-	 *
 	 * @param module The owning module.
 	 */
 	public BanCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
+		configuration = (AsshatModuleConfiguration) module.getConfiguration();
 	}
 
 	@Override
 	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
-		if(!commandSender.hasPermission("voxelguest.asshat.ban")) {
+		if (!commandSender.hasPermission("voxelguest.asshat.ban"))
+		{
 			commandSender.sendMessage("You don't have permissions.");
 			return true;
 		}
@@ -44,7 +48,8 @@ public class BanCommandExecutor implements CommandExecutor
 		boolean silentFlag = false;
 		String banReason = "";
 
-		for(int i = 1; i < args.length; i++) {
+		for (int i = 1; i < args.length; i++)
+		{
 			final String arg = args[i];
 
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
@@ -60,10 +65,6 @@ public class BanCommandExecutor implements CommandExecutor
 			}
 
 			banReason += arg + " ";
-		}
-
-		if(banReason.isEmpty()) {
-			banReason = "";
 		}
 
 		if (forceNameFlag)
@@ -93,7 +94,8 @@ public class BanCommandExecutor implements CommandExecutor
 			return true;
 		}
 
-		if(module.getBanlist().isPlayerBanned(playerName)) {
+		if (module.getBanlist().isPlayerBanned(playerName))
+		{
 			commandSender.sendMessage(String.format("Player %s is already banned.", playerName));
 			return true;
 		}
@@ -112,7 +114,7 @@ public class BanCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got banned for %s by %s", playerName, banReason, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getBanBroadcastMsg(), playerName, commandSender.getName(), banReason, true));
+				Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getBanBroadcastMsg(), playerName, commandSender.getName(), banReason, true));
 			}
 		} catch (Exception ex)
 		{

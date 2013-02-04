@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import com.google.common.base.Preconditions;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 
 import java.util.List;
 
@@ -15,15 +16,20 @@ import java.util.List;
  */
 public class KickCommandExecutor implements CommandExecutor
 {
-    private final AsshatModule module;
-    
-    public KickCommandExecutor(AsshatModule asshatModule) {
-        this.module = asshatModule;
-    }
+	private final AsshatModule module;
+	private final AsshatModuleConfiguration configuration;
+
+	public KickCommandExecutor(final AsshatModule asshatModule)
+	{
+		this.module = asshatModule;
+		configuration = (AsshatModuleConfiguration) module.getConfiguration();
+	}
+
 	@Override
 	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
-		if(!commandSender.hasPermission("voxelguest.asshat.kick")) {
+		if (!commandSender.hasPermission("voxelguest.asshat.kick"))
+		{
 			commandSender.sendMessage("You don't have permissions.");
 			return true;
 		}
@@ -39,7 +45,8 @@ public class KickCommandExecutor implements CommandExecutor
 		boolean silentFlag = false;
 		String kickReason = "";
 
-		for(int i = 1; i < args.length; i++) {
+		for (int i = 1; i < args.length; i++)
+		{
 			final String arg = args[i];
 
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
@@ -119,7 +126,7 @@ public class KickCommandExecutor implements CommandExecutor
 		Bukkit.getLogger().info(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
 		if (!silentFlag)
 		{
-			Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getKickBroadcastMsg(), player.getName(), sender.getName(), reason, true));
+			Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getKickBroadcastMsg(), player.getName(), sender.getName(), reason, true));
 		}
 	}
 }

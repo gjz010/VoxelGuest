@@ -69,7 +69,6 @@ public class Mutelist
 	public final String whyIsPlayerMuted(final String playerName)
 	{
 		Preconditions.checkState(isPlayerMuted(playerName), "Player %s must be muted in order to get the mute reason.", playerName);
-
 		return getMutedPlayer(playerName).getMuteReason();
 	}
 }

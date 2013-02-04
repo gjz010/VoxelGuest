@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
  */
 public class SoapboxCommandExecutor implements CommandExecutor
 {
-	private AsshatModule module;
+	private final AsshatModule module;
 
 	/**
 	 *

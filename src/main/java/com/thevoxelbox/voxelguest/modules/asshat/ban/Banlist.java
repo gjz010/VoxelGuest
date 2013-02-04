@@ -75,7 +75,6 @@ public class Banlist
 	public final String whyIsPlayerBanned(final String playerName)
 	{
 		Preconditions.checkState(isPlayerBanned(playerName), "Player %s must be banned in order to get the ban reason.", playerName);
-
 		return getBannedPlayer(playerName).getBanReason();
 	}
 }

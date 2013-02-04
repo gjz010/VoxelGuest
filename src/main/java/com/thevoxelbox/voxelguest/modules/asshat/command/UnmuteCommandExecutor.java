@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +14,7 @@ import org.bukkit.command.CommandSender;
 public class UnmuteCommandExecutor implements CommandExecutor
 {
 	private AsshatModule module;
+	private final AsshatModuleConfiguration configuration;
 
 	/**
 	 *
@@ -20,6 +23,9 @@ public class UnmuteCommandExecutor implements CommandExecutor
 	public UnmuteCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
+
+		Preconditions.checkState(module.getConfiguration() instanceof AsshatModuleConfiguration);
+		configuration = (AsshatModuleConfiguration)module.getConfiguration();
 	}
 
 	@Override
@@ -65,7 +71,7 @@ public class UnmuteCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got unmuted by %s", playerName, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getUngagBroadcastMsg(), playerName, commandSender.getName(), "", false));
+				Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getUngagBroadcastMsg(), playerName, commandSender.getName(), "", false));
 			}
 		} catch (Exception ex)
 		{

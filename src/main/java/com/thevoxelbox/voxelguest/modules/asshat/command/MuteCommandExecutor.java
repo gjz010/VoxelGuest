@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,21 +15,23 @@ import java.util.List;
  */
 public class MuteCommandExecutor implements CommandExecutor
 {
-	private AsshatModule module;
+	private final AsshatModuleConfiguration configuration;
+	private final AsshatModule module;
 
 	/**
-	 *
 	 * @param module The owning module.
 	 */
 	public MuteCommandExecutor(final AsshatModule module)
 	{
 		this.module = module;
+		configuration = (AsshatModuleConfiguration) module.getConfiguration();
 	}
 
 	@Override
 	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
 	{
-		if(!commandSender.hasPermission("voxelguest.asshat.mute")) {
+		if (!commandSender.hasPermission("voxelguest.asshat.mute"))
+		{
 			commandSender.sendMessage("You don't have permissions.");
 			return true;
 		}
@@ -44,7 +47,8 @@ public class MuteCommandExecutor implements CommandExecutor
 		boolean silentFlag = false;
 		String muteReason = "";
 
-		for(int i = 1; i < args.length; i++) {
+		for (int i = 1; i < args.length; i++)
+		{
 			final String arg = args[i];
 
 			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
@@ -89,7 +93,8 @@ public class MuteCommandExecutor implements CommandExecutor
 			return true;
 		}
 
-		if(module.getMutelist().isPlayerMuted(playerName)) {
+		if (module.getMutelist().isPlayerMuted(playerName))
+		{
 			commandSender.sendMessage(String.format("Player %s is already gagged.", playerName));
 			return true;
 		}
@@ -107,10 +112,9 @@ public class MuteCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got gagged for %s by %s", playerName, muteReason, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getGagBroadcastMsg(), playerName, commandSender.getName(), muteReason, true));
+				Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getGagBroadcastMsg(), playerName, commandSender.getName(), muteReason, true));
 			}
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 			commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));
