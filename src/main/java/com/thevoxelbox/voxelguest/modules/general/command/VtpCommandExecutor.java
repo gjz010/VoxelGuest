@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.general.command;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,16 +8,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class VtpCommandExecutor implements CommandExecutor
 {
 
     public VtpCommandExecutor()
     {
-        
+
     }
 
     @Override
-    
+
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -28,7 +28,7 @@ public class VtpCommandExecutor implements CommandExecutor
             {
                 Player player = (Player) sender;
                 List<Player> playerMatches = Bukkit.matchPlayer(args[0]);
-    
+
                 if (playerMatches.size() > 1)
                 {
                     player.sendMessage(ChatColor.RED + "Partial match");
@@ -41,9 +41,9 @@ public class VtpCommandExecutor implements CommandExecutor
                 {
                     Player targetPlayer = playerMatches.get(0);
                     Location loc = targetPlayer.getLocation();
-    
+
                     player.sendMessage(ChatColor.AQUA + "Woosh!");
-    
+
                     if (args.length < 2)
                     {
                         player.teleport(loc);
@@ -56,7 +56,7 @@ public class VtpCommandExecutor implements CommandExecutor
                             targetPlayer.teleport(player.getLocation());
                             return true;
                         }
-    
+
                         for (int i = 1; i < args.length; i++)
                         {
                             try
@@ -76,8 +76,7 @@ public class VtpCommandExecutor implements CommandExecutor
                                     loc.setZ(loc.getZ() + Double.parseDouble(args[i].replace("z", "")));
                                     continue;
                                 }
-                            }
-                            catch (NumberFormatException e)
+                            } catch (NumberFormatException e)
                             {
                                 player.sendMessage(ChatColor.RED + "Error parsing argument \"" + args[i] + "\"");
                                 return true;

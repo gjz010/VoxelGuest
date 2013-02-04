@@ -16,65 +16,65 @@ import java.util.Set;
  */
 public abstract class GuestModule implements Module
 {
-	private String name = "Default Module Name (Yell at the developer if you see this!)";
-	private boolean enabled = false;
+    private String name = "Default Module Name (Yell at the developer if you see this!)";
+    private boolean enabled = false;
 
-	@Override
-	public void onEnable()
-	{
-		enabled = true;
-	}
+    @Override
+    public void onEnable()
+    {
+        enabled = true;
+    }
 
-	@Override
-	public void onDisable()
-	{
-		enabled = false;
-	}
+    @Override
+    public void onDisable()
+    {
+        enabled = false;
+    }
 
-	@Override
-	public boolean isEnabled()
-	{
-		return enabled;
-	}
+    @Override
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
 
-	@Override
-	public String getName()
-	{
-		return name;
-	}
+    @Override
+    public String getName()
+    {
+        return name;
+    }
 
-	protected void setName(String name)
-	{
-		this.name = name;
-	}
+    protected void setName(String name)
+    {
+        this.name = name;
+    }
 
-	@Override
-	public String toString()
-	{
-		return getName();
-	}
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
 
-	@Override
-	public String getConfigFileName()
-	{
-		return getName().replace(" ", "").toLowerCase();
-	}
+    @Override
+    public String getConfigFileName()
+    {
+        return getName().replace(" ", "").toLowerCase();
+    }
 
-	@Override
-	public Object getConfiguration()
-	{
-		return null;
-	}
+    @Override
+    public Object getConfiguration()
+    {
+        return null;
+    }
 
-	@Override
-	public Set<Listener> getListeners()
-	{
-		return new HashSet<>();
-	}
+    @Override
+    public Set<Listener> getListeners()
+    {
+        return new HashSet<>();
+    }
 
-	@Override
-	public Map<String, CommandExecutor> getCommandMappings()
-	{
-		return new HashMap<>();
-	}
+    @Override
+    public Map<String, CommandExecutor> getCommandMappings()
+    {
+        return new HashMap<>();
+    }
 }

@@ -19,7 +19,6 @@ public class KickCommandExecutor implements CommandExecutor
     private final AsshatModuleConfiguration configuration;
 
     /**
-     *
      * @param asshatModule The parent module.
      */
     public KickCommandExecutor(final AsshatModule asshatModule)

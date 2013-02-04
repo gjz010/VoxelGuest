@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelguest.modules.greylist.command;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,7 +34,7 @@ public class GreylistCommandExecutor implements CommandExecutor
                 if (greylistModule.isOnPersistentGreylist(greylistee))
                 {
                     sender.sendMessage(String.format("%s is already on the greylist.", greylistee));
-                    return true; 
+                    return true;
                 }
                 greylistModule.greylist(greylistee);
                 sender.sendMessage(String.format("Added %s to greylist.", greylistee));

@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelguest.modules.greylist.command;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

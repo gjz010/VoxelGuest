@@ -1,23 +1,21 @@
 package com.thevoxelbox.voxelguest;
 
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.thevoxelbox.voxelguest.configuration.Configuration;
 import com.thevoxelbox.voxelguest.modules.Module;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * @author Monofraps
@@ -30,10 +28,8 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     /**
      * Registers a guest module and enables it immediately if parameter enable is true.
      *
-     * @param module
-     *         The instance of the module class to register.
-     * @param enable
-     *         If set to true, the method will enable the module immediately after registration by calling enableModule
+     * @param module The instance of the module class to register.
+     * @param enable If set to true, the method will enable the module immediately after registration by calling enableModule
      */
     public final void registerGuestModule(final Module module, final boolean enable)
     {
@@ -52,8 +48,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
             try
             {
                 enableModuleByInstance(module);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 Bukkit.getLogger().severe(String.format("Failed to enable module %s", module.toString()));
                 ex.printStackTrace();
@@ -64,8 +59,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     /**
      * Enables a give module.
      *
-     * @param module
-     *         The instance of the module to enable.
+     * @param module The instance of the module to enable.
      */
     public final void enableModuleByInstance(final Module module)
     {
@@ -101,8 +95,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
                 Bukkit.getLogger().info(String.format("Registered %d event listeners for module %s", numRegisteredListeners, module.toString()));
             }
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             Bukkit.getLogger().severe(String.format("Exception while enabling module: %s", ex.getMessage()));
             ex.printStackTrace();
@@ -125,8 +118,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     /**
      * Enables all registered modules of type [module].
      *
-     * @param module
-     *         The type of the modules to enable.
+     * @param module The type of the modules to enable.
      */
     public final void enableModuleByType(final Class<? extends Module> module)
     {
@@ -139,8 +131,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
                 try
                 {
                     enableModuleByInstance(registeredModule);
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     Bukkit.getLogger().severe(String.format("Exception while enabling module: %s", ex.getMessage()));
                     ex.printStackTrace();
@@ -152,8 +143,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     /**
      * Disables a give module.
      *
-     * @param module
-     *         The instance of the module to disable.
+     * @param module The instance of the module to disable.
      */
     public final void disableModuleByInstance(final Module module)
     {
@@ -172,12 +162,14 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
         {
             for (String command : commandExecutors.keySet())
             {
-	            try {
+                try
+                {
                     VoxelGuest.getPluginInstance().getCommand(command).setExecutor(null);
-	            } catch (Exception ex) {
-		            Bukkit.getLogger().warning("Failed to unregister module command: " + command);
-		            ex.printStackTrace();
-	            }
+                } catch (Exception ex)
+                {
+                    Bukkit.getLogger().warning("Failed to unregister module command: " + command);
+                    ex.printStackTrace();
+                }
             }
         }
 
@@ -200,20 +192,17 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
                         HandlerList.unregisterAll(listener);
                     }
                 }
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 Bukkit.getLogger().severe("Failed to unregister module listeners.");
                 ex.printStackTrace();
-            }
-            finally
+            } finally
             {
                 registeredModules.get(module).clear();
             }
 
             module.onDisable();
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             Bukkit.getLogger().severe(String.format("Exception while disabling module: %s", ex.getMessage()));
             ex.printStackTrace();
@@ -223,8 +212,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     /**
      * Disables all modules of type [module].
      *
-     * @param module
-     *         The type of the modules to disable.
+     * @param module The type of the modules to disable.
      */
     public final void disableModuleByType(final Class<? extends Module> module)
     {
@@ -237,8 +225,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
                 try
                 {
                     disableModuleByInstance(registeredModule);
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     Bukkit.getLogger().severe(String.format("Exception while disabling module: %s", ex.getMessage()));
                     ex.printStackTrace();
@@ -250,8 +237,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     /**
      * Restarts or just enables a give module. It calls disableModuleByInstance and enableModuleByInstance internally.
      *
-     * @param module
-     *         The instance of the module to restart.
+     * @param module The instance of the module to restart.
      */
     public final void restartModule(final Module module)
     {
@@ -267,8 +253,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
         {
             disableModuleByInstance(module);
             enableModuleByInstance(module);
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             Bukkit.getLogger().severe(String.format("Failed to restart module %s because: %s", module.toString(), ex.getMessage()));
             ex.printStackTrace();
@@ -287,8 +272,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
                 try
                 {
                     disableModuleByInstance(module);
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     Bukkit.getLogger().severe(String.format("Failed to disable module %s because: %s", module.toString(), ex.getMessage()));
                     ex.printStackTrace();

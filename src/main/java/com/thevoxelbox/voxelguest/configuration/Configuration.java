@@ -1,5 +1,10 @@
 package com.thevoxelbox.voxelguest.configuration;
 
+import com.google.common.base.Preconditions;
+import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
+import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
+import net.sf.morph.transform.transformers.SimpleDelegatingTransformer;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,12 +12,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
-
-import com.google.common.base.Preconditions;
-import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
-import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
-
-import net.sf.morph.transform.transformers.SimpleDelegatingTransformer;
 
 /**
  * @author MikeMatrix
@@ -58,16 +57,13 @@ public final class Configuration
                         }
                     }
                 }
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 return false;
-            }
-            catch (InvocationTargetException e)
+            } catch (InvocationTargetException e)
             {
                 return false;
-            }
-            catch (IllegalAccessException e)
+            } catch (IllegalAccessException e)
             {
                 return false;
             }
@@ -103,16 +99,13 @@ public final class Configuration
             }
 
             properties.store(fileWriter, null);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             return false;
-        }
-        catch (InvocationTargetException e)
+        } catch (InvocationTargetException e)
         {
             return false;
-        }
-        catch (IllegalAccessException e)
+        } catch (IllegalAccessException e)
         {
             return false;
         }
