@@ -4,57 +4,75 @@ authors: [MikeMatrix, Monofraps, thedeadlybutter]
 version: ${project.build.version}
 website: ${project.url}
 description: ${project.description}
+
 commands:
   greylist:
     aliases: [graylist, gl]
     permission: voxelguest.greylist.greylist
+    description: Adds a player name to the graylist
   ungreylist:
     aliases: [ungraylist, ugl]
     permission: voxelguest.greylist.ungreylist
+    description: Removes a player name to the graylist
   vgregion:
     permission: voxelguest.regions.modifyregion
   ban:
     aliases: [vban]
     permission: voxelguest.asshat.ban
+    description: Bans a player from logging on to the server
   banreason:
     aliases: [vbanreason]
     permission: voxelguest.asshat.banreason
+    description: Displays the ban reason for the player described
   freeze:
     aliases: [vfreeze]
     permission: voxelguest.asshat.freeze
+    description: Prevents everyone on the server from moving unless they have the exclusion permishion.
   kick:
     aliases: [vkick]
     permission: voxelguest.asshat.kick
+    description: Forces a player to disconnect from the server
   mute:
     aliases: [vmute, gag, vgag]
     permission: voxelguest.asshat.mute
+    description: prevents a player from speaking
   soapbox:
     aliases: [vsoapbox]
     permission: voxelguest.asshat.soapbox
+    description: Perevents everyone that dose not have the exclusion permishion from chatting
   unban:
     aliases: [vunban]
     permission: voxelguest.asshat.unban
+    description: Unbans a player
   unmute:
     aliases: [vunmute]
     permission: voxelguest.asshat.unmute
+    description: Unmutes a player
   who:
     aliases: [who, vwho, list]
     permission: voxelguest.general.who
+    description: Lists all the players online
   fakequit:
     aliases: [fakequit, fq]
     permission: voxelguest.general.fakequit
+    description: Vanishes you from other players, and removes you from the /who list, making it seem like you are offline.
   vanish:
     aliases: [vanish, vvanish, van]
     permission: voxelguest.general.vanish
+    description: Vanishes you from other players, removing you from their view.
   ep:
     aliases: [ep]
     permission: voxelguest.general.ep
+    description: Runs an entity purge and clears entities in a defined world.
   sys:
     aliases: [sys, system]
     permission: voxelguest.general.sys
+    description: Helps you can inspect your server's CPU performance, memory management, and Bukkit management.
   vpg:
     aliases: [vpg, vpromote]
     permission: voxelguest.general.vpg
+    description: Allows the command sender to change a defined player's group.
   vtp:
     aliases: [vtp, vteleport]
     permission: voxelguest.general.vtp
+    description: Teleport command
