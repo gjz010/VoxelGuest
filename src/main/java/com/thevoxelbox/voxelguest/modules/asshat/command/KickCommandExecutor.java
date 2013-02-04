@@ -57,10 +57,6 @@ public class KickCommandExecutor implements CommandExecutor
 			kickReason += arg + " ";
 		}
 
-		if(kickReason.isEmpty()) {
-			kickReason = null;
-		}
-
 		for (String arg : args)
 		{
 
@@ -123,7 +119,7 @@ public class KickCommandExecutor implements CommandExecutor
 		Bukkit.getLogger().info(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
 		if (!silentFlag)
 		{
-			Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getKickBroadcastMsg(), player.getName(), sender.getName(), reason));
+			Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getKickBroadcastMsg(), player.getName(), sender.getName(), reason, true));
 		}
 	}
 }
