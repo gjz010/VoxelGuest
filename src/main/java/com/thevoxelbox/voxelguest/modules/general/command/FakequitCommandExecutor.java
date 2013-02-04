@@ -64,8 +64,12 @@ public class FakequitCommandExecutor implements CommandExecutor
 			String online = Bukkit.getOnlinePlayers().length - fakequit.size() + "";
 			String fQMsg = configuration.getLeaveFormat().replace("$no", online).replace("$n", sender.getName());
 			Bukkit.broadcastMessage(fQMsg);
+			module.setVanished(vanished);
 		}
-
+		
+		module.setFakequit(fakequit);
+		module.setoFakequitd(ofakequit);
+		
 		return true;
 	}
 }

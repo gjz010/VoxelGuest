@@ -45,6 +45,9 @@ public class VanishCommandExecutor implements CommandExecutor
 			vanished.add(sender.getName());
 			module.hidePlayerForAll((Player) sender);
 		}
+		
+		module.setVanished(vanished);
+		module.setoVanished(oVanished);
 
 		return true;
 	}
