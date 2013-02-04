@@ -40,6 +40,7 @@ public class Persistence
 
     public void shutdown() throws SQLException
     {
+        daoCache.clear();
         connectionSource.close();
     }
 
