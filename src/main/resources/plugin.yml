@@ -1,7 +1,7 @@
 name: ${project.name}
 main: com.thevoxelbox.voxelguest.VoxelGuest
 authors: [MikeMatrix, Monofraps, thedeadlybutter]
-version: ${project.version}
+version: ${project.build.version}
 website: ${project.url}
 description: ${project.description}
 commands:
