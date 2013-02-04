@@ -89,7 +89,7 @@ public class AsshatModule extends GuestModule
     @Override
     public final Object getConfiguration()
     {
-        return null;
+        return config;
     }
 
     @Override
@@ -149,17 +149,19 @@ public class AsshatModule extends GuestModule
     public AsshatModuleConfiguration getConfig() {
         return config;
     }
-    public String fmtBroadcastMsg(final String msg, final String target, final String adminName, String reason) {
-        if (reason == null)
+    public String fmtBroadcastMsg(final String msg, final String target, final String adminName, String reason, boolean hasReason) {
+        if (reason.equals(""))
         {
            reason = this.config.getDefaultAsshatReason();
         }
-        
-        if (reason.equals(""))
+        if (hasReason)
         {
             return msg.replace("%playername%", target).replace("%admin%", adminName);
         }
-        return msg.replace("%playername%", target).replace("%admin%", adminName)
-                .replace("%reason%", reason);
+        else
+        {
+            return msg.replace("%playername%", target).replace("%admin%", adminName)
+                    .replace("%reason%", reason);
+        }
     }
 }

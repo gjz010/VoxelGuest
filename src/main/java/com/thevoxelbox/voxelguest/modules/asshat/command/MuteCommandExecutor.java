@@ -62,10 +62,6 @@ public class MuteCommandExecutor implements CommandExecutor
 			muteReason += arg + " ";
 		}
 
-		if(muteReason.isEmpty()) {
-			muteReason = null;
-		}
-
 		if (forceNameFlag)
 		{
 			safeMute(playerName, muteReason, commandSender, silentFlag);
@@ -111,7 +107,7 @@ public class MuteCommandExecutor implements CommandExecutor
 			Bukkit.getLogger().info(String.format("%s got gagged for %s by %s", playerName, muteReason, commandSender.getName()));
 			if (!silentFlag)
 			{
-				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getGagBroadcastMsg(), playerName, commandSender.getName(), muteReason));
+				Bukkit.broadcastMessage(this.module.fmtBroadcastMsg(this.module.getConfig().getGagBroadcastMsg(), playerName, commandSender.getName(), muteReason, true));
 			}
 		}
 		catch (Exception ex)
