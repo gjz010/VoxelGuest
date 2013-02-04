@@ -30,13 +30,14 @@ public class Persistence
 		return instance;
 	}
 
-	public void initialize(final File file)
+	public void initialize(String connectionString, String username, String password)
 	{
-		file.getParentFile().mkdirs();
 		configuration
-				.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect")
-				.setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
-				.setProperty("hibernate.connection.url", "jdbc:sqlite:" + file.getPath())
+				.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+				.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
+				.setProperty("hibernate.connection.url", "jdbc:mysql://" + connectionString)
+				.setProperty("hibernate.connection.username", username)
+				.setProperty("hibernate.connection.password", password)
 				.setProperty("hibernate.hbm2ddl.auto", "update")
 				.setProperty("hibernate.connection.pool_size", "1");
 	}

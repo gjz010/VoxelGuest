@@ -143,7 +143,7 @@ public class AsshatModule extends GuestModule
 		this.freezeEnabled = freezeEnabled;
 	}
 
-	public final String formatBroadcastMessage(final String msg, final String target, final String adminName, String reason, final boolean hasReason)
+	public final String formatBroadcastMessage(final String msg, final String target, final String adminName, final String reason, final boolean hasReason)
 	{
 		if (!hasReason)
 		{

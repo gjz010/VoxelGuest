@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.thevoxelbox.voxelguest.configuration.Configuration;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
@@ -24,8 +25,9 @@ public class VoxelGuest extends JavaPlugin
 {
     private static VoxelGuest pluginInstance = null;
     private static ModuleManager moduleManagerInstance = null;
-	
-	private static Permission perms = null; //vault perms
+	private static Permission perms = null;
+
+	private PluginConfiguration configuration = new PluginConfiguration();
 
     public static VoxelGuest getPluginInstance()
     {
@@ -70,18 +72,23 @@ public class VoxelGuest extends JavaPlugin
 	@Override
     public void onLoad()
     {
-        Persistence.getInstance().initialize(new File(getDataFolder(), "persistence.db"));
+	    Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+        Persistence.getInstance().initialize(configuration.getDbConnectionString(), configuration.getDbUsername(), configuration.getDbPassword());
     }
 
     @Override
     public void onDisable()
     {
+	    Configuration.saveConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+
         VoxelGuest.getModuleManagerInstance().shutdown();
     }
 
     @Override
     public void onEnable()
     {
+	    Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+
 	    if(!setupPermissions()) {
 		    Bukkit.getLogger().severe("Failed to setup Vault, due to no dependency found!"); //Should stop?
 	    }
