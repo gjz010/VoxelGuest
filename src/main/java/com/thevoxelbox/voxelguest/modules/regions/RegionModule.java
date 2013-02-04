@@ -21,95 +21,95 @@ import java.util.List;
  */
 public class RegionModule extends GuestModule
 {
-	private List<Region> regions = new ArrayList<>();
-	private BlockEventListener blockEventListener;
-	private PlayerEventListener playerEventListener;
-	private RegionCommand regionCommand;
+    private List<Region> regions = new ArrayList<>();
+    private BlockEventListener blockEventListener;
+    private PlayerEventListener playerEventListener;
+    private RegionCommand regionCommand;
 
-	public RegionModule()
-	{
-		setName("Region Module");
+    public RegionModule()
+    {
+        setName("Region Module");
 
-		Persistence.getInstance().registerPersistentClass(Region.class);
+        Persistence.getInstance().registerPersistentClass(Region.class);
 
-		blockEventListener = new BlockEventListener(this);
-		playerEventListener = new PlayerEventListener(this);
-		regionCommand = new RegionCommand(this);
-	}
+        blockEventListener = new BlockEventListener(this);
+        playerEventListener = new PlayerEventListener(this);
+        regionCommand = new RegionCommand(this);
+    }
 
-	@Override
-	public final void onEnable()
-	{
-		List<Object> regionObjects = Persistence.getInstance().loadAll(Region.class);
-		for(Object regionObject : regionObjects) {
-			Preconditions.checkState(regionObject instanceof Region);
+    @Override
+    public final void onEnable()
+    {
+        List<Object> regionObjects = Persistence.getInstance().loadAll(Region.class);
+        for(Object regionObject : regionObjects) {
+            Preconditions.checkState(regionObject instanceof Region);
 
-			Region region = (Region)regionObject;
-			regions.add(region);
-		}
+            Region region = (Region)regionObject;
+            regions.add(region);
+        }
 
-		super.onEnable();
-	}
+        super.onEnable();
+    }
 
-	@Override
-	public final void onDisable()
-	{
-		regions.clear();
-		super.onDisable();
-	}
+    @Override
+    public final void onDisable()
+    {
+        regions.clear();
+        super.onDisable();
+    }
 
-	@Override
-	public String getConfigFileName()
-	{
-		return "region";
-	}
+    @Override
+    public String getConfigFileName()
+    {
+        return "region";
+    }
 
-	@Override
-	public Object getConfiguration()
-	{
-		return null;
-	}
+    @Override
+    public Object getConfiguration()
+    {
+        return null;
+    }
 
-	@Override
-	public final HashSet<Listener> getListeners()
-	{
-		final HashSet<Listener> listeners = new HashSet<>();
-		listeners.add(blockEventListener);
-		listeners.add(playerEventListener);
+    @Override
+    public final HashSet<Listener> getListeners()
+    {
+        final HashSet<Listener> listeners = new HashSet<>();
+        listeners.add(blockEventListener);
+        listeners.add(playerEventListener);
 
-		return listeners;
-	}
+        return listeners;
+    }
 
-	@Override
-	public HashMap<String, CommandExecutor> getCommandMappings()
-	{
-		HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
-		commandMappings.put("vgregion", regionCommand);
-		return commandMappings;
-	}
+    @Override
+    public HashMap<String, CommandExecutor> getCommandMappings()
+    {
+        HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
+        commandMappings.put("vgregion", regionCommand);
+        return commandMappings;
+    }
 
-	public boolean addRegion(Region region)
-	{
-		if (region != null)
-		{
-			regions.add(region);
-			Persistence.getInstance().save(region);
-			Bukkit.getLogger().info("Created region: " + region.getRegionName());
-			return true;
-		}
-		return false;
-	}
+    public boolean addRegion(Region region)
+    {
+        if (region != null)
+        {
+            regions.add(region);
+            Persistence.getInstance().save(region);
+            Bukkit.getLogger().info("Created region: " + region.getRegionName());
+            return true;
+        }
+        return false;
+    }
 
-	public final Region getRegionAtLocation(final Location regionLocation)
-	{
-		for (Region region : regions)
-		{
-			if (region.isLocationInRegion(regionLocation))
-			{
-				return region;
-			}
-		}
-		return null;
-	}
+    public final Region getRegionAtLocation(final Location regionLocation)
+    {
+        for (Region region : regions)
+        {
+            if (region.isLocationInRegion(regionLocation))
+            {
+                return region;
+            }
+        }
+        return null;
+    }
 
 }

@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
@@ -13,73 +12,73 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public class PlayerListener implements Listener
 {
-	private final AsshatModule module;
+    private final AsshatModule module;
 
-	/**
-	 *
-	 * @param module The parent module.
-	 */
-	public PlayerListener(final AsshatModule module)
-	{
-		this.module = module;
-	}
+    /**
+     *
+     * @param module The parent module.
+     */
+    public PlayerListener(final AsshatModule module)
+    {
+        this.module = module;
+    }
 
-	/**
-	 * Handles muted players and global silence.
-	 * @param event
-	 */
-	@EventHandler
-	public final void onChatEvent(final AsyncPlayerChatEvent event)
-	{
-		final Player player = event.getPlayer();
+    /**
+     * Handles muted players and global silence.
+     * @param event
+     */
+    @EventHandler
+    public final void onChatEvent(final AsyncPlayerChatEvent event)
+    {
+        final Player player = event.getPlayer();
 
-		if (module.getMutelist().isPlayerMuted(player.getName()))
-		{
-			event.setCancelled(true);
+        if (module.getMutelist().isPlayerMuted(player.getName()))
+        {
+            event.setCancelled(true);
 
-			player.sendMessage("You are muted for: ");
-			player.sendMessage(module.getMutelist().whyIsPlayerMuted(player.getName()));
-		}
+            player.sendMessage("You are muted for: ");
+            player.sendMessage(module.getMutelist().whyIsPlayerMuted(player.getName()));
+        }
 
-		if (module.isSilenceEnabled())
-		{
-			if (!player.hasPermission(AsshatModule.SILENCE_BYPASS_PERM))
-			{
-				event.setCancelled(true);
-			}
-		}
-	}
+        if (module.isSilenceEnabled())
+        {
+            if (!player.hasPermission(AsshatModule.SILENCE_BYPASS_PERM))
+            {
+                event.setCancelled(true);
+            }
+        }
+    }
 
-	/**
-	 * Handles banned players.
-	 * @param event
-	 */
-	@EventHandler
-	public final void onPlayerLogin(final AsyncPlayerPreLoginEvent event)
-	{
-		final String playerName = event.getName();
+    /**
+     * Handles banned players.
+     * @param event
+     */
+    @EventHandler
+    public final void onPlayerLogin(final AsyncPlayerPreLoginEvent event)
+    {
+        final String playerName = event.getName();
 
-		if (module.getBanlist().isPlayerBanned(playerName))
-		{
-			event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, module.getBanlist().whyIsPlayerBanned(playerName));
-		}
-	}
+        if (module.getBanlist().isPlayerBanned(playerName))
+        {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, module.getBanlist().whyIsPlayerBanned(playerName));
+        }
+    }
 
-	/**
-	 * Handles global freeze.
-	 * @param event
-	 */
-	@EventHandler
-	public final void onPlayerMove(final PlayerMoveEvent event)
-	{
-		final Player player = event.getPlayer();
+    /**
+     * Handles global freeze.
+     * @param event
+     */
+    @EventHandler
+    public final void onPlayerMove(final PlayerMoveEvent event)
+    {
+        final Player player = event.getPlayer();
 
-		if (module.isFreezeEnabled())
-		{
-			if (!player.hasPermission(AsshatModule.FREEZE_BYPASS_PERM))
-			{
-				event.setCancelled(true);
-			}
-		}
-	}
+        if (module.isFreezeEnabled())
+        {
+            if (!player.hasPermission(AsshatModule.FREEZE_BYPASS_PERM))
+            {
+                event.setCancelled(true);
+            }
+        }
+    }
 }

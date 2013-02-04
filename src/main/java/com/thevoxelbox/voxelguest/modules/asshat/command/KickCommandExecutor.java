@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
-import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
@@ -16,121 +15,121 @@ import java.util.List;
  */
 public class KickCommandExecutor implements CommandExecutor
 {
-	private final AsshatModule module;
-	private final AsshatModuleConfiguration configuration;
+    private final AsshatModule module;
+    private final AsshatModuleConfiguration configuration;
 
-	public KickCommandExecutor(final AsshatModule asshatModule)
-	{
-		this.module = asshatModule;
-		configuration = (AsshatModuleConfiguration) module.getConfiguration();
-	}
+    public KickCommandExecutor(final AsshatModule asshatModule)
+    {
+        this.module = asshatModule;
+        configuration = (AsshatModuleConfiguration) module.getConfiguration();
+    }
 
-	@Override
-	public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
-	{
-		if (!commandSender.hasPermission("voxelguest.asshat.kick"))
-		{
-			commandSender.sendMessage("You don't have permissions.");
-			return true;
-		}
+    @Override
+    public final boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
+    {
+        if (!commandSender.hasPermission("voxelguest.asshat.kick"))
+        {
+            commandSender.sendMessage("You don't have permissions.");
+            return true;
+        }
 
-		if (args.length < 1)
-		{
-			commandSender.sendMessage("You must at least specify the name of the player to kick.");
-			return false;
-		}
+        if (args.length < 1)
+        {
+            commandSender.sendMessage("You must at least specify the name of the player to kick.");
+            return false;
+        }
 
-		final String playerName = args[0].toLowerCase();
-		boolean forceNameFlag = false;
-		boolean silentFlag = false;
-		String kickReason = "";
+        final String playerName = args[0].toLowerCase();
+        boolean forceNameFlag = false;
+        boolean silentFlag = false;
+        String kickReason = "";
 
-		for (int i = 1; i < args.length; i++)
-		{
-			final String arg = args[i];
+        for (int i = 1; i < args.length; i++)
+        {
+            final String arg = args[i];
 
-			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
-			{
-				forceNameFlag = true;
-				continue;
-			}
+            if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
+            {
+                forceNameFlag = true;
+                continue;
+            }
 
-			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
-			{
-				silentFlag = true;
-				continue;
-			}
+            if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
+            {
+                silentFlag = true;
+                continue;
+            }
 
-			kickReason += arg + " ";
-		}
+            kickReason += arg + " ";
+        }
 
-		if(kickReason.isEmpty()) {
-			kickReason = configuration.getDefaultAsshatReason();
-		}
+        if(kickReason.isEmpty()) {
+            kickReason = configuration.getDefaultAsshatReason();
+        }
 
-		for (String arg : args)
-		{
+        for (String arg : args)
+        {
 
-			if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
-			{
-				forceNameFlag = true;
-			}
+            if (arg.equalsIgnoreCase("-force") || arg.equalsIgnoreCase("-f"))
+            {
+                forceNameFlag = true;
+            }
 
-			if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
-			{
-				silentFlag = true;
-			}
+            if (arg.equalsIgnoreCase("-silent") || arg.equalsIgnoreCase("-si") || arg.equalsIgnoreCase("-s"))
+            {
+                silentFlag = true;
+            }
 
-		}
+        }
 
-		if (forceNameFlag)
-		{
-			if (Bukkit.getPlayerExact(playerName) != null)
-			{
-				safeKick(Bukkit.getPlayerExact(playerName), kickReason, commandSender, silentFlag);
-				return true;
-			}
-			else
-			{
-				commandSender.sendMessage("Could not find any player named like " + playerName);
-				return true;
-			}
-		}
+        if (forceNameFlag)
+        {
+            if (Bukkit.getPlayerExact(playerName) != null)
+            {
+                safeKick(Bukkit.getPlayerExact(playerName), kickReason, commandSender, silentFlag);
+                return true;
+            }
+            else
+            {
+                commandSender.sendMessage("Could not find any player named like " + playerName);
+                return true;
+            }
+        }
 
-		final List<Player> players = Bukkit.matchPlayer(playerName);
-		if (players.size() < 0)
-		{
-			commandSender.sendMessage("Could not find any player named like " + playerName);
-			return true;
-		}
+        final List<Player> players = Bukkit.matchPlayer(playerName);
+        if (players.size() < 0)
+        {
+            commandSender.sendMessage("Could not find any player named like " + playerName);
+            return true;
+        }
 
-		if (players.size() > 1)
-		{
-			commandSender.sendMessage("Found multiple player matching the name (use the -force flag if you entered the exact player name)" + playerName);
-			String list = "";
-			for (Player player : players)
-			{
-				list += player.getName() + ", ";
-			}
-			list = list.substring(0, list.length() - 1);
+        if (players.size() > 1)
+        {
+            commandSender.sendMessage("Found multiple player matching the name (use the -force flag if you entered the exact player name)" + playerName);
+            String list = "";
+            for (Player player : players)
+            {
+                list += player.getName() + ", ";
+            }
+            list = list.substring(0, list.length() - 1);
 
-			commandSender.sendMessage(list);
-			return true;
-		}
+            commandSender.sendMessage(list);
+            return true;
+        }
 
-		safeKick(players.get(0), kickReason, commandSender, silentFlag);
+        safeKick(players.get(0), kickReason, commandSender, silentFlag);
 
-		return true;
-	}
+        return true;
+    }
 
-	private void safeKick(final Player player, final String reason, final CommandSender sender, final boolean silentFlag)
-	{
-		player.kickPlayer(reason);
+    private void safeKick(final Player player, final String reason, final CommandSender sender, final boolean silentFlag)
+    {
+        player.kickPlayer(reason);
 
-		Bukkit.getLogger().info(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
-		if (!silentFlag)
-		{
-			Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getKickBroadcastMsg(), player.getName(), sender.getName(), reason, true));
-		}
-	}
+        Bukkit.getLogger().info(String.format("%s got kicked by %s for %s", player.getName(), sender.getName(), reason));
+        if (!silentFlag)
+        {
+            Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getKickBroadcastMsg(), player.getName(), sender.getName(), reason, true));
+        }
+    }
 }

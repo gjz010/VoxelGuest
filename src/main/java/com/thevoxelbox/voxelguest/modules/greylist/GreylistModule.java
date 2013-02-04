@@ -22,130 +22,130 @@ import java.util.List;
  */
 public class GreylistModule extends GuestModule
 {
-	private GreylistListener greylistListener;
-	private GreylistCommandExecutor greylistCommandExecutor;
-	private UngreylistCommandExecutor ungreylistCommandExecutor;
-	private boolean explorationMode = false;
-	private String notGreylistedKickMessage = "You are not greylisted.";
+    private GreylistListener greylistListener;
+    private GreylistCommandExecutor greylistCommandExecutor;
+    private UngreylistCommandExecutor ungreylistCommandExecutor;
+    private boolean explorationMode = false;
+    private String notGreylistedKickMessage = "You are not greylisted.";
 
-	public GreylistModule()
-	{
-		setName("Greylist Module");
-		greylistListener = new GreylistListener(this);
-		greylistCommandExecutor = new GreylistCommandExecutor(this);
-		ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
+    public GreylistModule()
+    {
+        setName("Greylist Module");
+        greylistListener = new GreylistListener(this);
+        greylistCommandExecutor = new GreylistCommandExecutor(this);
+        ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
 
-		Persistence.getInstance().registerPersistentClass(Greylistee.class);
-	}
+        Persistence.getInstance().registerPersistentClass(Greylistee.class);
+    }
 
-	@Override
-	public void onEnable()
-	{
+    @Override
+    public void onEnable()
+    {
 
-		super.onEnable();
-	}
+        super.onEnable();
+    }
 
-	@Override
-	public Object getConfiguration()
-	{
-		return this;
-	}
+    @Override
+    public Object getConfiguration()
+    {
+        return this;
+    }
 
-	@Override
-	public HashSet<Listener> getListeners()
-	{
-		final HashSet<Listener> listeners = new HashSet<>();
-		listeners.add(greylistListener);
-		return listeners;
-	}
+    @Override
+    public HashSet<Listener> getListeners()
+    {
+        final HashSet<Listener> listeners = new HashSet<>();
+        listeners.add(greylistListener);
+        return listeners;
+    }
 
-	@Override
-	public HashMap<String, CommandExecutor> getCommandMappings()
-	{
-		HashMap<String, CommandExecutor> commandMapping = new HashMap<>();
-		commandMapping.put("greylist", greylistCommandExecutor);
-		commandMapping.put("ungreylist", ungreylistCommandExecutor);
-		return commandMapping;
-	}
+    @Override
+    public HashMap<String, CommandExecutor> getCommandMappings()
+    {
+        HashMap<String, CommandExecutor> commandMapping = new HashMap<>();
+        commandMapping.put("greylist", greylistCommandExecutor);
+        commandMapping.put("ungreylist", ungreylistCommandExecutor);
+        return commandMapping;
+    }
 
-	@ConfigurationGetter("exploration-mode")
-	public boolean isExplorationMode()
-	{
-		return explorationMode;
-	}
+    @ConfigurationGetter("exploration-mode")
+    public boolean isExplorationMode()
+    {
+        return explorationMode;
+    }
 
-	@ConfigurationSetter("exploration-mode")
-	public void setExplorationMode(final boolean explorationMode)
-	{
-		this.explorationMode = explorationMode;
-	}
+    @ConfigurationSetter("exploration-mode")
+    public void setExplorationMode(final boolean explorationMode)
+    {
+        this.explorationMode = explorationMode;
+    }
 
-	@ConfigurationGetter("not-greylisted-kick-message")
-	public String getNotGreylistedKickMessage()
-	{
-		return notGreylistedKickMessage;
-	}
+    @ConfigurationGetter("not-greylisted-kick-message")
+    public String getNotGreylistedKickMessage()
+    {
+        return notGreylistedKickMessage;
+    }
 
-	@ConfigurationSetter("not-greylisted-kick-message")
-	public void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
-	{
-		this.notGreylistedKickMessage = notGreylistedKickMessage;
-	}
+    @ConfigurationSetter("not-greylisted-kick-message")
+    public void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
+    {
+        this.notGreylistedKickMessage = notGreylistedKickMessage;
+    }
 
-	public final boolean isOnPersistentGreylist(String name)
-	{
-		final List<Object> greylistees;
+    public final boolean isOnPersistentGreylist(String name)
+    {
+        final List<Object> greylistees;
 
-		try
-		{
-			greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-			return false;
-		}
+        try
+        {
+            greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+            return false;
+        }
 
-		for (Object greylisteeObject : greylistees)
-		{
-			if (greylisteeObject instanceof Greylistee)
-			{
-				if (((Greylistee) greylisteeObject).getName().equalsIgnoreCase(name))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        for (Object greylisteeObject : greylistees)
+        {
+            if (greylisteeObject instanceof Greylistee)
+            {
+                if (((Greylistee) greylisteeObject).getName().equalsIgnoreCase(name))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	public void greylist(final String name)
-	{
-		final List<Object> greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
-		for (Object greylisteeObject : greylistees)
-		{
-			Preconditions.checkState(greylisteeObject instanceof Greylistee);
+    public void greylist(final String name)
+    {
+        final List<Object> greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
+        for (Object greylisteeObject : greylistees)
+        {
+            Preconditions.checkState(greylisteeObject instanceof Greylistee);
 
-			Greylistee greylistee = (Greylistee) greylisteeObject;
-			if (greylistee.getName().equalsIgnoreCase(name))
-			{
-				return;
-			}
-		}
-		Persistence.getInstance().save(new Greylistee(name));
-	}
+            Greylistee greylistee = (Greylistee) greylisteeObject;
+            if (greylistee.getName().equalsIgnoreCase(name))
+            {
+                return;
+            }
+        }
+        Persistence.getInstance().save(new Greylistee(name));
+    }
 
-	public void ungreylist(final String name)
-	{
-		final List<Object> greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
-		for (Object greylisteeObject : greylistees)
-		{
-			Preconditions.checkState(greylisteeObject instanceof Greylistee);
+    public void ungreylist(final String name)
+    {
+        final List<Object> greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
+        for (Object greylisteeObject : greylistees)
+        {
+            Preconditions.checkState(greylisteeObject instanceof Greylistee);
 
-			Greylistee greylistee = (Greylistee) greylisteeObject;
-			if (greylistee.getName().equalsIgnoreCase(name))
-			{
-				Persistence.getInstance().delete(greylistee);
-			}
-		}
-	}
+            Greylistee greylistee = (Greylistee) greylisteeObject;
+            if (greylistee.getName().equalsIgnoreCase(name))
+            {
+                Persistence.getInstance().delete(greylistee);
+            }
+        }
+    }
 }

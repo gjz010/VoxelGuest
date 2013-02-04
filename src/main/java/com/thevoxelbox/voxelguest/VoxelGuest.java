@@ -25,9 +25,9 @@ public class VoxelGuest extends JavaPlugin
 {
     private static VoxelGuest pluginInstance = null;
     private static ModuleManager moduleManagerInstance = null;
-	private static Permission perms = null;
+    private static Permission perms = null;
 
-	private PluginConfiguration configuration = new PluginConfiguration();
+    private PluginConfiguration configuration = new PluginConfiguration();
 
     public static VoxelGuest getPluginInstance()
     {
@@ -59,27 +59,27 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.moduleManagerInstance = moduleManagerInstance;
     }
 
-	public static Permission getPerms()
-	{
-		return perms;
-	}
+    public static Permission getPerms()
+    {
+        return perms;
+    }
 
-	private static void setPerms(final Permission perms)
-	{
-		VoxelGuest.perms = perms;
-	}
+    private static void setPerms(final Permission perms)
+    {
+        VoxelGuest.perms = perms;
+    }
 
-	@Override
+    @Override
     public void onLoad()
     {
-	    Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+        Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
         Persistence.getInstance().initialize(configuration.getDbConnectionString(), configuration.getDbUsername(), configuration.getDbPassword());
     }
 
     @Override
     public void onDisable()
     {
-	    Configuration.saveConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+        Configuration.saveConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
 
         VoxelGuest.getModuleManagerInstance().shutdown();
     }
@@ -87,11 +87,12 @@ public class VoxelGuest extends JavaPlugin
     @Override
     public void onEnable()
     {
-	    Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+        Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
 
-	    if(!setupPermissions()) {
-		    Bukkit.getLogger().severe("Failed to setup Vault, due to no dependency found!"); //Should stop?
-	    }
+        if (!setupPermissions())
+        {
+            Bukkit.getLogger().severe("Failed to setup Vault, due to no dependency found!"); //Should stop?
+        }
 
         VoxelGuest.setPluginInstance(this);
         VoxelGuest.setModuleManagerInstance(new ModuleManager());
@@ -99,21 +100,21 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new RegionModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new AsshatModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), false);
-	    VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
+        VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
 
-	    Persistence.getInstance().rebuildSessionFactory();
+        Persistence.getInstance().rebuildSessionFactory();
 
-	    //VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
-	    VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
-	    VoxelGuest.getModuleManagerInstance().enableModuleByType(GreylistModule.class);
-	    VoxelGuest.getModuleManagerInstance().enableModuleByType(GeneralModule.class);
+        //VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
+        VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
+        VoxelGuest.getModuleManagerInstance().enableModuleByType(GreylistModule.class);
+        VoxelGuest.getModuleManagerInstance().enableModuleByType(GeneralModule.class);
     }
 
-	private boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		setPerms(rsp.getProvider());
-		return VoxelGuest.getPerms() != null;
-	}
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        setPerms(rsp.getProvider());
+        return VoxelGuest.getPerms() != null;
+    }
 
     static
     {
