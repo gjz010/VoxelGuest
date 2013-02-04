@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "greylist")
 public class Greylistee
 {
-    @DatabaseField
+    @DatabaseField(generatedId = true)
     private long id;
     @DatabaseField
     private String name;

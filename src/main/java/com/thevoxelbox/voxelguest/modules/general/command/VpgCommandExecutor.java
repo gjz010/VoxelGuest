@@ -45,7 +45,7 @@ public class VpgCommandExecutor implements CommandExecutor
             }
             else
             {
-                sender.sendMessage("No player matches found for \"" + args[0] + "\"");
+                sender.sendMessage("No player matches found for \"" + args [0] + "\"");
                 return true;
             }
         }

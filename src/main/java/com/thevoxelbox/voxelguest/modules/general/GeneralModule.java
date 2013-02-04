@@ -33,7 +33,7 @@ public class GeneralModule extends GuestModule
     private final VanishCommandExecutor vanishCommandExecutor;
     private final FakequitCommandExecutor fakequitCommandExecutor;
     private final WhoCommandExecutor whoCommandExecutor;
-
+    
     /*
      * these will be used to persist vanished and fakequit players through reloads and restarts
     private String[] reloadVanishedList;
@@ -156,20 +156,39 @@ public class GeneralModule extends GuestModule
     {
         return fakequit;
     }
+    
+    public void setFakequit(List<String> f)
+    {
+        fakequit = f;
+    }
 
     public List<String> getoFakequit()
     {
         return oFakequit;
+    }
+    public void setoFakequitd(List<String> f)
+    {
+        oFakequit = f;
     }
 
     public List<String> getVanished()
     {
         return vanished;
     }
+    
+    public void setVanished(List<String> v)
+    {
+        vanished = v;
+    }
 
     public List<String> getoVanished()
     {
         return oVanished;
+    }
+    
+    public void setoVanished(List<String> v)
+    {
+        oVanished = v;
     }
 
     @Override

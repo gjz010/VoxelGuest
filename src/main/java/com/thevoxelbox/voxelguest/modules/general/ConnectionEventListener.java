@@ -15,14 +15,13 @@ public class ConnectionEventListener implements Listener
     private GeneralModuleConfiguration configuration;
 
     /**
+     *
      * @param generalModule The parent module.
      */
     public ConnectionEventListener(final GeneralModule generalModule)
     {
         this.module = generalModule;
-
-        Preconditions.checkState(generalModule.getConfiguration() instanceof GeneralModuleConfiguration);
-        this.configuration = (GeneralModuleConfiguration) generalModule.getConfiguration();
+        this.configuration = (GeneralModuleConfiguration)generalModule.getConfiguration();
     }
 
     @EventHandler
