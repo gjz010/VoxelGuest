@@ -111,8 +111,10 @@ public class GeneralModule extends GuestModule
         return commandMappings;
     }
 
-    /*
+    /**
      * Hides the specified player for all online players
+     *
+     * @param hidden player to hide
      */
     public void hidePlayerForAll(Player hidden)
     {
@@ -130,8 +132,10 @@ public class GeneralModule extends GuestModule
         }
     }
 
-    /*
+    /**
      * Hides all online vanished players for the specified player
+     *
+     * @param player Player to hide vanished from
      */
     public void hideAllForPlayer(Player player)
     {
@@ -152,40 +156,81 @@ public class GeneralModule extends GuestModule
         }
     }
 
+    /**
+     * Gets the current list of people fake quit.
+     *
+     * @return List of the names of players fake quit
+     */
     public List<String> getFakequit()
     {
         return fakequit;
     }
-    
-    public void setFakequit(List<String> f)
+
+    /**
+     * Sets the list of people fake quit.
+     *
+     * @param newFQList List of names to set as fake quit
+     */
+    public void setFakequit(List<String> newFQList)
     {
-        fakequit = f;
+        fakequit = newFQList;
     }
 
+    /**
+     * Gets the list of names of players on the offline fake quit.
+     * 
+     * @return
+     */
     public List<String> getoFakequit()
     {
         return oFakequit;
     }
-    public void setoFakequitd(List<String> f)
+
+    /**
+     * Sets the list of names of players on the offline fake quit.
+     * 
+     * @param newOfflineFQList
+     */
+    public void setoFakequitd(List<String> newOfflineFQList)
     {
-        oFakequit = f;
+        oFakequit = newOfflineFQList;
     }
 
+    /**
+     * Get the list of people vanished.
+     *
+     * @return List of people vanished
+     */
     public List<String> getVanished()
     {
         return vanished;
     }
-    
+
+    /**
+     * Get the list of people vanished.
+     *
+     * @param v
+     */
     public void setVanished(List<String> v)
     {
         vanished = v;
     }
 
+    /**
+     * Gets the list of names of players on the offline vanished.
+     *
+     * @return
+     */
     public List<String> getoVanished()
     {
         return oVanished;
     }
-    
+
+    /**
+     * Sets the list of names of players on the offline vanished.
+     *
+     * @param v
+     */
     public void setoVanished(List<String> v)
     {
         oVanished = v;
