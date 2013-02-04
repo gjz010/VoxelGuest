@@ -1,5 +1,10 @@
 package com.thevoxelbox.voxelguest.modules.general;
 
+/**
+ * Helps determine the number of ticks in a second by polling the system time at select intervals.
+ *
+ * @author TheCryoknight
+ */
 public class TPSTicker implements Runnable
 {
     private static final long pollInterval = 150L;
@@ -14,14 +19,23 @@ public class TPSTicker implements Runnable
         }
 
         return (double) pollInterval / lastDifference;
-
     }
 
+    /**
+     * Checks to see if the ticker has ticked yet to ensure accurate results.
+     *
+     * @return true if ticker has been initiated and started
+     */
     public static boolean hasTicked()
     {
         return !(lastDifference == 0L);
     }
 
+    /**
+     * Get the time (in ticks) between polls, for use in ticker initiation.
+     *
+     * @return time in ticks between polls
+     */
     public static long getPollInterval()
     {
         return pollInterval;
