@@ -39,7 +39,7 @@ public class Persistence
 		connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + new File(dbFile, "persistence2.db").getPath());
 	}
 
-	public void finalize() throws SQLException
+	public void shutdown() throws SQLException
 	{
 		connectionSource.close();
 	}
