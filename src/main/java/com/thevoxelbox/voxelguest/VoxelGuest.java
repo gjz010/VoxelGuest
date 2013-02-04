@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,7 +86,7 @@ public class VoxelGuest extends JavaPlugin
     {
         try
         {
-            Persistence.getInstance().initialize(getDataFolder());
+            Persistence.getInstance().initialize(new File(getDataFolder(), "persistence2.db"));
         } catch (SQLException e)
         {
             Bukkit.getLogger().severe("Failed to initialize persistence system.");

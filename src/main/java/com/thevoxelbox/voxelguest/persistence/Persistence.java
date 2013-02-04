@@ -17,7 +17,7 @@ import java.util.Map;
  * @author Monofraps
  * @author MikeMatrix
  */
-public class Persistence
+public final class Persistence
 {
     private static Persistence instance = new Persistence();
     private ConnectionSource connectionSource;
@@ -27,33 +27,65 @@ public class Persistence
     {
     }
 
+    /**
+     * @return Returns the instance of the persistence system.
+     */
     public static Persistence getInstance()
     {
         return instance;
     }
 
-    public void initialize(File dbFile) throws SQLException
+    /**
+     * Initialized ORMlite.
+     *
+     * @param dbFile The file to use for persistence.
+     *
+     * @throws SQLException
+     */
+    public void initialize(final File dbFile) throws SQLException
     {
-        dbFile.mkdirs();
-        connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + new File(dbFile, "persistence2.db").getPath());
+        dbFile.getParentFile().mkdirs();
+        connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + dbFile.getPath());
     }
 
+    /**
+     * Clears the DAO cache and closes all remaining DB connections.
+     *
+     * @throws SQLException
+     */
     public void shutdown() throws SQLException
     {
         daoCache.clear();
         connectionSource.close();
     }
 
-    public <E> Dao<E, ?> getDao(Class<E> clazz) throws SQLException
+    /**
+     * Creates a DAO.
+     *
+     * @param clazz The class of the objects for which you want the DAO for.
+     * @param <E>   The type of the object for which you want the DAO for.
+     *
+     * @return Returns a DAO.
+     *
+     * @throws SQLException
+     */
+    public <E> Dao<E, ?> getDao(final Class<E> clazz) throws SQLException
     {
         if (!daoCache.containsKey(clazz))
         {
             TableUtils.createTableIfNotExists(connectionSource, clazz);
-            daoCache.put(clazz, DaoManager.createDao(Persistence.getInstance().getConnectionSource(), clazz));
+            daoCache.put(clazz, DaoManager.createDao(connectionSource, clazz));
         }
         return daoCache.get(clazz);
     }
 
+    /**
+     * Stores an object into the database.
+     *
+     * @param object The object to store into the database.
+     * @param <V>    The type of the object to delete.
+     * @param <ID>   The type of the object's id.
+     */
     public <V extends Object, ID extends Object> void save(V object)
     {
         try
@@ -72,18 +104,24 @@ public class Persistence
         }
     }
 
-    public <V extends Object, ID extends Object> void saveAll(List<Object> objects)
+    /**
+     * Stores a list of objects into the database.
+     *
+     * @param objects The list of objects to store.
+     * @param <V>     The type of the object to delete.
+     * @param <ID>    The type of the object's id.
+     */
+    public <V extends Object, ID extends Object> void saveAll(final List<Object> objects)
     {
         if (objects.size() == 0)
         {
             return;
         }
 
-        DatabaseConnection connection = null;
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(objects.get(0).getClass());
-            connection = objectDao.startThreadConnection();
+            DatabaseConnection connection = objectDao.startThreadConnection();
 
             for (Object object : objects)
             {
@@ -100,14 +138,22 @@ public class Persistence
         }
     }
 
-    public <V extends Object, ID extends Object> List<V> loadAll(Class<?> clazz)
+    /**
+     * Loads all objects from a table.
+     *
+     * @param clazz The class of the objects to load;
+     * @param <V>   The type of the object to delete.
+     * @param <ID>  The type of the object's id.
+     *
+     * @return
+     */
+    public <V extends Object, ID extends Object> List<V> loadAll(final Class<?> clazz)
     {
-        DatabaseConnection connection = null;
         List<V> objects = null;
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(clazz);
-            connection = objectDao.startThreadConnection();
+            DatabaseConnection connection = objectDao.startThreadConnection();
 
             objects = objectDao.queryForAll();
 
@@ -124,7 +170,17 @@ public class Persistence
         return objects;
     }
 
-    public <V extends Object, ID extends Object> List<V> loadAll(Class<?> clazz, Map<String, Object> restrictions)
+    /**
+     * Loads all objects from a table. SELECT query is restricted by [restrictions].
+     *
+     * @param clazz        The class of the objects to load.
+     * @param restrictions A map of restrictions (column_name <<->> value)
+     * @param <V>          The type of the object to delete.
+     * @param <ID>         The type of the object's id.
+     *
+     * @return Returns a lost of all DB entries matching the restrictions.
+     */
+    public <V extends Object, ID extends Object> List<V> loadAll(final Class<?> clazz, final Map<String, Object> restrictions)
     {
         List<V> objects = null;
         try
@@ -139,13 +195,19 @@ public class Persistence
         return objects;
     }
 
+    /**
+     * Deletes a persistence entry in the database.
+     *
+     * @param object The object to delete.
+     * @param <V>    The type of the object to delete.
+     * @param <ID>   The type of the object's id.
+     */
     public <V extends Object, ID extends Object> void delete(final Object object)
     {
-        DatabaseConnection connection = null;
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(object.getClass());
-            connection = objectDao.startThreadConnection();
+            DatabaseConnection connection = objectDao.startThreadConnection();
 
             objectDao.delete((V) object);
 
@@ -157,10 +219,5 @@ public class Persistence
         {
             e.printStackTrace();
         }
-    }
-
-    public ConnectionSource getConnectionSource()
-    {
-        return connectionSource;
     }
 }
