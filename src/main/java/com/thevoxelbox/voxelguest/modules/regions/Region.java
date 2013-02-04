@@ -1,136 +1,133 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.ElementCollection;
-import org.bukkit.Bukkit;
 
 /**
  * @author Butters
  * @author Monofraps
  */
-@Entity
-@Table(name = "regions")
+@DatabaseTable(tableName = "regions")
 public class Region implements Serializable
 {
-    
-	@Column
-	private final String regionName;
-        @Column
-        private String worldName;
-	@Id
-	@Column
+
+	@DatabaseField(generatedId = true)
 	private long id;
-	@Column
+	@DatabaseField
+	private String regionName;
+	@DatabaseField
+	private String worldName;
+	@DatabaseField
 	private int pointOneX;
-        @Column
-        private int pointOneY;
-        @Column
-        private int pointOneZ;
-        @Column
-        private int pointTwoX;
-        @Column
-        private int pointTwoY;
-        @Column
-        private int pointTwoZ;
-        
+	@DatabaseField
+	private int pointOneY;
+	@DatabaseField
+	private int pointOneZ;
+	@DatabaseField
+	private int pointTwoX;
+	@DatabaseField
+	private int pointTwoY;
+	@DatabaseField
+	private int pointTwoZ;
 	//World
-	@Column
+	@DatabaseField
 	private boolean allowMobSpawn = false;
-	@Column
+	@DatabaseField
 	private boolean allowFireSpread = false;
-	@Column
+	@DatabaseField
 	private boolean allowLeafDecay = false;
-	@Column
+	@DatabaseField
 	private boolean allowBlockGrowth = false;
-	@Column
+	@DatabaseField
 	private boolean allowBlockSpread = false;
-	@Column
+	@DatabaseField
 	private boolean allowCreeperExplosions = false;
-	@Column
+	@DatabaseField
 	private boolean allowTntBreakingPaintings = false;
-	@Column
+	@DatabaseField
 	private boolean allowLavaFlow = false;
-	@Column
+	@DatabaseField
 	private boolean allowWaterFlow = false;
-	@Column
+	@DatabaseField
 	private boolean allowDragonEggMovement = false;
-	@Column
+	@DatabaseField
 	private boolean allowSnowMelting = false;
-	@Column
+	@DatabaseField
 	private boolean allowIceMelting = false;
-	@Column
+	@DatabaseField
 	private boolean allowSnowFormation = false;
-	@Column
+	@DatabaseField
 	private boolean allowIceFormation = false;
-	@Column
+	@DatabaseField
 	private boolean allowEnchanting = false;
-	@Column
-        @ElementCollection
+	@DatabaseField
 	private List<Integer> bannedBlocks = new ArrayList<>();
-	@Column
-        @ElementCollection
+	@DatabaseField
 	private List<Integer> bannedItems = new ArrayList<>();
-	@Column
+	@DatabaseField
 	private String buildPermission;
 	//Player
-	@Column
+	@DatabaseField
 	private boolean allowPvPDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowLavaDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowCactusDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowTnTDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowDrowningDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowExplosiveDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowFallDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowFireDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowPoisonDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowMagicDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowProjectileDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowHungerDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowVoidDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowFireTickDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowLightningDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowSuffocationDamage = false;
-	@Column
+	@DatabaseField
 	private boolean allowFoodChange = false;
+
+	public Region()
+	{
+	}
 
 	public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName, final String buildPermission)
 	{
-                this.worldName = pointOne.getWorld().getName();
-                if(pointOne != null){
-                        this.pointOneX = pointOne.getBlockX();
-                        this.pointOneY = pointOne.getBlockY();
-                        this.pointOneZ = pointOne.getBlockZ();
-                }
-                if(pointTwo != null){
-                        this.pointTwoX = pointTwo.getBlockX();
-                        this.pointTwoY = pointTwo.getBlockY();
-                        this.pointTwoZ = pointTwo.getBlockZ();                    
-                }
+		this.worldName = pointOne.getWorld().getName();
+		if (pointOne != null)
+		{
+			this.pointOneX = pointOne.getBlockX();
+			this.pointOneY = pointOne.getBlockY();
+			this.pointOneZ = pointOne.getBlockZ();
+		}
+		if (pointTwo != null)
+		{
+			this.pointTwoX = pointTwo.getBlockX();
+			this.pointTwoY = pointTwo.getBlockY();
+			this.pointTwoZ = pointTwo.getBlockZ();
+		}
 		this.regionName = regionName;
 		this.buildPermission = buildPermission;
 	}
@@ -160,9 +157,9 @@ public class Region implements Serializable
 	public void setPointOne(final Location pointOne)
 	{
 		this.worldName = pointOne.getWorld().getName();
-                this.pointOneX = pointOne.getBlockX();
-                this.pointOneY = pointOne.getBlockY();
-                this.pointOneZ = pointOne.getBlockZ();
+		this.pointOneX = pointOne.getBlockX();
+		this.pointOneY = pointOne.getBlockY();
+		this.pointOneZ = pointOne.getBlockZ();
 	}
 
 	public Location getPointTwo()
@@ -173,9 +170,9 @@ public class Region implements Serializable
 	public void setPointTwo(final Location pointTwo)
 	{
 		this.worldName = pointTwo.getWorld().getName();
-                this.pointTwoX = pointTwo.getBlockX();
-                this.pointTwoY = pointTwo.getBlockY();
-                this.pointTwoZ = pointTwo.getBlockZ();
+		this.pointTwoX = pointTwo.getBlockX();
+		this.pointTwoY = pointTwo.getBlockY();
+		this.pointTwoZ = pointTwo.getBlockZ();
 	}
 
 	public boolean isMobSpawnAllowed()

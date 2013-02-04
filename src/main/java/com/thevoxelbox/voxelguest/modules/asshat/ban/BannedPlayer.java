@@ -1,31 +1,26 @@
 package com.thevoxelbox.voxelguest.modules.asshat.ban;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * @author Monofraps
  */
-@Entity
-@Table(name = "bans")
+@DatabaseTable(tableName = "bans")
 public class BannedPlayer
 {
-	@Id
-	@GeneratedValue
-	@Column
+	@DatabaseField(generatedId = true)
 	private long id;
-	@Column
+	@DatabaseField
 	private String playerName;
-	@Column
+	@DatabaseField
 	private String banReason;
 
+    /**
+     * ORM constructor.
+     */
 	public BannedPlayer()
 	{
-		this.playerName = "";
-		this.banReason = "";
 	}
 
 	/**

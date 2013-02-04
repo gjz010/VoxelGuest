@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelguest.modules.greylist.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,15 +12,12 @@ import javax.persistence.Table;
 /**
  * @author MikeMatrix
  */
-@Entity
-@Table(name = "greylist")
+@DatabaseTable(tableName = "greylist")
 public class Greylistee
 {
-    @Id
-    @GeneratedValue
-    @Column
+    @DatabaseField
     private long id;
-    @Column
+    @DatabaseField
     private String name;
 
     public Greylistee()

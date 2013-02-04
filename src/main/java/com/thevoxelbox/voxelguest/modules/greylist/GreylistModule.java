@@ -11,7 +11,6 @@ import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,8 +33,6 @@ public class GreylistModule extends GuestModule
 		greylistListener = new GreylistListener(this);
 		greylistCommandExecutor = new GreylistCommandExecutor(this);
 		ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
-
-		Persistence.getInstance().registerPersistentClass(Greylistee.class);
 	}
 
 	@Override
@@ -92,13 +89,16 @@ public class GreylistModule extends GuestModule
 		this.notGreylistedKickMessage = notGreylistedKickMessage;
 	}
 
-	public final boolean isOnPersistentGreylist(String name)
+	public final boolean isOnPersistentGreylist(final String name)
 	{
-		final List<Object> greylistees;
+		final List<Greylistee> greylistees;
 
 		try
 		{
-			greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
+			greylistees = Persistence.getInstance().loadAll(Greylistee.class, new HashMap<String, Object>()
+			{{
+					put("name", name);
+				}});
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -120,23 +120,30 @@ public class GreylistModule extends GuestModule
 
 	public void greylist(final String name)
 	{
-		final List<Object> greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
-		for (Object greylisteeObject : greylistees)
-		{
-			Preconditions.checkState(greylisteeObject instanceof Greylistee);
+		final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, new HashMap<String, Object>()
+		{{
+				put("name", name);
+			}});
 
-			Greylistee greylistee = (Greylistee) greylisteeObject;
+		for (Greylistee greylistee : greylistees)
+		{
 			if (greylistee.getName().equalsIgnoreCase(name))
 			{
 				return;
 			}
 		}
 		Persistence.getInstance().save(new Greylistee(name));
+
+
 	}
 
 	public void ungreylist(final String name)
 	{
-		final List<Object> greylistees = Persistence.getInstance().loadAll(Greylistee.class, Restrictions.like("name", name));
+		final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, new HashMap<String, Object>()
+		{{
+				put("name", name);
+			}});
+
 		for (Object greylisteeObject : greylistees)
 		{
 			Preconditions.checkState(greylisteeObject instanceof Greylistee);
@@ -147,5 +154,6 @@ public class GreylistModule extends GuestModule
 				Persistence.getInstance().delete(greylistee);
 			}
 		}
+
 	}
 }

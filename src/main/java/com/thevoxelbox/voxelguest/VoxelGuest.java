@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelguest;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,25 +70,33 @@ public class VoxelGuest extends JavaPlugin
 		VoxelGuest.perms = perms;
 	}
 
-	@Override
-    public void onLoad()
-    {
-	    Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
-        Persistence.getInstance().initialize(configuration.getDbConnectionString(), configuration.getDbUsername(), configuration.getDbPassword());
-    }
-
     @Override
     public void onDisable()
     {
-	    Configuration.saveConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+	    try
+	    {
+		    Persistence.getInstance().finalize();
+	    } catch (SQLException e)
+	    {
+		    Bukkit.getLogger().severe("Failed to finalize persistence system.");
+		    e.printStackTrace();
+	    }
 
-        VoxelGuest.getModuleManagerInstance().shutdown();
+	    VoxelGuest.getModuleManagerInstance().shutdown();
+
     }
 
     @Override
     public void onEnable()
     {
-	    Configuration.loadConfiguration(new File(getDataFolder() + File.separator + "mainconfig.properties"), configuration);
+	    try
+	    {
+		    Persistence.getInstance().initialize(getDataFolder());
+	    } catch (SQLException e)
+	    {
+		    Bukkit.getLogger().severe("Failed to initialize persistence system.");
+		    e.printStackTrace();
+	    }
 
 	    if(!setupPermissions()) {
 		    Bukkit.getLogger().severe("Failed to setup Vault, due to no dependency found!"); //Should stop?
@@ -100,8 +109,6 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new AsshatModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), false);
 	    VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
-
-	    Persistence.getInstance().rebuildSessionFactory();
 
 	    //VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
 	    VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);

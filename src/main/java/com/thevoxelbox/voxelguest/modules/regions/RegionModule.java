@@ -30,8 +30,6 @@ public class RegionModule extends GuestModule
 	{
 		setName("Region Module");
 
-		Persistence.getInstance().registerPersistentClass(Region.class);
-
 		blockEventListener = new BlockEventListener(this);
 		playerEventListener = new PlayerEventListener(this);
 		regionCommand = new RegionCommand(this);
@@ -40,11 +38,8 @@ public class RegionModule extends GuestModule
 	@Override
 	public final void onEnable()
 	{
-		List<Object> regionObjects = Persistence.getInstance().loadAll(Region.class);
-		for(Object regionObject : regionObjects) {
-			Preconditions.checkState(regionObject instanceof Region);
-
-			Region region = (Region)regionObject;
+		final List<Region> regionObjects = Persistence.getInstance().loadAll(Region.class);
+		for(Region region : regionObjects) {
 			regions.add(region);
 		}
 
