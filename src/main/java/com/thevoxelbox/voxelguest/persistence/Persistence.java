@@ -57,75 +57,93 @@ public class Persistence
 
 	public void save(Object object)
 	{
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		synchronized (sessionFactory)
+		{
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
 
-		session.saveOrUpdate(object);
+			session.saveOrUpdate(object);
 
-		session.getTransaction().commit();
-		session.close();
+			session.getTransaction().commit();
+			session.close();
+		}
 	}
 
 	public void saveAll(List<Object> objects)
 	{
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-
-		for (Object object : objects)
+		synchronized (sessionFactory)
 		{
-			session.saveOrUpdate(object);
-		}
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
 
-		session.getTransaction().commit();
-		session.close();
+			for (Object object : objects)
+			{
+				session.saveOrUpdate(object);
+			}
+
+			session.getTransaction().commit();
+			session.close();
+		}
 	}
 
 	public Object load(Class<?> clazz, Serializable id)
 	{
-		Session session = sessionFactory.openSession();
+		synchronized (sessionFactory)
+		{
+			Session session = sessionFactory.openSession();
 
-		Object result = session.load(clazz, id);
+			Object result = session.load(clazz, id);
 
-		session.close();
+			session.close();
 
-		return result;
+			return result;
+		}
 	}
 
 	public List<Object> loadAll(Class<?> clazz)
 	{
-		Session session = sessionFactory.openSession();
+		synchronized (sessionFactory)
+		{
+			Session session = sessionFactory.openSession();
 
-		final List result = session.createCriteria(clazz).list();
+			final List result = session.createCriteria(clazz).list();
 
-		session.close();
+			session.close();
 
-		return result;
+			return result;
+		}
 	}
 
 	public List<Object> loadAll(Class<?> clazz, Criterion... criterion)
 	{
-		Session session = sessionFactory.openSession();
-
-		final Criteria criteria = session.createCriteria(clazz);
-		for (Criterion currentCriterion : criterion)
+		synchronized (sessionFactory)
 		{
-			criteria.add(currentCriterion);
+			Session session = sessionFactory.openSession();
+
+			final Criteria criteria = session.createCriteria(clazz);
+			for (Criterion currentCriterion : criterion)
+			{
+				criteria.add(currentCriterion);
+			}
+			final List result = criteria.list();
+
+			session.close();
+
+			return result;
 		}
-		final List result = criteria.list();
-
-		session.close();
-
-		return result;
 	}
 
 	public void delete(final Object greylistee)
 	{
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		synchronized (sessionFactory)
+		{
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
 
-		session.delete(greylistee);
+			session.delete(greylistee);
 
-		session.getTransaction().commit();
-		session.close();
+			session.getTransaction().commit();
+			session.close();
+		}
 	}
 }
