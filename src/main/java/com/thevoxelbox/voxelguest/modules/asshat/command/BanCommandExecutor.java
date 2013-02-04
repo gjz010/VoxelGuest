@@ -75,7 +75,7 @@ public class BanCommandExecutor implements CommandExecutor
 		final List<Player> players = Bukkit.matchPlayer(playerName);
 		if (players.size() < 1)
 		{
-			commandSender.sendMessage("Could not find any player named like " + playerName);
+			commandSender.sendMessage(String.format("Could not find any online player named like %s. Append the -force parameter to the command to ban offline players.", playerName));
 			return true;
 		}
 
