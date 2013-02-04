@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -28,7 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class BlockEventListener implements Listener
 {
 
-    private final String CANT_BUILD_HERE = "&4You cannot build here";
+    private final String CANT_BUILD_HERE = "§4You cannot build here";
     private RegionModule regionModule;
 
     public BlockEventListener(final RegionModule regionModule)
@@ -36,7 +37,7 @@ public class BlockEventListener implements Listener
         this.regionModule = regionModule;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public final void onBlockBreak(final BlockBreakEvent event)
     {
         Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
@@ -45,15 +46,29 @@ public class BlockEventListener implements Listener
             return;
         }
 
-        if (!region.getBuildPermission().equalsIgnoreCase(""))
+        if (region.isBuildingRestricted())
         {
-            if (!event.getPlayer().hasPermission(region.getBuildPermission()))
+            if (!event.getPlayer().hasPermission(RegionModule.REGION_MODIFY_PERMISSION_PREFIX + region.getRegionName()))
             {
                 event.getPlayer().sendMessage(CANT_BUILD_HERE);
                 event.setCancelled(true);
             }
         }
+    }
 
+    /**
+     * Prevents block drops.
+     * @param event
+     */
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public final void onBlockDrop(final BlockBreakEvent event) {
+        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
+        if(region == null) {
+            return;
+        }
+
+        event.getBlock().setType(Material.AIR);
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -65,9 +80,9 @@ public class BlockEventListener implements Listener
             return;
         }
 
-        if (!region.getBuildPermission().equalsIgnoreCase(""))
+        if (region.isBuildingRestricted())
         {
-            if (!event.getPlayer().hasPermission(region.getBuildPermission()))
+            if (!event.getPlayer().hasPermission(RegionModule.REGION_MODIFY_PERMISSION_PREFIX + region.getRegionName()))
             {
                 event.getPlayer().sendMessage(CANT_BUILD_HERE);
                 event.setCancelled(true);
@@ -90,19 +105,22 @@ public class BlockEventListener implements Listener
             return;
         }
 
-        if (!region.getBuildPermission().equalsIgnoreCase(""))
+        if (region.isBuildingRestricted())
         {
-            if (!event.getPlayer().hasPermission(region.getBuildPermission()))
+            if (!event.getPlayer().hasPermission(RegionModule.REGION_MODIFY_PERMISSION_PREFIX + region.getRegionName()))
             {
                 event.getPlayer().sendMessage(CANT_BUILD_HERE);
                 event.setCancelled(true);
             }
         }
 
-        if (region.getBannedItems().contains(event.getItem().getTypeId()))
+        if (event.getItem() != null)
         {
-            event.getPlayer().sendMessage(CANT_BUILD_HERE);
-            event.setCancelled(true);
+            if (region.getBannedItems().contains(event.getItem().getTypeId()))
+            {
+                event.getPlayer().sendMessage(CANT_BUILD_HERE);
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -122,7 +140,7 @@ public class BlockEventListener implements Listener
     }
 
     @EventHandler
-    public final void onBlowGrow(final BlockGrowEvent event)
+    public final void onBlockGrow(final BlockGrowEvent event)
     {
         Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
         if (region == null)
@@ -130,7 +148,7 @@ public class BlockEventListener implements Listener
             return;
         }
 
-        if (!region.isBlowGrowthAllowed())
+        if (!region.isBlockGrowthAllowed())
         {
             event.setCancelled(true);
         }
@@ -276,7 +294,7 @@ public class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        if (region.getBannedItems().contains(event.getItem()))
+        if (region.getBannedItems().contains(event.getItem().getTypeId()))
         {
             event.setCancelled(true);
         }
@@ -291,7 +309,7 @@ public class BlockEventListener implements Listener
             return;
         }
 
-        if (!region.isCreeperExplosionsAllowed())
+        if (!region.isCreeperExplosionAllowed())
         {
             event.setCancelled(true);
         }

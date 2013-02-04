@@ -75,7 +75,7 @@ public class RegionCommand implements CommandExecutor
     private void createRegion(final CommandSender cs, final String[] args)
     {
         String regionName = null;
-        String buildPerm = null;
+        boolean buildingRestricted = false;
         World regionWorld = null;
         Integer point1X = null;
         Integer point1Z = null;
@@ -128,9 +128,9 @@ public class RegionCommand implements CommandExecutor
             {
                 regionName = args[index].replace("RN:", "");
             }
-            else if (args[index].startsWith("BP:"))
+            else if (args[index].startsWith("BP"))
             {
-                buildPerm = args[index].replace("BP:", "");
+                buildingRestricted = true;
             }
             else if (args[index].startsWith("W:"))
             {
@@ -158,15 +158,10 @@ public class RegionCommand implements CommandExecutor
             return;
         }
 
-        if (buildPerm == null)
-        {
-            buildPerm = "";
-        }
-
         //For open worlds that have no boundry
         if (regionWorld != null && (point1X == null && point1Z == null && point2X == null && point2Z == null))
         {
-            Region region = new Region(regionWorld.getName(), null, null, regionName, buildPerm);
+            Region region = new Region(regionWorld.getName(), null, null, regionName);
             boolean regionMade = regionModule.addRegion(region);
             if (regionMade)
             {
@@ -189,7 +184,8 @@ public class RegionCommand implements CommandExecutor
 
         Location pointOne = new Location(regionWorld, point1X.intValue(), 0, point1Z);
         Location pointTwo = new Location(regionWorld, point2X.intValue(), regionWorld.getMaxHeight(), point2Z.intValue());
-        Region region = new Region(regionWorld.getName(), pointOne, pointTwo, regionName, buildPerm);
+        Region region = new Region(regionWorld.getName(), pointOne, pointTwo, regionName);
+        region.setBuildingRestricted(buildingRestricted);
 
         boolean regionMade = regionModule.addRegion(region);
         if (regionMade)

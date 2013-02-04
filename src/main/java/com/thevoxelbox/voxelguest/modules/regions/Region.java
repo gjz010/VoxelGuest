@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,6 +10,7 @@ import org.bukkit.util.Vector;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,9 +18,8 @@ import java.util.List;
  * @author Monofraps
  */
 @DatabaseTable(tableName = "regions")
-public class Region implements Serializable
+public class Region
 {
-
     @DatabaseField(generatedId = true)
     private long id;
     @DatabaseField
@@ -25,97 +27,106 @@ public class Region implements Serializable
     @DatabaseField
     private String worldName;
     @DatabaseField
-    private int pointOneX;
+    private boolean globalRegion; // indicates if this region is a global region
     @DatabaseField
-    private int pointOneY;
+    private int pointOneX = 0;
     @DatabaseField
-    private int pointOneZ;
+    private int pointOneY = 0;
     @DatabaseField
-    private int pointTwoX;
+    private int pointOneZ = 0;
     @DatabaseField
-    private int pointTwoY;
+    private int pointTwoX = 0;
     @DatabaseField
-    private int pointTwoZ;
+    private int pointTwoY = 0;
+    @DatabaseField
+    private int pointTwoZ = 0;
     //World
     @DatabaseField
-    private boolean allowMobSpawn = false;
+    private boolean buildingRestricted = true;
     @DatabaseField
-    private boolean allowFireSpread = false;
+    private boolean mobSpawnAllowed = false;
     @DatabaseField
-    private boolean allowLeafDecay = false;
+    private boolean fireSpreadAllowed = false;
     @DatabaseField
-    private boolean allowBlockGrowth = false;
+    private boolean leafDecayAllowed = false;
     @DatabaseField
-    private boolean allowBlockSpread = false;
+    private boolean blockGrowthAllowed = false;
     @DatabaseField
-    private boolean allowCreeperExplosions = false;
+    private boolean blockSpreadAllowed = false;
     @DatabaseField
-    private boolean allowTntBreakingPaintings = false;
+    private boolean blockDropAllowed = false;
     @DatabaseField
-    private boolean allowLavaFlow = false;
+    private boolean creeperExplosionAllowed = false;
     @DatabaseField
-    private boolean allowWaterFlow = false;
+    private boolean tntBreakingPaintingsAllowed = false;
     @DatabaseField
-    private boolean allowDragonEggMovement = false;
+    private boolean lavaFlowAllowed = false;
     @DatabaseField
-    private boolean allowSnowMelting = false;
+    private boolean waterFlowAllowed = false;
     @DatabaseField
-    private boolean allowIceMelting = false;
+    private boolean dragonEggMovementAllowed = false;
     @DatabaseField
-    private boolean allowSnowFormation = false;
+    private boolean snowMeltingAllowed = false;
     @DatabaseField
-    private boolean allowIceFormation = false;
+    private boolean iceMeltingAllowed = false;
     @DatabaseField
-    private boolean allowEnchanting = false;
+    private boolean snowFormationAllowed = false;
     @DatabaseField
-    private List<Integer> bannedBlocks = new ArrayList<>();
+    private boolean iceFormationAllowed = false;
     @DatabaseField
-    private List<Integer> bannedItems = new ArrayList<>();
-    @DatabaseField
-    private String buildPermission;
+    private boolean enchantingAllowed = false;
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private ArrayList<Integer> bannedBlocks = new ArrayList<>();
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private ArrayList<Integer> bannedItems = new ArrayList<>();
     //Player
     @DatabaseField
-    private boolean allowPvPDamage = false;
+    private boolean pvpDamageAllowed = false;
     @DatabaseField
-    private boolean allowLavaDamage = false;
+    private boolean lavaDamageAllowed = false;
     @DatabaseField
-    private boolean allowCactusDamage = false;
+    private boolean cactusDamageAllowed = false;
     @DatabaseField
-    private boolean allowTnTDamage = false;
+    private boolean tntDamageAllowed = false;
     @DatabaseField
-    private boolean allowDrowningDamage = false;
+    private boolean drowningDamageAllowed = false;
     @DatabaseField
-    private boolean allowExplosiveDamage = false;
+    private boolean explosiveDamageAllowed = false;
     @DatabaseField
-    private boolean allowFallDamage = false;
+    private boolean fallDamageAllowed = false;
     @DatabaseField
-    private boolean allowFireDamage = false;
+    private boolean fireDamageAllowed = false;
     @DatabaseField
-    private boolean allowPoisonDamage = false;
+    private boolean poisonDamageAllowed = false;
     @DatabaseField
-    private boolean allowMagicDamage = false;
+    private boolean magicDamageAllowed = false;
     @DatabaseField
-    private boolean allowProjectileDamage = false;
+    private boolean projectileDamageAllowed = false;
     @DatabaseField
-    private boolean allowHungerDamage = false;
+    private boolean hungerDamageAllowed = false;
     @DatabaseField
-    private boolean allowVoidDamage = false;
+    private boolean voidDamageAllowed = false;
     @DatabaseField
-    private boolean allowFireTickDamage = false;
+    private boolean fireTickDamageAllowed = false;
     @DatabaseField
-    private boolean allowLightningDamage = false;
+    private boolean lightningDamageAllowed = false;
     @DatabaseField
-    private boolean allowSuffocationDamage = false;
+    private boolean suffocationDamageAllowed = false;
     @DatabaseField
-    private boolean allowFoodChange = false;
+    private boolean foodChangeAllowed = false;
 
     public Region()
     {
     }
 
-    public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName, final String buildPermission)
+    public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName)
     {
-        this.worldName = pointOne.getWorld().getName();
+        this.worldName = worldName;
+
+        if(pointOne == null && pointTwo == null) {
+            this.globalRegion = true;
+        }
+
         if (pointOne != null)
         {
             this.pointOneX = pointOne.getBlockX();
@@ -128,8 +139,8 @@ public class Region implements Serializable
             this.pointTwoY = pointTwo.getBlockY();
             this.pointTwoZ = pointTwo.getBlockZ();
         }
+
         this.regionName = regionName;
-        this.buildPermission = buildPermission;
     }
 
     public final boolean isLocationInRegion(final Location locationToCheck)
@@ -140,7 +151,7 @@ public class Region implements Serializable
         }
 
         //For open worlds that do not have specified points
-        if (getPointOne() == null && getPointTwo() == null)
+        if (globalRegion)
         {
             return true;
         }
@@ -175,369 +186,14 @@ public class Region implements Serializable
         this.pointTwoZ = pointTwo.getBlockZ();
     }
 
-    public boolean isMobSpawnAllowed()
+    public long getId()
     {
-        return allowMobSpawn;
+        return id;
     }
 
-    public void setAllowMobSpawn(final boolean allowMobSpawn)
+    public void setId(final long id)
     {
-        this.allowMobSpawn = allowMobSpawn;
-    }
-
-    public boolean isFireSpreadAllowed()
-    {
-        return allowFireSpread;
-    }
-
-    public void setAllowFireSpread(final boolean allowFireSpread)
-    {
-        this.allowFireSpread = allowFireSpread;
-    }
-
-    public boolean isLeafDecayAllowed()
-    {
-        return allowLeafDecay;
-    }
-
-    public void setAllowLeafDecay(final boolean allowLeafDecay)
-    {
-        this.allowLeafDecay = allowLeafDecay;
-    }
-
-    public boolean isBlowGrowthAllowed()
-    {
-        return allowBlockGrowth;
-    }
-
-    public void setAllowBlockGrowth(final boolean allowBlockGrowth)
-    {
-        this.allowBlockGrowth = allowBlockGrowth;
-    }
-
-    public boolean isBlockSpreadAllowed()
-    {
-        return allowBlockSpread;
-    }
-
-    public void setAllowBlockSpread(final boolean allowBlockSpread)
-    {
-        this.allowBlockSpread = allowBlockSpread;
-    }
-
-    public boolean isCreeperExplosionsAllowed()
-    {
-        return allowCreeperExplosions;
-    }
-
-    public void setAllowCreeperExplosions(final boolean allowCreeperExplosions)
-    {
-        this.allowCreeperExplosions = allowCreeperExplosions;
-    }
-
-    public boolean isTntBreakingPaintingsAllowed()
-    {
-        return allowTntBreakingPaintings;
-    }
-
-    public void setAllowBreakingPaintings(boolean allowBreakingPaintings)
-    {
-        this.allowTntBreakingPaintings = allowBreakingPaintings;
-    }
-
-    public List<Integer> getBannedBlocks()
-    {
-        return bannedBlocks;
-    }
-
-    public void setBannedBlocks(List<Integer> bannedBlocks)
-    {
-        this.bannedBlocks = bannedBlocks;
-    }
-
-    public List<Integer> getBannedItems()
-    {
-        return bannedItems;
-    }
-
-    public void setBannedItems(final List<Integer> bannedItems)
-    {
-        this.bannedItems = bannedItems;
-    }
-
-    public boolean isPlayerDamageAllowed()
-    {
-        return allowPvPDamage;
-    }
-
-    public void setAllowPlayerDamage(final boolean allowPlayerDamage)
-    {
-        this.allowPvPDamage = allowPlayerDamage;
-    }
-
-    public String getBuildPermission()
-    {
-        return buildPermission;
-    }
-
-    public boolean isLavaFlowAllowed()
-    {
-        return allowLavaFlow;
-    }
-
-    public void setAllowLavaFlow(final boolean allowLavaFlow)
-    {
-        this.allowLavaFlow = allowLavaFlow;
-    }
-
-    public boolean isWaterFlowAllowed()
-    {
-        return allowWaterFlow;
-    }
-
-    public void setAllowWaterFlow(final boolean allowWaterFlow)
-    {
-        this.allowWaterFlow = allowWaterFlow;
-    }
-
-    public boolean isDragonEggMovementAllowed()
-    {
-        return allowDragonEggMovement;
-    }
-
-    public void setAllowDragonEggMovement(final boolean allowDragonEggMovement)
-    {
-        this.allowDragonEggMovement = allowDragonEggMovement;
-    }
-
-    public boolean isSnowMeltingAllowed()
-    {
-        return allowSnowMelting;
-    }
-
-    public void setAllowSnowMelting(final boolean allowSnowMelting)
-    {
-        this.allowSnowMelting = allowSnowMelting;
-    }
-
-    public boolean isIceMeltingAllowed()
-    {
-        return allowIceMelting;
-    }
-
-    public void setAllowIceMelting(final boolean allowIceMelting)
-    {
-        this.allowIceMelting = allowIceMelting;
-    }
-
-    public boolean isSnowFormationAllowed()
-    {
-        return allowSnowFormation;
-    }
-
-    public boolean isIceFormationAllowed()
-    {
-        return allowIceFormation;
-    }
-
-    public boolean isEnchantingAllowed()
-    {
-        return allowEnchanting;
-    }
-
-    public void setAllowEnchanting(final boolean allowEnchanting)
-    {
-        this.allowEnchanting = allowEnchanting;
-    }
-
-    public void setAllowSnowFormation(final boolean allowSnowFormation)
-    {
-        this.allowSnowFormation = allowSnowFormation;
-    }
-
-    public void setAllowIceFormation(final boolean allowIceFormation)
-    {
-        this.allowIceFormation = allowIceFormation;
-    }
-
-    public boolean isAllowPvPDamage()
-    {
-        return allowPvPDamage;
-    }
-
-    public void setAllowPvPDamage(boolean allowPvPDamage)
-    {
-        this.allowPvPDamage = allowPvPDamage;
-    }
-
-    public boolean isAllowLavaDamage()
-    {
-        return allowLavaDamage;
-    }
-
-    public void setAllowLavaDamage(boolean allowLavaDamage)
-    {
-        this.allowLavaDamage = allowLavaDamage;
-    }
-
-    public boolean isAllowCactusDamage()
-    {
-        return allowCactusDamage;
-    }
-
-    public void setAllowCactusDamage(boolean allowCactusDamage)
-    {
-        this.allowCactusDamage = allowCactusDamage;
-    }
-
-    public boolean isAllowTnTDamage()
-    {
-        return allowTnTDamage;
-    }
-
-    public void setAllowTnTDamage(boolean allowTnTDamage)
-    {
-        this.allowTnTDamage = allowTnTDamage;
-    }
-
-    public boolean isAllowDrowningDamage()
-    {
-        return allowDrowningDamage;
-    }
-
-    public void setAllowDrowningDamage(boolean allowDrowningDamage)
-    {
-        this.allowDrowningDamage = allowDrowningDamage;
-    }
-
-    public boolean isAllowExplosiveDamage()
-    {
-        return allowExplosiveDamage;
-    }
-
-    public void setAllowExplosiveDamage(boolean allowExplosiveDamage)
-    {
-        this.allowExplosiveDamage = allowExplosiveDamage;
-    }
-
-    public boolean isAllowFallDamage()
-    {
-        return allowFallDamage;
-    }
-
-    public void setAllowFallDamage(boolean allowFallDamage)
-    {
-        this.allowFallDamage = allowFallDamage;
-    }
-
-    public boolean isAllowFireDamage()
-    {
-        return allowFireDamage;
-    }
-
-    public void setAllowFireDamage(boolean allowFireDamage)
-    {
-        this.allowFireDamage = allowFireDamage;
-    }
-
-    public boolean isAllowPoisonDamage()
-    {
-        return allowPoisonDamage;
-    }
-
-    public void setAllowPoisonDamage(boolean allowPoisonDamage)
-    {
-        this.allowPoisonDamage = allowPoisonDamage;
-    }
-
-    public boolean isAllowMagicDamage()
-    {
-        return allowMagicDamage;
-    }
-
-    public void setAllowMagicDamage(boolean allowMagicDamage)
-    {
-        this.allowMagicDamage = allowMagicDamage;
-    }
-
-    public boolean isAllowProjectileDamage()
-    {
-        return allowProjectileDamage;
-    }
-
-    public void setAllowProjectileDamage(boolean allowProjectileDamage)
-    {
-        this.allowProjectileDamage = allowProjectileDamage;
-    }
-
-    public boolean isAllowHungerDamage()
-    {
-        return allowHungerDamage;
-    }
-
-    public void setAllowHungerDamage(boolean allowHungerDamage)
-    {
-        this.allowHungerDamage = allowHungerDamage;
-    }
-
-    public boolean isAllowVoidDamage()
-    {
-        return allowVoidDamage;
-    }
-
-    public void setAllowVoidDamage(boolean allowVoidDamage)
-    {
-        this.allowVoidDamage = allowVoidDamage;
-    }
-
-    public boolean isAllowFoodChange()
-    {
-        return allowFoodChange;
-    }
-
-    public void setAllowFoodChange(boolean allowFoodChange)
-    {
-        this.allowFoodChange = allowFoodChange;
-    }
-
-    public boolean isAllowTntBreakingPaintings()
-    {
-        return allowTntBreakingPaintings;
-    }
-
-    public void setAllowTntBreakingPaintings(boolean allowTntBreakingPaintings)
-    {
-        this.allowTntBreakingPaintings = allowTntBreakingPaintings;
-    }
-
-    public boolean isAllowFireTickDamage()
-    {
-        return allowFireTickDamage;
-    }
-
-    public void setAllowFireTickDamage(boolean allowFireTickDamage)
-    {
-        this.allowFireTickDamage = allowFireTickDamage;
-    }
-
-    public boolean isAllowLightningDamage()
-    {
-        return allowLightningDamage;
-    }
-
-    public void setAllowLightningDamage(boolean allowLightningDamage)
-    {
-        this.allowLightningDamage = allowLightningDamage;
-    }
-
-    public boolean isAllowSuffocationDamage()
-    {
-        return allowSuffocationDamage;
-    }
-
-    public void setAllowSuffocationDamage(boolean allowSuffocationDamage)
-    {
-        this.allowSuffocationDamage = allowSuffocationDamage;
+        this.id = id;
     }
 
     public String getRegionName()
@@ -545,5 +201,448 @@ public class Region implements Serializable
         return regionName;
     }
 
+    public void setRegionName(final String regionName)
+    {
+        this.regionName = regionName;
+    }
 
+    public String getWorldName()
+    {
+        return worldName;
+    }
+
+    public void setWorldName(final String worldName)
+    {
+        this.worldName = worldName;
+    }
+
+    public int getPointOneX()
+    {
+        return pointOneX;
+    }
+
+    public void setPointOneX(final int pointOneX)
+    {
+        this.pointOneX = pointOneX;
+    }
+
+    public int getPointOneY()
+    {
+        return pointOneY;
+    }
+
+    public void setPointOneY(final int pointOneY)
+    {
+        this.pointOneY = pointOneY;
+    }
+
+    public int getPointOneZ()
+    {
+        return pointOneZ;
+    }
+
+    public void setPointOneZ(final int pointOneZ)
+    {
+        this.pointOneZ = pointOneZ;
+    }
+
+    public int getPointTwoX()
+    {
+        return pointTwoX;
+    }
+
+    public void setPointTwoX(final int pointTwoX)
+    {
+        this.pointTwoX = pointTwoX;
+    }
+
+    public int getPointTwoY()
+    {
+        return pointTwoY;
+    }
+
+    public void setPointTwoY(final int pointTwoY)
+    {
+        this.pointTwoY = pointTwoY;
+    }
+
+    public int getPointTwoZ()
+    {
+        return pointTwoZ;
+    }
+
+    public void setPointTwoZ(final int pointTwoZ)
+    {
+        this.pointTwoZ = pointTwoZ;
+    }
+
+    public boolean isMobSpawnAllowed()
+    {
+        return mobSpawnAllowed;
+    }
+
+    public void setMobSpawnAllowed(final boolean mobSpawnAllowed)
+    {
+        this.mobSpawnAllowed = mobSpawnAllowed;
+    }
+
+    public boolean isFireSpreadAllowed()
+    {
+        return fireSpreadAllowed;
+    }
+
+    public void setFireSpreadAllowed(final boolean fireSpreadAllowed)
+    {
+        this.fireSpreadAllowed = fireSpreadAllowed;
+    }
+
+    public boolean isLeafDecayAllowed()
+    {
+        return leafDecayAllowed;
+    }
+
+    public void setLeafDecayAllowed(final boolean leafDecayAllowed)
+    {
+        this.leafDecayAllowed = leafDecayAllowed;
+    }
+
+    public boolean isBlockGrowthAllowed()
+    {
+        return blockGrowthAllowed;
+    }
+
+    public void setBlockGrowthAllowed(final boolean blockGrowthAllowed)
+    {
+        this.blockGrowthAllowed = blockGrowthAllowed;
+    }
+
+    public boolean isBlockSpreadAllowed()
+    {
+        return blockSpreadAllowed;
+    }
+
+    public void setBlockSpreadAllowed(final boolean blockSpreadAllowed)
+    {
+        this.blockSpreadAllowed = blockSpreadAllowed;
+    }
+
+    public boolean isBlockDropAllowed()
+    {
+        return blockDropAllowed;
+    }
+
+    public void setBlockDropAllowed(final boolean blockDropAllowed)
+    {
+        this.blockDropAllowed = blockDropAllowed;
+    }
+
+    public boolean isCreeperExplosionAllowed()
+    {
+        return creeperExplosionAllowed;
+    }
+
+    public void setCreeperExplosionAllowed(final boolean creeperExplosionAllowed)
+    {
+        this.creeperExplosionAllowed = creeperExplosionAllowed;
+    }
+
+    public boolean isTntBreakingPaintingsAllowed()
+    {
+        return tntBreakingPaintingsAllowed;
+    }
+
+    public void setTntBreakingPaintingsAllowed(final boolean tntBreakingPaintingsAllowed)
+    {
+        this.tntBreakingPaintingsAllowed = tntBreakingPaintingsAllowed;
+    }
+
+    public boolean isLavaFlowAllowed()
+    {
+        return lavaFlowAllowed;
+    }
+
+    public void setLavaFlowAllowed(final boolean lavaFlowAllowed)
+    {
+        this.lavaFlowAllowed = lavaFlowAllowed;
+    }
+
+    public boolean isWaterFlowAllowed()
+    {
+        return waterFlowAllowed;
+    }
+
+    public void setWaterFlowAllowed(final boolean waterFlowAllowed)
+    {
+        this.waterFlowAllowed = waterFlowAllowed;
+    }
+
+    public boolean isDragonEggMovementAllowed()
+    {
+        return dragonEggMovementAllowed;
+    }
+
+    public void setDragonEggMovementAllowed(final boolean dragonEggMovementAllowed)
+    {
+        this.dragonEggMovementAllowed = dragonEggMovementAllowed;
+    }
+
+    public boolean isSnowMeltingAllowed()
+    {
+        return snowMeltingAllowed;
+    }
+
+    public void setSnowMeltingAllowed(final boolean snowMeltingAllowed)
+    {
+        this.snowMeltingAllowed = snowMeltingAllowed;
+    }
+
+    public boolean isIceMeltingAllowed()
+    {
+        return iceMeltingAllowed;
+    }
+
+    public void setIceMeltingAllowed(final boolean iceMeltingAllowed)
+    {
+        this.iceMeltingAllowed = iceMeltingAllowed;
+    }
+
+    public boolean isSnowFormationAllowed()
+    {
+        return snowFormationAllowed;
+    }
+
+    public void setSnowFormationAllowed(final boolean snowFormationAllowed)
+    {
+        this.snowFormationAllowed = snowFormationAllowed;
+    }
+
+    public boolean isIceFormationAllowed()
+    {
+        return iceFormationAllowed;
+    }
+
+    public void setIceFormationAllowed(final boolean iceFormationAllowed)
+    {
+        this.iceFormationAllowed = iceFormationAllowed;
+    }
+
+    public boolean isEnchantingAllowed()
+    {
+        return enchantingAllowed;
+    }
+
+    public void setEnchantingAllowed(final boolean enchantingAllowed)
+    {
+        this.enchantingAllowed = enchantingAllowed;
+    }
+
+    public ArrayList<Integer> getBannedBlocks()
+    {
+        return bannedBlocks;
+    }
+
+    public void setBannedBlocks(final ArrayList<Integer> bannedBlocks)
+    {
+        this.bannedBlocks = bannedBlocks;
+    }
+
+    public ArrayList<Integer> getBannedItems()
+    {
+        return bannedItems;
+    }
+
+    public void setBannedItems(final ArrayList<Integer> bannedItems)
+    {
+        this.bannedItems = bannedItems;
+    }
+
+    public boolean isPvpDamageAllowed()
+    {
+        return pvpDamageAllowed;
+    }
+
+    public void setPvpDamageAllowed(final boolean pvpDamageAllowed)
+    {
+        this.pvpDamageAllowed = pvpDamageAllowed;
+    }
+
+    public boolean isLavaDamageAllowed()
+    {
+        return lavaDamageAllowed;
+    }
+
+    public void setLavaDamageAllowed(final boolean lavaDamageAllowed)
+    {
+        this.lavaDamageAllowed = lavaDamageAllowed;
+    }
+
+    public boolean isCactusDamageAllowed()
+    {
+        return cactusDamageAllowed;
+    }
+
+    public void setCactusDamageAllowed(final boolean cactusDamageAllowed)
+    {
+        this.cactusDamageAllowed = cactusDamageAllowed;
+    }
+
+    public boolean isTntDamageAllowed()
+    {
+        return tntDamageAllowed;
+    }
+
+    public void setTntDamageAllowed(final boolean tntDamageAllowed)
+    {
+        this.tntDamageAllowed = tntDamageAllowed;
+    }
+
+    public boolean isDrowningDamageAllowed()
+    {
+        return drowningDamageAllowed;
+    }
+
+    public void setDrowningDamageAllowed(final boolean drowningDamageAllowed)
+    {
+        this.drowningDamageAllowed = drowningDamageAllowed;
+    }
+
+    public boolean isExplosiveDamageAllowed()
+    {
+        return explosiveDamageAllowed;
+    }
+
+    public void setExplosiveDamageAllowed(final boolean explosiveDamageAllowed)
+    {
+        this.explosiveDamageAllowed = explosiveDamageAllowed;
+    }
+
+    public boolean isFallDamageAllowed()
+    {
+        return fallDamageAllowed;
+    }
+
+    public void setFallDamageAllowed(final boolean fallDamageAllowed)
+    {
+        this.fallDamageAllowed = fallDamageAllowed;
+    }
+
+    public boolean isFireDamageAllowed()
+    {
+        return fireDamageAllowed;
+    }
+
+    public void setFireDamageAllowed(final boolean fireDamageAllowed)
+    {
+        this.fireDamageAllowed = fireDamageAllowed;
+    }
+
+    public boolean isPoisonDamageAllowed()
+    {
+        return poisonDamageAllowed;
+    }
+
+    public void setPoisonDamageAllowed(final boolean poisonDamageAllowed)
+    {
+        this.poisonDamageAllowed = poisonDamageAllowed;
+    }
+
+    public boolean isMagicDamageAllowed()
+    {
+        return magicDamageAllowed;
+    }
+
+    public void setMagicDamageAllowed(final boolean magicDamageAllowed)
+    {
+        this.magicDamageAllowed = magicDamageAllowed;
+    }
+
+    public boolean isProjectileDamageAllowed()
+    {
+        return projectileDamageAllowed;
+    }
+
+    public void setProjectileDamageAllowed(final boolean projectileDamageAllowed)
+    {
+        this.projectileDamageAllowed = projectileDamageAllowed;
+    }
+
+    public boolean isHungerDamageAllowed()
+    {
+        return hungerDamageAllowed;
+    }
+
+    public void setHungerDamageAllowed(final boolean hungerDamageAllowed)
+    {
+        this.hungerDamageAllowed = hungerDamageAllowed;
+    }
+
+    public boolean isVoidDamageAllowed()
+    {
+        return voidDamageAllowed;
+    }
+
+    public void setVoidDamageAllowed(final boolean voidDamageAllowed)
+    {
+        this.voidDamageAllowed = voidDamageAllowed;
+    }
+
+    public boolean isFireTickDamageAllowed()
+    {
+        return fireTickDamageAllowed;
+    }
+
+    public void setFireTickDamageAllowed(final boolean fireTickDamageAllowed)
+    {
+        this.fireTickDamageAllowed = fireTickDamageAllowed;
+    }
+
+    public boolean isLightningDamageAllowed()
+    {
+        return lightningDamageAllowed;
+    }
+
+    public void setLightningDamageAllowed(final boolean lightningDamageAllowed)
+    {
+        this.lightningDamageAllowed = lightningDamageAllowed;
+    }
+
+    public boolean isSuffocationDamageAllowed()
+    {
+        return suffocationDamageAllowed;
+    }
+
+    public void setSuffocationDamageAllowed(final boolean suffocationDamageAllowed)
+    {
+        this.suffocationDamageAllowed = suffocationDamageAllowed;
+    }
+
+    public boolean isFoodChangeAllowed()
+    {
+        return foodChangeAllowed;
+    }
+
+    public void setFoodChangeAllowed(final boolean foodChangeAllowed)
+    {
+        this.foodChangeAllowed = foodChangeAllowed;
+    }
+
+    public boolean isGlobalRegion()
+    {
+        return globalRegion;
+    }
+
+    public void setGlobalRegion(final boolean globalRegion)
+    {
+        this.globalRegion = globalRegion;
+    }
+
+    public boolean isBuildingRestricted()
+    {
+        return buildingRestricted;
+    }
+
+    public void setBuildingRestricted(final boolean buildingRestricted)
+    {
+        this.buildingRestricted = buildingRestricted;
+    }
 }

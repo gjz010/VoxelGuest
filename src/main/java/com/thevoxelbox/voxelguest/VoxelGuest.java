@@ -106,7 +106,7 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
 
-        //VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
+        VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(GreylistModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(GeneralModule.class);

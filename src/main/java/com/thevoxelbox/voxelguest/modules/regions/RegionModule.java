@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class RegionModule extends GuestModule
 {
+    public static final String REGION_MODIFY_PERMISSION_PREFIX = "voxelguest.regions.modify.";
     private List<Region> regions = new ArrayList<>();
     private BlockEventListener blockEventListener;
     private PlayerEventListener playerEventListener;

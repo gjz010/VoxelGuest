@@ -19,15 +19,15 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
  */
 public class PlayerEventListener implements Listener
 {
-    private RegionModule regionModule;
+    private final RegionModule regionModule;
 
-    public PlayerEventListener(RegionModule regionModule)
+    public PlayerEventListener(final RegionModule regionModule)
     {
         this.regionModule = regionModule;
     }
 
     @EventHandler
-    public final void onDamageByBlock(EntityDamageByBlockEvent event)
+    public final void onDamageByBlock(final EntityDamageByBlockEvent event)
     {
         if (!(event.getEntityType() == EntityType.PLAYER))
         {
@@ -44,7 +44,7 @@ public class PlayerEventListener implements Listener
 
         if (cause == DamageCause.CONTACT)
         {
-            if (!region.isAllowCactusDamage())
+            if (!region.isCactusDamageAllowed())
             {
                 event.setCancelled(true);
             }
@@ -52,7 +52,7 @@ public class PlayerEventListener implements Listener
 
         if (cause == DamageCause.LAVA)
         {
-            if (!region.isAllowLavaDamage())
+            if (!region.isLavaDamageAllowed())
             {
                 event.setCancelled(true);
             }
@@ -60,7 +60,7 @@ public class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onDamageByEntity(EntityDamageByEntityEvent event)
+    public final void onDamageByEntity(final EntityDamageByEntityEvent event)
     {
         Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
         if (region == null)
@@ -75,28 +75,28 @@ public class PlayerEventListener implements Listener
         {
             if (cause == DamageCause.ENTITY_ATTACK)
             {
-                if (!region.isAllowPvPDamage())
+                if (!region.isPvpDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.ENTITY_EXPLOSION)
             {
-                if (!region.isAllowExplosiveDamage())
+                if (!region.isExplosiveDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.PROJECTILE)
             {
-                if (!region.isAllowProjectileDamage())
+                if (!region.isProjectileDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.BLOCK_EXPLOSION)
             {
-                if (!region.isAllowTnTDamage())
+                if (!region.isTntDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
@@ -117,7 +117,7 @@ public class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onEntityDamage(EntityDamageEvent event)
+    public final void onEntityDamage(final EntityDamageEvent event)
     {
         Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
         if (region == null)
@@ -132,70 +132,70 @@ public class PlayerEventListener implements Listener
         {
             if (cause == DamageCause.DROWNING)
             {
-                if (!region.isAllowDrowningDamage())
+                if (!region.isDrowningDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.FALL)
             {
-                if (!region.isAllowFallDamage())
+                if (!region.isFallDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.FIRE)
             {
-                if (!region.isAllowFireDamage())
+                if (!region.isFireDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.FIRE_TICK)
             {
-                if (!region.isAllowFireTickDamage())
+                if (!region.isFireTickDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.LIGHTNING)
             {
-                if (!region.isAllowLightningDamage())
+                if (!region.isLightningDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.MAGIC)
             {
-                if (!region.isAllowMagicDamage())
+                if (!region.isMagicDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.POISON)
             {
-                if (!region.isAllowPoisonDamage())
+                if (!region.isPoisonDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.STARVATION)
             {
-                if (!region.isAllowHungerDamage())
+                if (!region.isHungerDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.SUFFOCATION)
             {
-                if (!region.isAllowSuffocationDamage())
+                if (!region.isSuffocationDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
             }
             else if (cause == DamageCause.VOID)
             {
-                if (!region.isAllowVoidDamage())
+                if (!region.isVoidDamageAllowed())
                 {
                     event.setCancelled(true);
                 }
@@ -205,7 +205,7 @@ public class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onFoodChange(FoodLevelChangeEvent event)
+    public final void onFoodChange(final FoodLevelChangeEvent event)
     {
         Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
         if (region == null)
