@@ -28,7 +28,7 @@ public class VanishCommandExecutor implements CommandExecutor
         }
 
         final List<String> oVanished = module.getoVanished();
-        final List<String> vanished = module.getoVanished();
+        final List<String> vanished = module.getVanished();
 
         if (oVanished.contains(sender.getName()))
         {
