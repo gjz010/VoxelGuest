@@ -28,8 +28,8 @@ public class AfkCommandExecutor implements CommandExecutor {
             {
                 if (args.length != 0)
                 {
-                    String afkMsg = args[1];
-                    for (int i = 1; i < args.length; i++)
+                    String afkMsg = "";
+                    for (int i = 0; i < args.length; i++)
                     {
                         afkMsg += " ";
                         afkMsg += args[i];
