@@ -5,10 +5,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+/**
+ * 
+ * @author TheCryoknight
+ */
 public class PlayerEventListener implements Listener
 {
     private final GeneralModule module;
@@ -88,7 +93,7 @@ public class PlayerEventListener implements Listener
         }
     }
     @EventHandler
-    public void onPlayerKick(PlayerQuitEvent event)
+    public void onPlayerKick(PlayerKickEvent event)
     {
         if (event.getPlayer() != null)
         {
