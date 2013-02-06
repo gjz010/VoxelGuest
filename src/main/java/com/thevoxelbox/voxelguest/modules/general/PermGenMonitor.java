@@ -26,18 +26,18 @@ public class PermGenMonitor implements Runnable
             String name = item.getName();
             MemoryUsage usage = item.getUsage();
 
-            if (name != null && name.contains("Perm Gen"))
+            if (name != null && name.contains("Perm Gen") && !name.contains("ro") && !name.contains("rw"))
             {
                 double permGenUsage = (double)usage.getUsed() / (double)usage.getMax();
                 if(permGenUsage > 0.55f && !sentConsoleWarning) {
-                    Bukkit.getLogger().warning("MEDIUM WARNING: Perm Gen space exceeded 40% usage! A server restart is recommended.");
+                    Bukkit.getLogger().warning("MEDIUM WARNING: Perm Gen space exceeded 55% usage! A server restart is recommended.");
                     sentConsoleWarning = true;
                     break;
                 }
 
                 if(permGenUsage > 0.65f && !sentBroadcastWarning) {
-                    Bukkit.getLogger().warning("SEVERE WARNING: Perm Gen space exceeded 60% usage! A server restart is recommended.");
-                    Bukkit.broadcastMessage("SEVERE WARNING: Perm Gen space exceeded 60% usage! A server restart is recommended.");
+                    Bukkit.getLogger().warning("SEVERE WARNING: Perm Gen space exceeded 65% usage! A server restart is recommended.");
+                    Bukkit.broadcastMessage("SEVERE WARNING: Perm Gen space exceeded 65% usage! A server restart is recommended.");
                     sentBroadcastWarning = true;
                     break;
                 }
