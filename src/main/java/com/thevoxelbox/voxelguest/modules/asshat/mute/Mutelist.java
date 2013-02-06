@@ -20,7 +20,7 @@ public class Mutelist
     public final void mute(final String playerName, final String muteReason)
     {
         Preconditions.checkState(!isPlayerMuted(playerName), "Player %s already muted.", playerName);
-        Persistence.getInstance().save(new MutedPlayer(playerName, muteReason));
+        Persistence.getInstance().save(new MutedPlayer(playerName.toLowerCase(), muteReason));
     }
 
     /**
@@ -37,7 +37,7 @@ public class Mutelist
     private MutedPlayer getMutedPlayer(final String playerName)
     {
         HashMap<String, Object> selectRestrictions = new HashMap<>();
-        selectRestrictions.put("playerName", playerName);
+        selectRestrictions.put("playerName", playerName.toLowerCase());
 
         final List<MutedPlayer> mutedPlayers = Persistence.getInstance().loadAll(MutedPlayer.class, selectRestrictions);
 

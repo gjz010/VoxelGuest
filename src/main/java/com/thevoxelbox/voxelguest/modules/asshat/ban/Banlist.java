@@ -20,7 +20,7 @@ public class Banlist
     public final void ban(final String playerName, final String banReason)
     {
         Preconditions.checkState(!isPlayerBanned(playerName), "Player %s already banned.", playerName);
-        Persistence.getInstance().save(new BannedPlayer(playerName, banReason));
+        Persistence.getInstance().save(new BannedPlayer(playerName.toLowerCase(), banReason));
 
     }
 
@@ -38,7 +38,7 @@ public class Banlist
     private BannedPlayer getBannedPlayer(final String playerName)
     {
         HashMap<String, Object> selectRestrictions = new HashMap<>();
-        selectRestrictions.put("playerName", playerName);
+        selectRestrictions.put("playerName", playerName.toLowerCase());
 
         final List<BannedPlayer> bannedPlayers = Persistence.getInstance().loadAll(BannedPlayer.class, selectRestrictions);
 
