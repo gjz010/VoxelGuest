@@ -34,6 +34,6 @@ public class AfkManager
     }
     
     public boolean isPlayerAfk(final Player player) {
-        return this.playersAfk.contains(player);
+        return this.playersAfk.contains(player.getName());
     }
 }
