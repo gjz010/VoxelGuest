@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.general.command;
 
 import com.google.common.base.Preconditions;
+import com.sun.management.OperatingSystemMXBean;
 import com.thevoxelbox.voxelguest.modules.general.TPSTicker;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -47,13 +48,13 @@ public class SystemCommandExecutor implements CommandExecutor
         sender.sendMessage("§8==============================");
         sender.sendMessage("§bServer Specs");
 
-        sender.sendMessage("§7Operating System§f: §a" + ManagementFactory.getOperatingSystemMXBean().getName() + " version " + ManagementFactory.getOperatingSystemMXBean().getVersion());
-        sender.sendMessage("§7Architecture§f: §a" + ManagementFactory.getOperatingSystemMXBean().getArch());
+        OperatingSystemMXBean operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+        sender.sendMessage("§7Operating System§f: §a" + operatingSystemBean.getName() + " version " + operatingSystemBean.getVersion());
+        sender.sendMessage("§7Architecture§f: §a" + operatingSystemBean.getArch());
 
         sender.sendMessage("§8==============================");
         sender.sendMessage("§bCPU Specs");
-        final double rawCPUUsage = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
-        sender.sendMessage("§7CPU Usage§f: " + renderBar(rawCPUUsage, (Runtime.getRuntime().availableProcessors())));
+        sender.sendMessage("§7CPU Usage§f: " + renderBar(operatingSystemBean.getSystemCpuLoad(), 1));
         sender.sendMessage("§7Available cores§f: §a" + Runtime.getRuntime().availableProcessors());
 
         sender.sendMessage("§8==============================");
