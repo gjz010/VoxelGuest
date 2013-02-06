@@ -50,8 +50,12 @@ public class GeneralModule extends GuestModule
 
     //TPS ticker
     private final TPSTicker ticker = new TPSTicker();
+    private int tpsTickerTaskId = -1;
     //Afk handler
     private final AfkManager afkManager;
+
+    private PermGenMonitor permGenMonitor;
+    private int permGenMonitorTaskId = -1;
 
     public GeneralModule()
     {
@@ -75,18 +79,22 @@ public class GeneralModule extends GuestModule
     @Override
     public final void onEnable()
     {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0L, TPSTicker.getPollInterval());
-        //load persisted vanished players
+        permGenMonitor = new PermGenMonitor();
+
+        tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.getPollInterval());
+        permGenMonitorTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), permGenMonitor, 20, 20 * 5);
 
         super.onEnable();
-
-
     }
 
     @Override
     public final void onDisable()
     {
-        //save vanished players
+        Bukkit.getScheduler().cancelTask(tpsTickerTaskId);
+        Bukkit.getScheduler().cancelTask(permGenMonitorTaskId);
+
+        tpsTickerTaskId = -1;
+        permGenMonitorTaskId = -1;
 
         super.onDisable();
     }
