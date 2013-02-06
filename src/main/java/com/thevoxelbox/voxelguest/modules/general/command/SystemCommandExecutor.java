@@ -77,11 +77,15 @@ public class SystemCommandExecutor implements CommandExecutor
                 sender.sendMessage("§7Max usage§f: §a" + memData.getUsage().getMax());
                 if (memData.isUsageThresholdSupported())
                 {
-                    sender.sendMessage("§7Threshold = " + memData.getUsageThreshold());
+                    sender.sendMessage("§7Threshold§f: §a" + memData.getUsageThreshold());
+                }
+                if (memData.getUsage().getMax() != -1)
+                {
+                    sender.sendMessage(DisplayUtils.renderBar(memUsed, memMax, true, ""));
                 }
                 sender.sendMessage("§8==============================");
-                return;
             }
+            return;
         }
         else
         {
