@@ -66,10 +66,6 @@ public class FakequitCommandExecutor implements CommandExecutor
             Bukkit.broadcastMessage(fQMsg);
             module.setVanished(vanished);
         }
-        
-        module.setFakequit(fakequit);
-        module.setoFakequitd(ofakequit);
-        
         return true;
     }
 }

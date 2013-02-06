@@ -16,6 +16,11 @@ import java.lang.management.MemoryUsage;
 import java.text.NumberFormat;
 import java.util.List;
 
+/**
+ * @author Monofraps
+ * @author TheCryoknight
+ * @author Deamon
+ */
 public class SystemCommandExecutor implements CommandExecutor
 {
     private static final int TPS_PER_SECOND_THRESHOLD = 20;
@@ -123,6 +128,9 @@ public class SystemCommandExecutor implements CommandExecutor
         sender.sendMessage("§7TPS§f: " + DisplayUtils.renderTPSBar(TPSTicker.calculateTPS(), TPS_PER_SECOND_THRESHOLD));
     }
 
+    /**
+     * @author Monofraps
+     */
     private static class DisplayUtils
     {
         public static String colorPercentage(final double percentage)
