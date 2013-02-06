@@ -138,21 +138,21 @@ public class SystemCommandExecutor implements CommandExecutor
             return colorPercentage(percentage, 50, 70, 90);
         }
 
-        public static String colorPercentage(final double percentage, final double yellow, final double red, final double darkRed)
+        public static String colorPercentage(final double percentage, final double yellow, final double orange, final double red)
         {
-            if (percentage > darkRed)
-            {
-                return ChatColor.DARK_RED + String.valueOf(percentage);
-            }
-
             if (percentage > red)
             {
                 return ChatColor.RED + String.valueOf(percentage);
             }
 
-            if (percentage > yellow)
+            if (percentage > orange)
             {
                 return ChatColor.GOLD + String.valueOf(percentage);
+            }
+
+            if (percentage > yellow)
+            {
+                return ChatColor.YELLOW + String.valueOf(percentage);
             }
 
             return ChatColor.GREEN + String.valueOf(percentage);

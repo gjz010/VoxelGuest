@@ -35,9 +35,10 @@ public class PermGenMonitor implements Runnable
                     break;
                 }
 
-                if(permGenUsage > 0.6f && !sentBroadcastWarning) {
+                if(permGenUsage > 0.65f && !sentBroadcastWarning) {
                     Bukkit.getLogger().warning("SEVERE WARNING: Perm Gen space exceeded 60% usage! A server restart is recommended.");
-                    sentConsoleWarning = true;
+                    Bukkit.broadcastMessage("SEVERE WARNING: Perm Gen space exceeded 60% usage! A server restart is recommended.");
+                    sentBroadcastWarning = true;
                     break;
                 }
 
