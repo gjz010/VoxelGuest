@@ -53,7 +53,7 @@ commands:
     permission: voxelguest.general.who
     description: Lists all the players online
   fakequit:
-    aliases: [fakequit, fq]
+    aliases: [fakequit, fq, vfq]
     permission: voxelguest.general.fakequit
     description: Vanishes you from other players, and removes you from the /who list, making it seem like you are offline.
   vanish:
@@ -61,11 +61,11 @@ commands:
     permission: voxelguest.general.vanish
     description: Vanishes you from other players, removing you from their view.
   ep:
-    aliases: [ep]
+    aliases: [ep, vep]
     permission: voxelguest.general.ep
     description: Runs an entity purge and clears entities in a defined world.
   sys:
-    aliases: [sys, system]
+    aliases: [sys, system, vsys]
     permission: voxelguest.general.sys
     description: Helps you can inspect your server's CPU performance, memory management, and Bukkit management.
   vpg:
@@ -76,3 +76,7 @@ commands:
     aliases: [vtp, vteleport]
     permission: voxelguest.general.vtp
     description: Teleport command
+  afk:
+    aliases: [afk, vafk]
+    permission: voxelguest.general.afk
+    description: Tells the server the the player is away from their keyboard

@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelguest.modules.general;
 
 import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
+import com.thevoxelbox.voxelguest.modules.general.command.AfkCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.EntityPurgeCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.FakequitCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.SystemCommandExecutor;
@@ -33,13 +34,8 @@ public class GeneralModule extends GuestModule
     private final VanishCommandExecutor vanishCommandExecutor;
     private final FakequitCommandExecutor fakequitCommandExecutor;
     private final WhoCommandExecutor whoCommandExecutor;
-    
-    /*
-     * these will be used to persist vanished and fakequit players through reloads and restarts
-    private String[] reloadVanishedList;
-    private String[] reloadFakequitList;
-    private String[] reloadOfflineFQList;
-    */
+    private final AfkCommandExecutor afkCommandExecutor;
+
     private final SystemCommandExecutor systemCommandExecutor;
     private final VpgCommandExecutor vpgCommandExecutor;
     private final VtpCommandExecutor vtpCommandExecutor;
@@ -47,25 +43,33 @@ public class GeneralModule extends GuestModule
     private List<String> oVanished = new ArrayList<>();
     private List<String> fakequit = new ArrayList<>();
     private List<String> oFakequit = new ArrayList<>();
+
     //Listener
-    private ConnectionEventListener connectionEventListener;
+    private final ConnectionEventListener connectionEventListener;
+    private final PlayerEventListener playerEventListener;
+
     //TPS ticker
-    private TPSTicker ticker = new TPSTicker();
+    private final TPSTicker ticker = new TPSTicker();
+    //Afk handler
+    private final AfkManager afkManager;
 
     public GeneralModule()
     {
-        setName("General Module");
+        this.setName("General Module");
 
-        configuration = new GeneralModuleConfiguration();
+        this.configuration = new GeneralModuleConfiguration();
 
-        entityPurgeCommandExecutor = new EntityPurgeCommandExecutor();
-        vanishCommandExecutor = new VanishCommandExecutor(this);
-        connectionEventListener = new ConnectionEventListener(this);
-        fakequitCommandExecutor = new FakequitCommandExecutor(this);
-        whoCommandExecutor = new WhoCommandExecutor(this);
-        systemCommandExecutor = new SystemCommandExecutor();
-        vpgCommandExecutor = new VpgCommandExecutor();
-        vtpCommandExecutor = new VtpCommandExecutor();
+        this.entityPurgeCommandExecutor = new EntityPurgeCommandExecutor();
+        this.vanishCommandExecutor = new VanishCommandExecutor(this);
+        this.connectionEventListener = new ConnectionEventListener(this);
+        this.playerEventListener = new PlayerEventListener(this);
+        this.fakequitCommandExecutor = new FakequitCommandExecutor(this);
+        this.whoCommandExecutor = new WhoCommandExecutor(this);
+        this.afkCommandExecutor = new AfkCommandExecutor(this);
+        this.systemCommandExecutor = new SystemCommandExecutor();
+        this.vpgCommandExecutor = new VpgCommandExecutor();
+        this.vtpCommandExecutor = new VtpCommandExecutor();
+        this.afkManager = new AfkManager();
     }
 
     @Override
@@ -91,7 +95,8 @@ public class GeneralModule extends GuestModule
     public final HashSet<Listener> getListeners()
     {
         final HashSet<Listener> listeners = new HashSet<>();
-        listeners.add(connectionEventListener);
+        listeners.add(this.connectionEventListener);
+        listeners.add(this.playerEventListener);
 
         return listeners;
     }
@@ -100,13 +105,14 @@ public class GeneralModule extends GuestModule
     public HashMap<String, CommandExecutor> getCommandMappings()
     {
         HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
-        commandMappings.put("ep", entityPurgeCommandExecutor);
-        commandMappings.put("vanish", vanishCommandExecutor);
-        commandMappings.put("fakequit", fakequitCommandExecutor);
-        commandMappings.put("who", whoCommandExecutor);
-        commandMappings.put("sys", systemCommandExecutor);
-        commandMappings.put("vpg", vpgCommandExecutor);
-        commandMappings.put("vtp", vtpCommandExecutor);
+        commandMappings.put("ep", this.entityPurgeCommandExecutor);
+        commandMappings.put("vanish", this.vanishCommandExecutor);
+        commandMappings.put("fakequit", this.fakequitCommandExecutor);
+        commandMappings.put("who", this.whoCommandExecutor);
+        commandMappings.put("afk", this.afkCommandExecutor);
+        commandMappings.put("sys", this.systemCommandExecutor);
+        commandMappings.put("vpg", this.vpgCommandExecutor);
+        commandMappings.put("vtp", this.vtpCommandExecutor);
 
         return commandMappings;
     }
@@ -152,7 +158,10 @@ public class GeneralModule extends GuestModule
         for (String s : vanished)
         {
             Player hidden = Bukkit.getPlayer(s);
-            if (hidden != null) player.hidePlayer(hidden);
+            if (hidden != null)
+            {
+                player.hidePlayer(hidden);
+            }
         }
     }
 
@@ -246,5 +255,9 @@ public class GeneralModule extends GuestModule
     public String getConfigFileName()
     {
         return "general";
+    }
+
+    public AfkManager getAfkManager() {
+        return afkManager;
     }
 }
