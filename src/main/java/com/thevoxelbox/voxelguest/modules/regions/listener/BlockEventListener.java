@@ -58,12 +58,15 @@ public class BlockEventListener implements Listener
 
     /**
      * Prevents block drops.
+     *
      * @param event
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public final void onBlockDrop(final BlockBreakEvent event) {
+    public final void onBlockDrop(final BlockBreakEvent event)
+    {
         Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if(region == null) {
+        if (region == null)
+        {
             return;
         }
 
@@ -99,6 +102,11 @@ public class BlockEventListener implements Listener
     @EventHandler
     public final void onPlayerInteract(final PlayerInteractEvent event)
     {
+        if (event.getClickedBlock() != null)
+        {
+            return;
+        }
+
         Region region = regionModule.getRegionAtLocation(event.getClickedBlock().getLocation());
         if (region == null)
         {
