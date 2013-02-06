@@ -7,28 +7,18 @@ package com.thevoxelbox.voxelguest.modules.general;
  */
 public class TPSTicker implements Runnable
 {
-    private static final long pollInterval = 150L;
-    private static long lastTimestamp = 0L;
-    private static long lastDifference = 0L;
+    private static final long pollInterval = 60;
+    private static long lastTimestamp = System.currentTimeMillis() - (pollInterval * 50);
+    private static long lastDifference = pollInterval;
 
     public static double calculateTPS()
     {
-        if (lastDifference == 0L)
+        if (lastDifference == 0)
         {
-            lastDifference = 1L;
+            lastDifference = 1;
         }
 
         return (double) pollInterval / lastDifference;
-    }
-
-    /**
-     * Checks to see if the ticker has ticked yet to ensure accurate results.
-     *
-     * @return true if ticker has been initiated and started
-     */
-    public static boolean hasTicked()
-    {
-        return !(lastDifference == 0L);
     }
 
     /**
