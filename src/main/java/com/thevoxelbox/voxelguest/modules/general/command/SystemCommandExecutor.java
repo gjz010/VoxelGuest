@@ -59,43 +59,55 @@ public class SystemCommandExecutor implements CommandExecutor
 
     private void printMemInfo(final CommandSender sender, final boolean detailed)
     {
-        sender.sendMessage("§8==============================");
-        sender.sendMessage("§bMemory Specs");
-
-        final double memUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / SystemCommandExecutor.BYTES_PER_MB;
-        final double memMax = Runtime.getRuntime().maxMemory() / SystemCommandExecutor.BYTES_PER_MB;
-        double permGenUsage = -1;
-        for (final MemoryPoolMXBean item : ManagementFactory.getMemoryPoolMXBeans())
-        {
-            final String name = item.getName();
-            final MemoryUsage usage = item.getUsage();
-            if (name != null && name.contains("Perm Gen"))
-            {
-                permGenUsage = Math.round(((double) usage.getUsed() / (double) usage.getMax()) * 100f);
-                break;
-            }
-        }
-
-        sender.sendMessage("§7JVM Memory§f: " + DisplayUtils.renderBar(memUsed, memMax));
-        sender.sendMessage("§7JVM Heap Memory (MB)§f: §a" + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / SystemCommandExecutor.BYTES_PER_MB);
-        sender.sendMessage("§7JVM Free Memory (MB)§f: §a" + Runtime.getRuntime().freeMemory() / SystemCommandExecutor.BYTES_PER_MB);
-        sender.sendMessage("§7JVM Maximum Memory (MB)§f: §a" + ((Runtime.getRuntime().maxMemory() == Long.MAX_VALUE) ? "No defined limit" : Runtime.getRuntime().maxMemory() / SystemCommandExecutor.BYTES_PER_MB));
-        sender.sendMessage("§7JVM Used Memory (MB)§f: §a" + Runtime.getRuntime().totalMemory() / SystemCommandExecutor.BYTES_PER_MB);
-        sender.sendMessage("§7JVM Perm Gen usage§f: §a" + DisplayUtils.colorPercentage(permGenUsage) + "%");
-
         if (detailed)
         {
             sender.sendMessage("§8==============================");
             sender.sendMessage("§bMemory Details");
+            final double memUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / SystemCommandExecutor.BYTES_PER_MB;
+            final double memMax = Runtime.getRuntime().maxMemory() / SystemCommandExecutor.BYTES_PER_MB;
+
+            sender.sendMessage("§8==============================");
+            sender.sendMessage("§7JVM Memory§f: " + DisplayUtils.renderBar(memUsed, memMax));
+            for (MemoryPoolMXBean memData : ManagementFactory.getMemoryPoolMXBeans())
+            {
+                sender.sendMessage("§8==============================");
+                sender.sendMessage("§7Name§f: §a" + memData.getName());
+                sender.sendMessage("§7Type§f: §a" + memData.getType());
+                sender.sendMessage("§7Usage§f: §a" + memData.getUsage().getUsed());
+                sender.sendMessage("§7Max usage§f: §a" + memData.getUsage().getMax());
+                if (memData.isUsageThresholdSupported())
+                {
+                    sender.sendMessage("§7Threshold = " + memData.getUsageThreshold());
+                }
+                sender.sendMessage("§8==============================");
+                return;
+            }
+        }
+        else
+        {
+            sender.sendMessage("§8==============================");
+            sender.sendMessage("§bMemory Specs");
+
+            final double memUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / SystemCommandExecutor.BYTES_PER_MB;
+            final double memMax = Runtime.getRuntime().maxMemory() / SystemCommandExecutor.BYTES_PER_MB;
+            double permGenUsage = -1;
             for (final MemoryPoolMXBean item : ManagementFactory.getMemoryPoolMXBeans())
             {
                 final String name = item.getName();
                 final MemoryUsage usage = item.getUsage();
-                if (name != null && usage != null)
+                if (name != null && name.contains("Perm Gen"))
                 {
-                    sender.sendMessage("§7" + name + "§f: " + DisplayUtils.colorPercentage(Math.round(((double) usage.getUsed() / (double) usage.getMax()) * 100f)) + "%");
+                    permGenUsage = Math.round(((double) usage.getUsed() / (double) usage.getMax()) * 100f);
+                    break;
                 }
             }
+
+            sender.sendMessage("§7JVM Memory§f: " + DisplayUtils.renderBar(memUsed, memMax));
+            sender.sendMessage("§7JVM Heap Memory (MB)§f: §a" + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / SystemCommandExecutor.BYTES_PER_MB);
+            sender.sendMessage("§7JVM Free Memory (MB)§f: §a" + Runtime.getRuntime().freeMemory() / SystemCommandExecutor.BYTES_PER_MB);
+            sender.sendMessage("§7JVM Maximum Memory (MB)§f: §a" + ((Runtime.getRuntime().maxMemory() == Long.MAX_VALUE) ? "No defined limit" : Runtime.getRuntime().maxMemory() / SystemCommandExecutor.BYTES_PER_MB));
+            sender.sendMessage("§7JVM Used Memory (MB)§f: §a" + Runtime.getRuntime().totalMemory() / SystemCommandExecutor.BYTES_PER_MB);
+            sender.sendMessage("§7JVM Perm Gen usage§f: §a" + DisplayUtils.colorPercentage(permGenUsage) + "%");
         }
     }
 
