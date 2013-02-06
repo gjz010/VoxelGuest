@@ -1,15 +1,14 @@
 package com.thevoxelbox.voxelguest.modules.general;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * 
  * @author TheCryoknight
- *
  */
 public class AfkManager
 {
@@ -18,7 +17,7 @@ public class AfkManager
 
     /**
      * Sets the players afk state
-     * 
+     *
      * @param player Player who gets their AFK state set.
      * @param isAfk
      */
@@ -34,7 +33,7 @@ public class AfkManager
 
     /**
      * Toggles the specified players afk state
-     * 
+     *
      * @param player
      */
     public void toggleAfk(final Player player)
@@ -50,11 +49,13 @@ public class AfkManager
 
     /**
      * Checks to see if Player is afk
-     * 
+     *
      * @param player Player to check afk state
+     *
      * @return true if player is afk
      */
-    public boolean isPlayerAfk(final Player player) {
+    public boolean isPlayerAfk(final Player player)
+    {
         return this.playersAfk.contains(player.getName());
     }
 }
