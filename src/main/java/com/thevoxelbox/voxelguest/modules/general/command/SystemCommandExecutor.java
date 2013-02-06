@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.sun.management.OperatingSystemMXBean;
 import com.thevoxelbox.voxelguest.modules.general.TPSTicker;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,20 +45,25 @@ public class SystemCommandExecutor implements CommandExecutor
                 final double memUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576;
                 final double memMax = Runtime.getRuntime().maxMemory() / 1048576;
 
-                sender.sendMessage("§8==============================");
-                sender.sendMessage("§7JVM Memory§f: " + renderBar(memUsed, memMax));
+                sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
+                sender.sendMessage(ChatColor.GRAY + "JVM Memory" + ChatColor.WHITE + ": " + renderBar(memUsed, memMax));
+                sender.sendMessage(ChatColor.GRAY + "JVM Heap Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576);
+                sender.sendMessage(ChatColor.GRAY + "JVM Free Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + Runtime.getRuntime().freeMemory() / 1048576);
+                sender.sendMessage(ChatColor.GRAY + "JVM Maximum Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + ((Runtime.getRuntime().maxMemory() == Long.MAX_VALUE) ? "No defined limit" : Runtime.getRuntime().maxMemory() / 1048576));
+                sender.sendMessage(ChatColor.GRAY + "JVM Used Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + Runtime.getRuntime().totalMemory() / 1048576);
+
                 for (MemoryPoolMXBean memData: ManagementFactory.getMemoryPoolMXBeans())
                 {
-                    sender.sendMessage("§8==============================");
-                    sender.sendMessage("§7Name§f: §a" + memData.getName());
-                    sender.sendMessage("§7Type§f: §a" + memData.getType());
-                    sender.sendMessage("§7Usage§f: §a" + memData.getUsage().getUsed());
-                    sender.sendMessage("§7Max usage§f: §a" + memData.getUsage().getMax());
+                    sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
+                    sender.sendMessage(ChatColor.GRAY + "Name" + ChatColor.WHITE + ": " + ChatColor.GREEN + memData.getName());
+                    sender.sendMessage(ChatColor.GRAY + "Type" + ChatColor.WHITE + ": " + ChatColor.GREEN + memData.getType());
+                    sender.sendMessage(ChatColor.GRAY + "Usage" + ChatColor.WHITE + ": " + ChatColor.GREEN + memData.getUsage().getUsed());
+                    sender.sendMessage(ChatColor.GRAY + "Max usage" + ChatColor.WHITE + ": " + ChatColor.GREEN + memData.getUsage().getMax());
                     if (memData.isUsageThresholdSupported())
                     {
-                        sender.sendMessage("§7Threshold = " + memData.getUsageThreshold());
+                        sender.sendMessage(ChatColor.GRAY + "Threshold " + ChatColor.WHITE + ": " + ChatColor.GREEN + memData.getUsageThreshold());
                     }
-                    sender.sendMessage("§8==============================");
+                    sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
                     return true;
                 }
             }
@@ -67,47 +73,50 @@ public class SystemCommandExecutor implements CommandExecutor
 
     private void printSpecs(CommandSender sender)
     {
-        sender.sendMessage("§8==============================");
-        sender.sendMessage("§bServer Specs");
+        sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
+        sender.sendMessage(ChatColor.AQUA + "Server Specs");
 
         OperatingSystemMXBean operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        sender.sendMessage("§7Operating System§f: §a" + operatingSystemBean.getName() + " version " + operatingSystemBean.getVersion());
-        sender.sendMessage("§7Architecture§f: §a" + operatingSystemBean.getArch());
+        sender.sendMessage(ChatColor.GRAY + "Operating System" + ChatColor.WHITE + ": " + ChatColor.GREEN + operatingSystemBean.getName() + " version " + operatingSystemBean.getVersion());
+        sender.sendMessage(ChatColor.GRAY + "Architecture" + ChatColor.WHITE + ": " + ChatColor.GREEN + operatingSystemBean.getArch());
 
-        sender.sendMessage("§8==============================");
-        sender.sendMessage("§bCPU Specs");
-        sender.sendMessage("§7CPU Usage§f: " + renderBar(operatingSystemBean.getSystemCpuLoad(), 1));
-        sender.sendMessage("§7Available cores§f: §a" + Runtime.getRuntime().availableProcessors());
+        sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
+        sender.sendMessage(ChatColor.AQUA + "CPU Specs");
+        sender.sendMessage(ChatColor.GRAY + "CPU Usage" + ChatColor.WHITE + ": " + renderBar(operatingSystemBean.getSystemCpuLoad(), 1));
+        sender.sendMessage(ChatColor.GRAY + "Available cores" + ChatColor.WHITE + ": " + ChatColor.GREEN + Runtime.getRuntime().availableProcessors());
 
-        sender.sendMessage("§8==============================");
-        sender.sendMessage("§bMemory Specs");
+        sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
+        sender.sendMessage(ChatColor.AQUA + "Memory Specs");
         final double memUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576;
         final double memMax = Runtime.getRuntime().maxMemory() / 1048576;
 
-        sender.sendMessage("§7JVM Memory§f: " + renderBar(memUsed, memMax));
-        sender.sendMessage("§7JVM Heap Memory (MB)§f: §a" + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576);
-        sender.sendMessage("§7JVM Free Memory (MB)§f: §a" + Runtime.getRuntime().freeMemory() / 1048576);
-        sender.sendMessage("§7JVM Maximum Memory (MB)§f: §a" + ((Runtime.getRuntime().maxMemory() == Long.MAX_VALUE) ? "No defined limit" : Runtime.getRuntime().maxMemory() / 1048576));
-        sender.sendMessage("§7JVM Used Memory (MB)§f: §a" + Runtime.getRuntime().totalMemory() / 1048576);
+        sender.sendMessage(ChatColor.GRAY + "JVM Memory" + ChatColor.WHITE + ": " + renderBar(memUsed, memMax));
+        sender.sendMessage(ChatColor.GRAY + "JVM Heap Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1048576);
+        sender.sendMessage(ChatColor.GRAY + "JVM Free Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + Runtime.getRuntime().freeMemory() / 1048576);
+        sender.sendMessage(ChatColor.GRAY + "JVM Maximum Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + ((Runtime.getRuntime().maxMemory() == Long.MAX_VALUE) ? "No defined limit" : Runtime.getRuntime().maxMemory() / 1048576));
+        sender.sendMessage(ChatColor.GRAY + "JVM Used Memory (MB)" + ChatColor.WHITE + ": " + ChatColor.GREEN + Runtime.getRuntime().totalMemory() / 1048576);
 
-        sender.sendMessage("§8==============================");
-        sender.sendMessage("§bBukkit Specs");
+        sender.sendMessage(ChatColor.DARK_GRAY + "==============================");
+        sender.sendMessage(ChatColor.AQUA + "Bukkit Specs");
 
         final List<World> loadedWorlds = Bukkit.getWorlds();
-        sender.sendMessage("§7Loaded Worlds§f:");
+        sender.sendMessage(ChatColor.GRAY + "Loaded Worlds" + ChatColor.WHITE + ":");
         for (World world : loadedWorlds)
         {
-            sender.sendMessage("§a- " + world.getName() + " §7[§fChunks: §6" + world.getLoadedChunks().length + "§f, Entities: §6" + world.getEntities().size() + "§7]");
+            sender.sendMessage(ChatColor.GREEN + "- " + world.getName()
+                    + ChatColor.GRAY + " [" + ChatColor.WHITE + "Chunks: " + ChatColor.GOLD
+                    + world.getLoadedChunks().length + ChatColor.WHITE + ", Entities: "
+                    + ChatColor.GOLD + world.getEntities().size() + ChatColor.GRAY + "]");
         }
 
-        String ticks = "§7TPS§f: ";
+        String ticks = ChatColor.GRAY + "TPS" + ChatColor.WHITE + ": ";
         if (TPSTicker.hasTicked())
         {
             sender.sendMessage(ticks + renderTPSBar(TPSTicker.calculateTPS(), TPS_PER_SECOND_THRESHOLD));
         }
         else
         {
-            sender.sendMessage(ticks + "§cNo TPS poll yet");
+            sender.sendMessage(ticks + ChatColor.RED + "No TPS poll yet");
         }
     }
 
@@ -115,17 +124,17 @@ public class SystemCommandExecutor implements CommandExecutor
     {
         final double usedLevel = BAR_SEGMENTS * (value / max);
         final int usedRounded = (int) Math.round(usedLevel);
-        String bar = "§8[";
+        String bar = ChatColor.DARK_GRAY + "[";
 
         for (int i = 0; i < BAR_SEGMENTS; i++)
         {
-            bar += ((i + 1) <= usedRounded) ? "§b#" : "§7_";
+            bar += ((i + 1) <= usedRounded) ? ChatColor.AQUA + "#" : ChatColor.GRAY + "_";
         }
 
         final double percent = (usedLevel / BAR_SEGMENTS);
         final NumberFormat format = NumberFormat.getPercentInstance();
 
-        return (bar + "§8] (§f" + format.format(percent) + "§8)");
+        return (bar + ChatColor.DARK_GRAY + "] (" + ChatColor.WHITE + format.format(percent) + ChatColor.DARK_GRAY + ")");
     }
 
     //TODO: Should be merged with renderBar
@@ -133,17 +142,17 @@ public class SystemCommandExecutor implements CommandExecutor
     {
         double usedLevel = TPS_PER_SECOND_THRESHOLD * (value / max);
         int usedRounded = (int) Math.round(usedLevel);
-        String bar = "§8[";
+        String bar = ChatColor.DARK_GRAY + "[";
 
         for (int i = 0; i < TPS_PER_SECOND_THRESHOLD; i++)
         {
             if ((i + 1) <= usedRounded)
             {
-                bar += "§b#";
+                bar += ChatColor.AQUA + "#";
             }
             else
             {
-                bar += "§7_";
+                bar += ChatColor.GRAY + "_";
             }
         }
 
@@ -154,6 +163,8 @@ public class SystemCommandExecutor implements CommandExecutor
             percent = 1;
         }
 
-        return (bar + "§8] (§f" + percent * TPS_PER_SECOND_THRESHOLD + " TPS§8)");
+        return (bar + ChatColor.DARK_GRAY + "] (" + ChatColor.WHITE
+                + percent * TPS_PER_SECOND_THRESHOLD + " TPS"
+                + ChatColor.DARK_GRAY + ")");
     }
 }
