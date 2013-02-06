@@ -102,7 +102,7 @@ public class BlockEventListener implements Listener
     @EventHandler
     public final void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if (event.getClickedBlock() != null)
+        if (event.getClickedBlock() == null)
         {
             return;
         }

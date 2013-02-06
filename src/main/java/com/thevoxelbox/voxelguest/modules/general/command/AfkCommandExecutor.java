@@ -35,6 +35,7 @@ public class AfkCommandExecutor implements CommandExecutor {
                         afkMsg += args[i];
                     }
                     Bukkit.broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + afkMsg);
+                    return true;
                 }
                 Bukkit.broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + " has gone AFK");
             }
