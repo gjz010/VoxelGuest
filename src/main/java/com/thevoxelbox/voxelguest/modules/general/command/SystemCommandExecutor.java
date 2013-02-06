@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
 import java.text.NumberFormat;
 import java.util.List;
 
@@ -38,8 +39,29 @@ public class SystemCommandExecutor implements CommandExecutor
                 System.gc();
                 return true;
             }
-        }
+            if (args[0].equalsIgnoreCase("mem"))
+            {
+                final double memUsed = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576;
+                final double memMax = Runtime.getRuntime().maxMemory() / 1048576;
 
+                sender.sendMessage("§8==============================");
+                sender.sendMessage("§7JVM Memory§f: " + renderBar(memUsed, memMax));
+                for (MemoryPoolMXBean memData: ManagementFactory.getMemoryPoolMXBeans())
+                {
+                    sender.sendMessage("§8==============================");
+                    sender.sendMessage("§7Name§f: §a" + memData.getName());
+                    sender.sendMessage("§7Type§f: §a" + memData.getType());
+                    sender.sendMessage("§7Usage§f: §a" + memData.getUsage().getUsed());
+                    sender.sendMessage("§7Max usage§f: §a" + memData.getUsage().getMax());
+                    if (memData.isUsageThresholdSupported())
+                    {
+                        sender.sendMessage("§7Threshold = " + memData.getUsageThreshold());
+                    }
+                    sender.sendMessage("§8==============================");
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
