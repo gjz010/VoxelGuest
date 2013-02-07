@@ -73,18 +73,20 @@ public class SystemCommandExecutor implements CommandExecutor
                 sender.sendMessage("§8==============================");
                 sender.sendMessage("§7Name§f: §a" + memData.getName());
                 sender.sendMessage("§7Type§f: §a" + memData.getType());
-                sender.sendMessage("§7Usage§f: §a" + memData.getUsage().getUsed());
-                sender.sendMessage("§7Max usage§f: §a" + memData.getUsage().getMax());
+                sender.sendMessage("§7Usage§f: §a" + (memData.getUsage().getUsed() / SystemCommandExecutor.BYTES_PER_MB));
+                sender.sendMessage("§7Max usage§f: §a" + (memData.getUsage().getMax() / SystemCommandExecutor.BYTES_PER_MB));
                 if (memData.isUsageThresholdSupported())
                 {
                     sender.sendMessage("§7Threshold§f: §a" + memData.getUsageThreshold());
                 }
                 if (memData.getUsage().getMax() != -1)
                 {
-                    sender.sendMessage(DisplayUtils.renderBar(memUsed, memMax, true, ""));
+                    final long typeMemUsed = memData.getUsage().getUsed();
+                    final long typeMemMax = memData.getUsage().getMax();
+                    sender.sendMessage(DisplayUtils.renderBar(typeMemUsed, typeMemMax, true, ""));
                 }
-                sender.sendMessage("§8==============================");
             }
+            sender.sendMessage("§8==============================");
             return;
         }
         else
