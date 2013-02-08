@@ -24,6 +24,12 @@ public final class Configuration
     {
     }
 
+    /**
+     * Loads a configuration from file.
+     * @param configurationFile The configuration file.
+     * @param targetObject The object which is supposed to be filled with variables from the configuration file.
+     * @return Returns a boolean indicating whether the loading was successful. (true = success)
+     */
     public static boolean loadConfiguration(final File configurationFile, final Object targetObject)
     {
         Preconditions.checkNotNull(configurationFile, "Configuration File cannot be null.");
@@ -59,12 +65,15 @@ public final class Configuration
                 }
             } catch (IOException e)
             {
+                e.printStackTrace();
                 return false;
             } catch (InvocationTargetException e)
             {
+                e.printStackTrace();
                 return false;
             } catch (IllegalAccessException e)
             {
+                e.printStackTrace();
                 return false;
             }
 
@@ -73,6 +82,12 @@ public final class Configuration
         return false;
     }
 
+    /**
+     * Saves an object to a file. Getters annotated with @ConfigurationGetter will be called to get the values to save.
+     * @param configurationFile The file to write to.
+     * @param sourceObject The object which is supposed to be saved.
+     * @return Returns a boolean indicating whether the operation was successful or not. (true = success)
+     */
     public static boolean saveConfiguration(final File configurationFile, final Object sourceObject)
     {
         Preconditions.checkNotNull(configurationFile, "Configuration File cannot be null.");
@@ -101,14 +116,17 @@ public final class Configuration
             properties.store(fileWriter, null);
         } catch (IOException e)
         {
+            e.printStackTrace();
             return false;
         } catch (InvocationTargetException e)
         {
+            e.printStackTrace();
             return false;
         } catch (IllegalAccessException e)
         {
+            e.printStackTrace();
             return false;
         }
-        return false;
+        return true;
     }
 }
