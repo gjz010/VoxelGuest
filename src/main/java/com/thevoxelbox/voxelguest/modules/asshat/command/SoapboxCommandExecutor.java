@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
+ * Executes /soapbox commands.
+ *
  * @author Monofraps
  */
 public class SoapboxCommandExecutor implements CommandExecutor
@@ -13,6 +15,8 @@ public class SoapboxCommandExecutor implements CommandExecutor
     private final AsshatModule module;
 
     /**
+     * Creates a new soapbox command executor.
+     *
      * @param module The owning module.
      */
     public SoapboxCommandExecutor(final AsshatModule module)

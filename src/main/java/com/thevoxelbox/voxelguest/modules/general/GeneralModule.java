@@ -75,7 +75,7 @@ public class GeneralModule extends GuestModule
     @Override
     public final void onEnable()
     {
-        permGenMonitor = new PermGenMonitor();
+        permGenMonitor = new PermGenMonitor(configuration);
 
         tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.getPollInterval());
         permGenMonitorTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), permGenMonitor, 20, 20 * 5);

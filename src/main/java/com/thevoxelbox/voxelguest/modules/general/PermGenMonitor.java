@@ -4,49 +4,48 @@ import org.bukkit.Bukkit;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
-import java.lang.management.MemoryType;
 import java.lang.management.MemoryUsage;
-import java.util.Iterator;
 
 /**
  * @author Monofraps
  */
 public class PermGenMonitor implements Runnable
 {
-    private boolean sentConsoleWarning = false;
+    private final GeneralModuleConfiguration configuration;
     private boolean sentBroadcastWarning = false;
 
-    @Override
-    public void run()
+    /**
+     * @param configuration THe general module configuration
+     */
+    public PermGenMonitor(final GeneralModuleConfiguration configuration)
     {
-        Iterator<MemoryPoolMXBean> iter = ManagementFactory.getMemoryPoolMXBeans().iterator();
-        while (iter.hasNext())
+        this.configuration = configuration;
+    }
+
+    @Override
+    public final void run()
+    {
+        for (final MemoryPoolMXBean item : ManagementFactory.getMemoryPoolMXBeans())
         {
-            MemoryPoolMXBean item = iter.next();
             String name = item.getName();
             MemoryUsage usage = item.getUsage();
 
             if (name != null && name.contains("Perm Gen") && !name.contains("ro") && !name.contains("rw"))
             {
-                double permGenUsage = (double)usage.getUsed() / (double)usage.getMax();
-                if (permGenUsage > 0.8f)
+                double permGenUsage = (double) usage.getUsed() / (double) usage.getMax();
+                if (permGenUsage > ((double) configuration.getPermGenShutdownThreshold() / 100f))
                 {
-                    Bukkit.broadcastMessage("Perm Gen space exceeded 80% usage! Forcing server shutdown to prevent data loss.");
+                    Bukkit.broadcastMessage(String.format("Perm Gen space exceeded %d%% usage! Forcing server shutdown to prevent data loss.", configuration.getPermGenShutdownThreshold()));
                     Bukkit.getLogger().severe("Perm Gen threshold exceeded. Forcing shutdown to prevent data loss.");
                     Bukkit.shutdown();
                     break;
                 }
 
-                if(permGenUsage > 0.65f && !sentBroadcastWarning) {
-                    Bukkit.getLogger().warning("SEVERE WARNING: Perm Gen space exceeded 65% usage! A server restart is recommended.");
-                    Bukkit.broadcastMessage("SEVERE WARNING: Perm Gen space exceeded 65% usage! A server restart is recommended.");
+                if ((permGenUsage > ((double) configuration.getPermGenWarningThreshold() / 100f)) && !sentBroadcastWarning)
+                {
+                    Bukkit.getLogger().warning(String.format("WARNING: Perm Gen space exceeded %d%% usage! A server restart is recommended.", configuration.getPermGenWarningThreshold()));
+                    Bukkit.broadcastMessage(String.format("WARNING: Perm Gen space exceeded %d%% usage! A server restart is recommended.", configuration.getPermGenWarningThreshold()));
                     sentBroadcastWarning = true;
-                    break;
-                }
-
-                if(permGenUsage > 0.55f && !sentConsoleWarning) {
-                    Bukkit.getLogger().warning("MEDIUM WARNING: Perm Gen space exceeded 55% usage! A server restart is recommended.");
-                    sentConsoleWarning = true;
                     break;
                 }
             }

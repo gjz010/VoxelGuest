@@ -1,15 +1,16 @@
 package com.thevoxelbox.voxelguest.persistence;
 
+import com.google.common.base.Preconditions;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
-import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public final class Persistence
     private static Persistence instance = new Persistence();
     private ConnectionSource connectionSource;
     private Map<Class, Dao> daoCache = new HashMap<>();
+    private boolean initialized = false;
 
     private Persistence()
     {
@@ -45,8 +47,11 @@ public final class Persistence
      */
     public void initialize(final File dbFile) throws SQLException
     {
+        Preconditions.checkState(!initialized, "Persistence system has already been initialized.");
         dbFile.getParentFile().mkdirs();
         connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + dbFile.getPath());
+
+        initialized = true;
     }
 
     /**
@@ -56,6 +61,9 @@ public final class Persistence
      */
     public void shutdown() throws SQLException
     {
+        Preconditions.checkState(initialized, "Persistence system has to be initialized before shutdown.");
+        initialized = false;
+
         daoCache.clear();
         connectionSource.close();
     }
@@ -72,6 +80,8 @@ public final class Persistence
      */
     public <E> Dao<E, ?> getDao(final Class<E> clazz) throws SQLException
     {
+        checkState();
+
         if (!daoCache.containsKey(clazz))
         {
             TableUtils.createTableIfNotExists(connectionSource, clazz);
@@ -87,8 +97,10 @@ public final class Persistence
      * @param <V>    The type of the object to delete.
      * @param <ID>   The type of the object's id.
      */
-    public <V extends Object, ID extends Object> void save(V object)
+    public <V, ID> void save(final V object)
     {
+        checkState();
+
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(object.getClass());
@@ -112,8 +124,10 @@ public final class Persistence
      * @param <V>     The type of the object to delete.
      * @param <ID>    The type of the object's id.
      */
-    public <V extends Object, ID extends Object> void saveAll(final List<Object> objects)
+    public <V, ID> void saveAll(final List<V> objects)
     {
+        checkState();
+
         if (objects.size() == 0)
         {
             return;
@@ -146,11 +160,13 @@ public final class Persistence
      * @param <V>   The type of the object to delete.
      * @param <ID>  The type of the object's id.
      *
-     * @return
+     * @return Returns a list of all objects loaded.
      */
-    public <V extends Object, ID extends Object> List<V> loadAll(final Class<?> clazz)
+    public <V, ID> List<V> loadAll(final Class<?> clazz)
     {
-        List<V> objects = null;
+        checkState();
+
+        List<V> objects = Collections.EMPTY_LIST;
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(clazz);
@@ -179,11 +195,13 @@ public final class Persistence
      * @param <V>          The type of the object to delete.
      * @param <ID>         The type of the object's id.
      *
-     * @return Returns a lost of all DB entries matching the restrictions.
+     * @return Returns a list of all DB entries matching the restrictions.
      */
-    public <V extends Object, ID extends Object> List<V> loadAll(final Class<?> clazz, final Map<String, Object> restrictions)
+    public <V, ID> List<V> loadAll(final Class<?> clazz, final Map<String, Object> restrictions)
     {
-        List<V> objects = null;
+        checkState();
+
+        List<V> objects = Collections.EMPTY_LIST;
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(clazz);
@@ -203,8 +221,10 @@ public final class Persistence
      * @param <V>    The type of the object to delete.
      * @param <ID>   The type of the object's id.
      */
-    public <V extends Object, ID extends Object> void delete(final Object object)
+    public <V, ID> void delete(final Object object)
     {
+        checkState();
+
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(object.getClass());
@@ -220,5 +240,10 @@ public final class Persistence
         {
             e.printStackTrace();
         }
+    }
+
+    private void checkState()
+    {
+        Preconditions.checkState(initialized, "Persistence system has to be initialized before usage.");
     }
 }
