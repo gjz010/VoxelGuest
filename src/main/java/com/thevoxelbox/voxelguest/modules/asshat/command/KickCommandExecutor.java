@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @author Monofraps
  */
-public class KickCommandExecutor implements CommandExecutor
+public class KickCommandExecutor implements TabExecutor
 {
     private final AsshatModule module;
     private final AsshatModuleConfiguration configuration;
@@ -139,5 +140,11 @@ public class KickCommandExecutor implements CommandExecutor
         {
             Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getKickBroadcastMsg(), player.getName(), sender.getName(), reason));
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
+    {
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @author Monofraps
  */
-public class MuteCommandExecutor implements CommandExecutor
+public class MuteCommandExecutor implements TabExecutor
 {
     private final AsshatModuleConfiguration configuration;
     private final AsshatModule module;
@@ -128,5 +129,11 @@ public class MuteCommandExecutor implements CommandExecutor
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
+    {
+        return null;
     }
 }

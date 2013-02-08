@@ -4,13 +4,17 @@ import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Executes /soapbox commands.
  *
  * @author Monofraps
  */
-public class SoapboxCommandExecutor implements CommandExecutor
+public class SoapboxCommandExecutor implements TabExecutor
 {
     private final AsshatModule module;
 
@@ -37,5 +41,11 @@ public class SoapboxCommandExecutor implements CommandExecutor
         commandSender.sendMessage(String.format("Soapbox is %s", module.isSilenceEnabled() ? "enabled" : "disabled"));
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
+    {
+        return Collections.EMPTY_LIST;
     }
 }
