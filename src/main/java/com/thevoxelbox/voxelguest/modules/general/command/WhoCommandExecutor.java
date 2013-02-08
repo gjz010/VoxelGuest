@@ -32,12 +32,11 @@ public class WhoCommandExecutor implements CommandExecutor
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         final boolean admin = sender.hasPermission(GeneralModule.FAKEQUIT_PERM);
-        final List<String> fakequit = module.getFakequit();
 
-        final HashMap<String, List<String>> groups = new HashMap<>();
+        final HashMap<String, List<String>> groups = new HashMap<String, List<String>>();
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            final boolean fq = fakequit.contains(player.getName());
+            final boolean fq = this.module.getVanishFakequitHandler().isPlayerFakequit(player);
             if (fq && !admin)
             {
                 continue;
@@ -64,7 +63,7 @@ public class WhoCommandExecutor implements CommandExecutor
             header += ChatColor.DARK_GRAY + "[" + getColour(groupName) + groupName.substring(0, 1).toUpperCase() + ":" + groups.get(groupName).size() + ChatColor.DARK_GRAY + "] ";
         }
 
-        final int numOnlinePlayers = Bukkit.getOnlinePlayers().length - fakequit.size();
+        final int numOnlinePlayers = Bukkit.getOnlinePlayers().length - this.module.getVanishFakequitHandler().getFakequitSize();
         header += ChatColor.DARK_GRAY + "(" + ChatColor.WHITE + "O:" + String.valueOf(numOnlinePlayers) + ChatColor.DARK_GRAY + ")";
         sender.sendMessage(header);
 

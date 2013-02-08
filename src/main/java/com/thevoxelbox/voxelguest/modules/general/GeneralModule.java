@@ -12,13 +12,10 @@ import com.thevoxelbox.voxelguest.modules.general.command.VtpCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.WhoCommandExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 public class GeneralModule extends GuestModule
 {
@@ -39,10 +36,6 @@ public class GeneralModule extends GuestModule
     private final SystemCommandExecutor systemCommandExecutor;
     private final VpgCommandExecutor vpgCommandExecutor;
     private final VtpCommandExecutor vtpCommandExecutor;
-    private List<String> vanished = new ArrayList<>();
-    private List<String> oVanished = new ArrayList<>();
-    private List<String> fakequit = new ArrayList<>();
-    private List<String> oFakequit = new ArrayList<>();
 
     //Listener
     private final ConnectionEventListener connectionEventListener;
@@ -51,8 +44,10 @@ public class GeneralModule extends GuestModule
     //TPS ticker
     private final TPSTicker ticker = new TPSTicker();
     private int tpsTickerTaskId = -1;
-    //Afk handler
+
+    //Handlers
     private final AfkManager afkManager;
+    private final VanishFakequitHandler vanishFakequitHandler;
 
     private PermGenMonitor permGenMonitor;
     private int permGenMonitorTaskId = -1;
@@ -74,6 +69,7 @@ public class GeneralModule extends GuestModule
         this.vpgCommandExecutor = new VpgCommandExecutor();
         this.vtpCommandExecutor = new VtpCommandExecutor();
         this.afkManager = new AfkManager();
+        this.vanishFakequitHandler = new VanishFakequitHandler(this);
     }
 
     @Override
@@ -125,134 +121,6 @@ public class GeneralModule extends GuestModule
         return commandMappings;
     }
 
-    /**
-     * Hides the specified player for all online players
-     *
-     * @param hidden player to hide
-     */
-    public void hidePlayerForAll(Player hidden)
-    {
-        if (hidden == null)
-        {
-            return;
-        }
-
-        for (Player p : Bukkit.getOnlinePlayers())
-        {
-            if (!p.hasPermission(VANISH_PERM))
-            {
-                p.hidePlayer(hidden);
-            }
-        }
-    }
-
-    /**
-     * Hides all online vanished players for the specified player
-     *
-     * @param player Player to hide vanished from
-     */
-    public void hideAllForPlayer(Player player)
-    {
-        if (player == null)
-        {
-            return;
-        }
-
-        if (player.hasPermission(VANISH_PERM))
-        {
-            return;
-        }
-
-        for (String s : vanished)
-        {
-            Player hidden = Bukkit.getPlayer(s);
-            if (hidden != null)
-            {
-                player.hidePlayer(hidden);
-            }
-        }
-    }
-
-    /**
-     * Gets the current list of people fake quit.
-     *
-     * @return List of the names of players fake quit
-     */
-    public List<String> getFakequit()
-    {
-        return fakequit;
-    }
-
-    /**
-     * Sets the list of people fake quit.
-     *
-     * @param newFQList List of names to set as fake quit
-     */
-    public void setFakequit(List<String> newFQList)
-    {
-        fakequit = newFQList;
-    }
-
-    /**
-     * Gets the list of names of players on the offline fake quit.
-     * 
-     * @return
-     */
-    public List<String> getoFakequit()
-    {
-        return oFakequit;
-    }
-
-    /**
-     * Sets the list of names of players on the offline fake quit.
-     * 
-     * @param newOfflineFQList
-     */
-    public void setoFakequitd(List<String> newOfflineFQList)
-    {
-        oFakequit = newOfflineFQList;
-    }
-
-    /**
-     * Get the list of people vanished.
-     *
-     * @return List of people vanished
-     */
-    public List<String> getVanished()
-    {
-        return vanished;
-    }
-
-    /**
-     * Get the list of people vanished.
-     *
-     * @param v
-     */
-    public void setVanished(List<String> v)
-    {
-        vanished = v;
-    }
-
-    /**
-     * Gets the list of names of players on the offline vanished.
-     *
-     * @return
-     */
-    public List<String> getoVanished()
-    {
-        return oVanished;
-    }
-
-    /**
-     * Sets the list of names of players on the offline vanished.
-     *
-     * @param v
-     */
-    public void setoVanished(List<String> v)
-    {
-        oVanished = v;
-    }
-
     @Override
     public Object getConfiguration()
     {
@@ -267,5 +135,16 @@ public class GeneralModule extends GuestModule
 
     public AfkManager getAfkManager() {
         return afkManager;
+    }
+
+    public VanishFakequitHandler getVanishFakequitHandler() {
+        return vanishFakequitHandler;
+    }
+
+    public String formatJoinLeaveMessage(final String msg, final String playerName)
+    {
+        int onlinePlayers = Bukkit.getOnlinePlayers().length;
+        onlinePlayers -= this.getVanishFakequitHandler().getFakequitSize();
+        return msg.replace("$no", Integer.toString(onlinePlayers)).replace("$n", playerName);
     }
 }

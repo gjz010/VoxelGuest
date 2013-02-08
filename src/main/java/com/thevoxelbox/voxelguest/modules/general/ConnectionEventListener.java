@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.general;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,21 +27,10 @@ public class ConnectionEventListener implements Listener
     {
         Player player = event.getPlayer();
 
-        event.setJoinMessage(this.formatJoinLeaveMessage(configuration.getJoinFormat(), player.getName()));
-
-        if (module.getoVanished().contains(player.getName()))
+        event.setJoinMessage(this.module.formatJoinLeaveMessage(configuration.getJoinFormat(), player.getName()));
+        this.module.getVanishFakequitHandler().handleConnect(player);
+        if (this.module.getVanishFakequitHandler().isPlayerFakequit(player))
         {
-            module.getVanished().add(player.getName());
-            module.getoVanished().remove(player.getName());
-            module.hidePlayerForAll(player);
-        }
-
-        module.hideAllForPlayer(player);
-
-        if (module.getoFakequit().contains(player.getName()))
-        {
-            module.getFakequit().add(player.getName());
-            module.getoFakequit().remove(player.getName());
             event.setJoinMessage("");
         }
     }
@@ -52,18 +40,10 @@ public class ConnectionEventListener implements Listener
     {
         Player player = event.getPlayer();
 
-        event.setQuitMessage(this.formatJoinLeaveMessage(configuration.getLeaveFormat(), player.getName()));
-
-        if (module.getVanished().contains(player.getName()))
+        event.setQuitMessage(this.module.formatJoinLeaveMessage(configuration.getLeaveFormat(), player.getName()));
+        
+        if (this.module.getVanishFakequitHandler().handleDisconnect(player))
         {
-            module.getoVanished().add(player.getName());
-            module.getVanished().remove(player.getName());
-        }
-
-        if (module.getFakequit().contains(player.getName()))
-        {
-            module.getoFakequit().add(player.getName());
-            module.getFakequit().remove(player.getName());
             event.setQuitMessage("");
         }
     }
@@ -73,24 +53,11 @@ public class ConnectionEventListener implements Listener
     {
         Player player = event.getPlayer();
 
-        event.setLeaveMessage(this.formatJoinLeaveMessage(configuration.getKickFormat(), player.getName()));
+        event.setLeaveMessage(this.module.formatJoinLeaveMessage(configuration.getKickFormat(), player.getName()));
 
-        if (module.getVanished().contains(player.getName()))
+        if (this.module.getVanishFakequitHandler().handleDisconnect(player))
         {
-            module.getoVanished().add(player.getName());
-            module.getVanished().remove(player.getName());
-        }
-
-        if (module.getFakequit().contains(player.getName()))
-        {
-            module.getoFakequit().add(player.getName());
-            module.getFakequit().remove(player.getName());
             event.setLeaveMessage("");
         }
-    }
-
-    private String formatJoinLeaveMessage(final String msg, final String playerName)
-    {
-        return msg.replace("$no", Integer.toString(Bukkit.getOnlinePlayers().length)).replace("$n", playerName);
     }
 }
