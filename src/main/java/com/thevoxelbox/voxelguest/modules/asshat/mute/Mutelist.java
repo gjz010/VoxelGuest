@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Represents a list of muted players.
  * @author Monofraps
  */
 public class Mutelist
@@ -16,22 +17,36 @@ public class Mutelist
      *
      * @param playerName The name of the player to mute.
      * @param muteReason The reason the player is muted for.
+     *
+     * @return Returns true if the mute operation was successful. False indicates that the player is already muted.
      */
-    public final void mute(final String playerName, final String muteReason)
+    public final boolean mute(final String playerName, final String muteReason)
     {
-        Preconditions.checkState(!isPlayerMuted(playerName), "Player %s already muted.", playerName);
+        if (isPlayerMuted(playerName))
+        {
+            return false;
+        }
+
         Persistence.getInstance().save(new MutedPlayer(playerName.toLowerCase(), muteReason));
+        return true;
     }
 
     /**
      * Unmutes a player.
      *
      * @param playerName The name of the player to unmute.
+     *
+     * @return Returns true if the unmute operation was successful. False indicates that the player is not muted.
      */
-    public final void unmute(final String playerName)
+    public final boolean unmute(final String playerName)
     {
-        Preconditions.checkState(isPlayerMuted(playerName), "Player %s is not muted.", playerName);
+        if (!isPlayerMuted(playerName))
+        {
+            return false;
+        }
+
         Persistence.getInstance().delete(getMutedPlayer(playerName));
+        return true;
     }
 
     private MutedPlayer getMutedPlayer(final String playerName)

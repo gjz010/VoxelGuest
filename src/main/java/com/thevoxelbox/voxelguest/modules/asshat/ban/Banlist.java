@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Represents a list of banned players.
  * @author Monofraps
  */
 public class Banlist
@@ -16,23 +17,36 @@ public class Banlist
      *
      * @param playerName The name of the player to ban.
      * @param banReason  The reason the player is banned for.
+     *
+     * @return Returns true if the ban operation was successful. False indicates that the player is already banned.
      */
-    public final void ban(final String playerName, final String banReason)
+    public final boolean ban(final String playerName, final String banReason)
     {
-        Preconditions.checkState(!isPlayerBanned(playerName), "Player %s already banned.", playerName);
-        Persistence.getInstance().save(new BannedPlayer(playerName.toLowerCase(), banReason));
+        if (isPlayerBanned(playerName))
+        {
+            return false;
+        }
 
+        Persistence.getInstance().save(new BannedPlayer(playerName.toLowerCase(), banReason));
+        return true;
     }
 
     /**
      * Unbans the player named playerName.
      *
      * @param playerName The name of the player to unban.
+     *
+     * @return Returns true if the unban operation was successful. False indicates that the player is not banned.
      */
-    public final void unban(final String playerName)
+    public final boolean unban(final String playerName)
     {
-        Preconditions.checkState(isPlayerBanned(playerName), "Player %s is not banned.", playerName);
+        if (!isPlayerBanned(playerName))
+        {
+            return false;
+        }
+
         Persistence.getInstance().delete(getBannedPlayer(playerName));
+        return true;
     }
 
     private BannedPlayer getBannedPlayer(final String playerName)
