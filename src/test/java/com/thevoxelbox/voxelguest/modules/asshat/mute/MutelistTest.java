@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sun.plugin.dom.exception.InvalidStateException;
+import java.lang.IllegalStateException;
 
 import java.io.File;
 
@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author Monofraps
  */
-public class MuteTest
+public class MutelistTest
 {
     private static final String TEST_BAN_PLAYER = "PeanutSmurf";
     private static final String TEST_BAN_REASON = "Coz you suck!";
@@ -36,17 +36,17 @@ public class MuteTest
         Persistence.getInstance().shutdown();
     }
 
-    @Test(expected = InvalidStateException.class)
-    public void testExceptionOnDoubleMute() throws Exception
+    @Test
+    public void testFalseOnDoubleMute() throws Exception
     {
         assertFalse(mutelist.mute(TEST_BAN_PLAYER, TEST_BAN_REASON));
     }
 
-    @Test(expected = InvalidStateException.class)
+    @Test
     public void testFalseOnDoubleUnmute() throws Exception
     {
-        assertTrue(mutelist.unmute(TEST_BAN_REASON));
-        assertFalse(mutelist.unmute(TEST_BAN_REASON));
+        assertTrue(mutelist.unmute(TEST_BAN_PLAYER));
+        assertFalse(mutelist.unmute(TEST_BAN_PLAYER));
     }
 
     @Test

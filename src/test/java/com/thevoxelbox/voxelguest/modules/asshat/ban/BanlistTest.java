@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelguest.modules.asshat.ban;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.File;
 
@@ -37,17 +37,17 @@ public class BanlistTest
         Persistence.getInstance().shutdown();
     }
 
-    @Test(expected = InvalidStateException.class)
+    @Test
     public void testExceptionOnDoubleBan() throws Exception
     {
         assertFalse(banlist.ban(TEST_BAN_PLAYER, TEST_BAN_REASON));
     }
 
-    @Test(expected = InvalidStateException.class)
+    @Test
     public void testFalseOnDoubleUnban() throws Exception
     {
-        assertTrue(banlist.unban(TEST_BAN_REASON));
-        assertFalse(banlist.unban(TEST_BAN_REASON));
+        assertTrue(banlist.unban(TEST_BAN_PLAYER));
+        assertFalse(banlist.unban(TEST_BAN_PLAYER));
     }
 
     @Test
