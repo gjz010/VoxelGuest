@@ -86,7 +86,7 @@ public class BanCommandExecutor implements CommandExecutor
 
         if (players.size() > 1)
         {
-            commandSender.sendMessage("Found multiple player matching the name (use the -force flag if you entered the exact player name)" + playerName);
+            commandSender.sendMessage("Found multiple players matching the name (use the -force flag if you entered the exact player name)" + playerName);
             String list = "";
             for (Player player : players)
             {
