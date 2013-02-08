@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
+ * Executes /ban commands.
+ *
  * @author Monofraps
  */
 public class BanCommandExecutor implements CommandExecutor
@@ -19,6 +21,8 @@ public class BanCommandExecutor implements CommandExecutor
     private final AsshatModuleConfiguration configuration;
 
     /**
+     * Creates a new ban command executor.
+     *
      * @param module The owning module.
      */
     public BanCommandExecutor(final AsshatModule module)

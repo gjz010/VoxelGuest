@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
+ * Executes /mute and /gag commands.
+ *
  * @author Monofraps
  */
 public class MuteCommandExecutor implements CommandExecutor
@@ -19,6 +21,8 @@ public class MuteCommandExecutor implements CommandExecutor
     private final AsshatModule module;
 
     /**
+     * Create a new mute/gag command executor.
+     *
      * @param module The owning module.
      */
     public MuteCommandExecutor(final AsshatModule module)

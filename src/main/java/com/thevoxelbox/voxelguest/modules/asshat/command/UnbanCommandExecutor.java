@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
+ * Executes /unban commands.
+ *
  * @author Monofraps
  */
 public class UnbanCommandExecutor implements CommandExecutor
@@ -16,6 +18,8 @@ public class UnbanCommandExecutor implements CommandExecutor
     private final AsshatModule module;
 
     /**
+     * Creates a new unban command executor.
+     *
      * @param module The owning module.
      */
     public UnbanCommandExecutor(final AsshatModule module)

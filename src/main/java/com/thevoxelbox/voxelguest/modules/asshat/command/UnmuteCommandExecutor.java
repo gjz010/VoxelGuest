@@ -8,14 +8,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
+ * Executes /unmute commands.
+ *
  * @author Monofraps
  */
 public class UnmuteCommandExecutor implements CommandExecutor
 {
     private final AsshatModuleConfiguration configuration;
-    private AsshatModule module;
+    private final AsshatModule module;
 
     /**
+     * Creates a new unmute command executor.
+     *
      * @param module The owning module.
      */
     public UnmuteCommandExecutor(final AsshatModule module)

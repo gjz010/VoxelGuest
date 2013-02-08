@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
+ * Executes /kick commands.
+ *
  * @author Monofraps
  */
 public class KickCommandExecutor implements CommandExecutor
@@ -19,6 +21,8 @@ public class KickCommandExecutor implements CommandExecutor
     private final AsshatModuleConfiguration configuration;
 
     /**
+     * Creates a new kick command executor.
+     *
      * @param asshatModule The parent module.
      */
     public KickCommandExecutor(final AsshatModule asshatModule)

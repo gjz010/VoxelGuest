@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
+ * Executes /banreason commands.
+ *
  * @author Monofraps
  */
 public class BanreasonCommandExecutor implements CommandExecutor
@@ -13,6 +15,8 @@ public class BanreasonCommandExecutor implements CommandExecutor
     private final AsshatModule module;
 
     /**
+     * Creates a new banreason command executor.
+     *
      * @param module The owning module.
      */
     public BanreasonCommandExecutor(final AsshatModule module)
