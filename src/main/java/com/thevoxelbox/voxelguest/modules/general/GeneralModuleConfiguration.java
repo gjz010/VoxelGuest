@@ -33,6 +33,9 @@ public class GeneralModuleConfiguration
     private String fakequitPrefix = ChatColor.DARK_GRAY
             + "[" + ChatColor.RED + "FQ" + ChatColor.DARK_GRAY + "]";
 
+    private int permGenShutdownThreshold = 80;
+    private int permGenWarningThreshold = 65;
+
     @ConfigurationGetter("admin-color")
     public final String getAdminColor()
     {
@@ -175,5 +178,29 @@ public class GeneralModuleConfiguration
     public final void setFakequitPrefix(final String fakequitPrefix)
     {
         this.fakequitPrefix = fakequitPrefix;
+    }
+
+    @ConfigurationGetter("permgen-shutdown-threshold")
+    public int getPermGenShutdownThreshold()
+    {
+        return permGenShutdownThreshold;
+    }
+
+    @ConfigurationSetter("permgen-shutdown-threshold")
+    public void setPermGenShutdownThreshold(final int permGenShutdownThreshold)
+    {
+        this.permGenShutdownThreshold = permGenShutdownThreshold;
+    }
+
+    @ConfigurationGetter("permgen-warning-threshold")
+    public int getPermGenWarningThreshold()
+    {
+        return permGenWarningThreshold;
+    }
+
+    @ConfigurationSetter("permgen-warning-threshold")
+    public void setPermGenWarningThreshold(final int permGenWarningThreshold)
+    {
+        this.permGenWarningThreshold = permGenWarningThreshold;
     }
 }
