@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelguest.modules.asshat.mute;
 import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +48,22 @@ public class Mutelist
 
         Persistence.getInstance().delete(getMutedPlayer(playerName));
         return true;
+    }
+
+    /**
+     * Generates a list of names containing all people currently muted
+     *
+     * @return List of names of people muted
+     */
+    public List<String> getMutedNames()
+    {
+        final List<MutedPlayer> mutedPlayers = Persistence.getInstance().loadAll(MutedPlayer.class);
+        final List<String> mutedNames = new ArrayList<>();
+        for (MutedPlayer mutePlayer : mutedPlayers)
+        {
+            mutedNames.add(mutePlayer.getPlayerName());
+        }
+        return mutedNames;
     }
 
     private MutedPlayer getMutedPlayer(final String playerName)

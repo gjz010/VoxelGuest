@@ -1,18 +1,22 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
 /**
  * Executes /unmute commands.
  *
  * @author Monofraps
  */
-public class UnmuteCommandExecutor implements CommandExecutor
+public class UnmuteCommandExecutor implements TabExecutor
 {
     private final AsshatModuleConfiguration configuration;
     private final AsshatModule module;
@@ -80,5 +84,31 @@ public class UnmuteCommandExecutor implements CommandExecutor
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    {
+        if (sender.hasPermission("voxelguest.asshat.unmute"))
+        {
+            final List<String> mutedNamesList = this.module.getMutelist().getMutedNames();
+            if (args.length == 0)
+            {
+                return mutedNamesList;
+            }
+            else
+            {
+                final List<String> tmpMatchList = new ArrayList<>();
+                final String completingParam = args[args.length - 1];
+                for (String mutedName : mutedNamesList)
+                {
+                    if (mutedName.toLowerCase().startsWith(completingParam.toLowerCase())) {
+                        tmpMatchList.add(mutedName);
+                    }
+                }
+                return tmpMatchList;
+            }
+        }
+        return Collections.emptyList();
     }
 }

@@ -7,13 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,8 +24,9 @@ import java.util.List;
  * @author TheCryoknight
  * @author Deamon
  */
-public class SystemCommandExecutor implements CommandExecutor
+public class SystemCommandExecutor implements TabExecutor
 {
+    private static final String[] commandFlags = {"gc", "mem"};
     private static final int TPS_PER_SECOND_THRESHOLD = 20;
     private static final int BAR_SEGMENTS = 20;
     private static final int BYTES_PER_MB = 1048576;
@@ -209,5 +213,31 @@ public class SystemCommandExecutor implements CommandExecutor
                 return (bar + "§8] (§f" + Math.round(actualValue) + " " + numOutSuffix + "§8)");
             }
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    {
+        if (sender.hasPermission("voxelguest.gereral.sys"))
+        {
+            if (args.length == 0)
+            {
+                return Arrays.asList(SystemCommandExecutor.commandFlags);
+            }
+            else
+            {
+                final List<String> tmpList = new ArrayList<>();
+                final String completingParam = args[args.length - 1];
+                for (String flag : SystemCommandExecutor.commandFlags)
+                {
+                    if (flag.toLowerCase().startsWith(completingParam.toLowerCase()))
+                    {
+                        tmpList.add(flag);
+                    }
+                }
+                return tmpList;
+            }
+        }
+        return Collections.emptyList();
     }
 }
