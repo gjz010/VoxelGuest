@@ -16,7 +16,11 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.HashSet;
-
+/**
+ *
+ * @author TheCryoknight
+ * @author Deamon5550
+ */
 public class GeneralModule extends GuestModule
 {
 

@@ -201,10 +201,10 @@ public class RegionCommand implements CommandExecutor
 
     private void printRegionInfo(CommandSender cs, Region region)
     {
-        cs.sendMessage(ChatColor.GRAY + "| Region info for: " + ChatColor.BLACK + region.getRegionName() + ChatColor.GRAY + " |");
-        cs.sendMessage(ChatColor.GRAY + "World: " + ChatColor.BLACK + region.getPointOne().getWorld().getName());
-        cs.sendMessage(ChatColor.GRAY + "Point one: " + ChatColor.BLACK + region.getPointOne().getX() + ", " + region.getPointOne().getZ());
-        cs.sendMessage(ChatColor.GRAY + "Point two: " + ChatColor.BLACK + region.getPointTwo().getX() + ", " + region.getPointTwo().getZ());
+        cs.sendMessage(ChatColor.GRAY + "Region info for: " + ChatColor.GREEN + region.getRegionName() + ChatColor.GRAY + ":");
+        cs.sendMessage(ChatColor.GRAY + "World: " + ChatColor.GREEN + region.getPointOne().getWorld().getName());
+        cs.sendMessage(ChatColor.GRAY + "Point one: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + region.getPointOne().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + region.getPointOne().getZ() + ChatColor.DARK_GRAY + ")");
+        cs.sendMessage(ChatColor.GRAY + "Point two: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + region.getPointTwo().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + region.getPointTwo().getZ() + ChatColor.DARK_GRAY + ")");
     }
 
 }

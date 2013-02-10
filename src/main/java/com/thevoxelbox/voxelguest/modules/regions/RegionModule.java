@@ -28,11 +28,11 @@ public class RegionModule extends GuestModule
 
     public RegionModule()
     {
-        setName("Region Module");
+        this.setName("Region Module");
 
-        blockEventListener = new BlockEventListener(this);
-        playerEventListener = new PlayerEventListener(this);
-        regionCommand = new RegionCommand(this);
+        this.blockEventListener = new BlockEventListener(this);
+        this.playerEventListener = new PlayerEventListener(this);
+        this.regionCommand = new RegionCommand(this);
     }
 
     @Override
