@@ -57,7 +57,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     }
 
     /**
-     * Enables a give module.
+     * Enables a given module.
      *
      * @param module The instance of the module to enable.
      */
@@ -79,7 +79,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
         try
         {
             final Set<Listener> moduleListeners = module.getListeners();
-            checkNotNull(moduleListeners, "Module %s returned null when asked for a list of listeners.", module.toString());
+            checkNotNull(moduleListeners, String.format("Module %s returned null when asked for a list of listeners.", module.toString()));
 
             if (!moduleListeners.isEmpty())
             {
@@ -141,7 +141,7 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
     }
 
     /**
-     * Disables a give module.
+     * Disables a given module.
      *
      * @param module The instance of the module to disable.
      */

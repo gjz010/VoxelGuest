@@ -38,6 +38,7 @@ public class EntityPurgeCommandExecutor implements TabExecutor
                 sender.sendMessage(ChatColor.GRAY + "Purging entities from: " + ChatColor.GREEN + world.getName());
                 this.doEntityPurge(world);
             }
+            return true;
         }
         for (String worldName : args)
         {
