@@ -13,6 +13,7 @@ import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +27,8 @@ public class GreylistModule extends GuestModule
     private GreylistListener greylistListener;
     private GreylistCommandExecutor greylistCommandExecutor;
     private UngreylistCommandExecutor ungreylistCommandExecutor;
+    private SocketListener socketListener;
+    private BukkitTask socketListenerTask;
     private boolean explorationMode = false;
     private String notGreylistedKickMessage = "You are not greylisted.";
     private String authToken = "changeme";
@@ -44,13 +47,26 @@ public class GreylistModule extends GuestModule
     @Override
     public final void onEnable()
     {
-        Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), new SocketListener(11368, this));
+        socketListener = new SocketListener(11368, this);
+        socketListenerTask = Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), socketListener);
         super.onEnable();
+    }
+
+    @Override
+    public void onDisable()
+    {
+        super.onDisable();
+
+        socketListener.setRun(false);
+        socketListenerTask.cancel();
+        socketListener = null;
+        socketListenerTask = null;
     }
 
     @Override
     public final Object getConfiguration()
     {
+
         return this;
     }
 

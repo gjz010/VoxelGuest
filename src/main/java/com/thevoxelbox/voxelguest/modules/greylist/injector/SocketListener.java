@@ -9,11 +9,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
+ * Do not do any further development on this injection system. It will be replaced with a more secure one.
+ *
  * @author Monofraps
+ * @deprecated
  */
 public class SocketListener implements Runnable
 {
     private final GreylistModule module;
+    private boolean run = true;
     private ServerSocket server;
 
     public SocketListener(int port, final GreylistModule module)
@@ -30,13 +34,13 @@ public class SocketListener implements Runnable
     }
 
     @Override
-    public void run()
+    public final void run()
     {
-        while (true)
+        while (run)
         {
             try
             {
-                Socket client = server.accept();
+                Socket client = server.accept();   // the blocking nature of this might become a problem
                 ClientHandler clientHandler = new ClientHandler(client, module);
                 Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), clientHandler);
             } catch (IOException e)
@@ -45,5 +49,18 @@ public class SocketListener implements Runnable
                 e.printStackTrace();
             }
         }
+
+        try
+        {
+            server.close();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void setRun(final boolean run)
+    {
+        this.run = run;
     }
 }
