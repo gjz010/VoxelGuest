@@ -1,13 +1,16 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
+import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.greylist.injector.SocketListener;
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 
@@ -25,6 +28,7 @@ public class GreylistModule extends GuestModule
     private UngreylistCommandExecutor ungreylistCommandExecutor;
     private boolean explorationMode = false;
     private String notGreylistedKickMessage = "You are not greylisted.";
+    private String authToken = "changeme";
 
     /**
      *
@@ -40,7 +44,7 @@ public class GreylistModule extends GuestModule
     @Override
     public final void onEnable()
     {
-
+        Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), new SocketListener(11368, this));
         super.onEnable();
     }
 
@@ -89,6 +93,18 @@ public class GreylistModule extends GuestModule
     public final void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
     {
         this.notGreylistedKickMessage = notGreylistedKickMessage;
+    }
+
+    @ConfigurationGetter("injection-auth-token")
+    public String getAuthToken()
+    {
+        return authToken;
+    }
+
+    @ConfigurationSetter("injection-auth-token")
+    public void setAuthToken(final String authToken)
+    {
+        this.authToken = authToken;
     }
 
     public final boolean isOnPersistentGreylist(final String name)
