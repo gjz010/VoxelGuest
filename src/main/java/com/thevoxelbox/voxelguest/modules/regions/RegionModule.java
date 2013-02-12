@@ -4,27 +4,21 @@ import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.regions.command.RegionCommand;
 import com.thevoxelbox.voxelguest.modules.regions.listener.BlockEventListener;
 import com.thevoxelbox.voxelguest.modules.regions.listener.PlayerEventListener;
-import com.thevoxelbox.voxelguest.persistence.Persistence;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * @author Butters
  */
 public class RegionModule extends GuestModule
 {
-    public static final String REGION_MODIFY_PERMISSION_PREFIX = "voxelguest.regions.modify.";
-    private List<Region> regions = new ArrayList<>();
-    private BlockEventListener blockEventListener;
-    private PlayerEventListener playerEventListener;
-    private RegionCommand regionCommand;
+    private final BlockEventListener blockEventListener;
+    private final PlayerEventListener playerEventListener;
+    private final RegionCommand regionCommand;
+    private final RegionManager regionManager;
 
     public RegionModule()
     {
@@ -33,24 +27,18 @@ public class RegionModule extends GuestModule
         this.blockEventListener = new BlockEventListener(this);
         this.playerEventListener = new PlayerEventListener(this);
         this.regionCommand = new RegionCommand(this);
+        this.regionManager = new RegionManager();
     }
 
     @Override
     public final void onEnable()
     {
-        final List<Region> regionObjects = Persistence.getInstance().loadAll(Region.class);
-        for (Region region : regionObjects)
-        {
-            regions.add(region);
-        }
-
         super.onEnable();
     }
 
     @Override
     public final void onDisable()
     {
-        regions.clear();
         super.onDisable();
     }
 
@@ -84,28 +72,11 @@ public class RegionModule extends GuestModule
         return commandMappings;
     }
 
-    public boolean addRegion(Region region)
-    {
-        if (region != null)
-        {
-            regions.add(region);
-            Persistence.getInstance().save(region);
-            Bukkit.getLogger().info("Created region: " + region.getRegionName());
-            return true;
-        }
-        return false;
-    }
-
-    public final Region getRegionAtLocation(final Location regionLocation)
-    {
-        for (Region region : regions)
-        {
-            if (region.isLocationInRegion(regionLocation))
-            {
-                return region;
-            }
-        }
-        return null;
+    /**
+     * @return The region manager
+     */
+    public RegionManager getRegionManager() {
+        return regionManager;
     }
 
 }

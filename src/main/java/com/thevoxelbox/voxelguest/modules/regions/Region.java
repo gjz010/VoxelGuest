@@ -2,15 +2,12 @@ package com.thevoxelbox.voxelguest.modules.regions;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -76,9 +73,9 @@ public class Region
     @DatabaseField
     private boolean enchantingAllowed = false;
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private ArrayList<Integer> bannedBlocks = new ArrayList<>();
+    private List<Integer> bannedBlocks = new ArrayList<>();
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private ArrayList<Integer> bannedItems = new ArrayList<>();
+    private List<Integer> bannedItems = new ArrayList<>();
     //Player
     @DatabaseField
     private boolean pvpDamageAllowed = false;
@@ -117,6 +114,7 @@ public class Region
 
     public Region()
     {
+        
     }
 
     public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName)
@@ -143,7 +141,7 @@ public class Region
         this.regionName = regionName;
     }
 
-    public final boolean isLocationInRegion(final Location locationToCheck)
+    public final boolean inBounds(final Location locationToCheck)
     {
         if (!locationToCheck.getWorld().equals(getPointOne().getWorld()))
         {
@@ -436,22 +434,22 @@ public class Region
         this.enchantingAllowed = enchantingAllowed;
     }
 
-    public ArrayList<Integer> getBannedBlocks()
+    public List<Integer> getBannedBlocks()
     {
         return bannedBlocks;
     }
 
-    public void setBannedBlocks(final ArrayList<Integer> bannedBlocks)
+    public void setBannedBlocks(final List<Integer> bannedBlocks)
     {
         this.bannedBlocks = bannedBlocks;
     }
 
-    public ArrayList<Integer> getBannedItems()
+    public List<Integer> getBannedItems()
     {
         return bannedItems;
     }
 
-    public void setBannedItems(final ArrayList<Integer> bannedItems)
+    public void setBannedItems(final List<Integer> bannedItems)
     {
         this.bannedItems = bannedItems;
     }
