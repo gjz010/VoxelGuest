@@ -9,7 +9,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.thevoxelbox.voxelguest.persistence.Persistence;
-
+/**
+ * Handles the access, use, persistence, and management of all of the currently active regions.
+ *
+ * @author TheCryoknight
+ */
 public class RegionManager
 {
     private static final String REGION_MODIFY_PERMISSION_PREFIX = "voxelguest.regions.modify.";

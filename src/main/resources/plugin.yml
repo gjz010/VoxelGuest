@@ -15,6 +15,7 @@ commands:
     permission: voxelguest.greylist.ungreylist
     description: Removes a player name to the graylist
   vgregion:
+    aliases: [vgregion, vregion]
     permission: voxelguest.regions.modifyregion
   ban:
     aliases: [vban]

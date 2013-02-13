@@ -2,7 +2,12 @@ package com.thevoxelbox.voxelguest.modules.regions.command;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Helps dealing with the multitudes of various flags used to define region properties.
+ * Also, Helps with the command help.
+ *
+ * @author TheCryoknight
+ */
 public enum CommandFlags
 {
     FIRE_SPREAD_ALLOWED ("-fs", "Fire spread"),
@@ -20,6 +25,7 @@ public enum CommandFlags
     SNOW_FORMATION_ALLOWED ("-sf", "Formation of snow"),
     ICE_FORMATION_ALLOWED ("-if", "Formtion of ice"),
     ENCHANTING_ALLOWED ("-en", "Enchantment"),
+    PHYSICS_ALLOWED("-phy", "block Physics"),
     BANNED_BLOCKS ("-bb", "Banned blocks"),
     BANNED_ITEMS ("-bi", "Banned items"),
 

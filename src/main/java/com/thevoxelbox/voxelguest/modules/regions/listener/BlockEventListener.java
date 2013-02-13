@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.regions.listener;
 
+import java.util.List;
+
 import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.regions.Region;
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
@@ -17,6 +19,7 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -77,6 +80,7 @@ public class BlockEventListener implements Listener
         if (!this.regionModule.getRegionManager().canPlayerModify(event.getPlayer(), event.getBlock().getLocation()))
         {
             event.setCancelled(true);
+            event.getPlayer().sendMessage(CANT_BUILD_HERE);
         }
     }
 
@@ -90,6 +94,7 @@ public class BlockEventListener implements Listener
         if (!this.regionModule.getRegionManager().canPlayerModify(event.getPlayer(), event.getClickedBlock().getLocation()))
         {
             event.setCancelled(true);
+            event.getPlayer().sendMessage(CANT_BUILD_HERE);
         }
     }
 
@@ -99,7 +104,7 @@ public class BlockEventListener implements Listener
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isLeafDecayAllowed())
@@ -118,7 +123,7 @@ public class BlockEventListener implements Listener
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isBlockGrowthAllowed())
@@ -137,7 +142,7 @@ public class BlockEventListener implements Listener
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isBlockSpreadAllowed())
@@ -156,7 +161,7 @@ public class BlockEventListener implements Listener
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isBlockSpreadAllowed())
@@ -175,7 +180,7 @@ public class BlockEventListener implements Listener
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isBlockSpreadAllowed())
@@ -194,7 +199,7 @@ public class BlockEventListener implements Listener
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isFireSpreadAllowed())
@@ -212,7 +217,7 @@ public class BlockEventListener implements Listener
     {
         final Location eventLoc = event.getBlock().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isBlockSpreadAllowed())
@@ -224,12 +229,36 @@ public class BlockEventListener implements Listener
         event.setCancelled(true);
         return;
     }
+    
+    @EventHandler
+    public final void onBlockPhysics(final BlockPhysicsEvent event)
+    {
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isPhysicsAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public final void onEnchant(final EnchantItemEvent event)
     {
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(event.getEnchantBlock().getLocation());
-        
+
         if (region != null)
         {
             if (!region.isEnchantingAllowed())
@@ -247,7 +276,7 @@ public class BlockEventListener implements Listener
     {
         final Location eventLoc = event.getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isCreeperExplosionAllowed())
@@ -265,7 +294,7 @@ public class BlockEventListener implements Listener
     {
         final Location eventLoc = event.getEntity().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-        
+
         if (region != null)
         {
             if (!region.isBuildingRestricted())

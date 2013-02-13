@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 
 /**
  * @author Butters
+ * @author TheCryoknight
  */
 public class RegionCommand implements TabExecutor
 {
@@ -34,12 +35,6 @@ public class RegionCommand implements TabExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command cmnd, final String string, final String[] args)
     {
-        if (!(sender.hasPermission("voxelguest.regions.modifyregion")))
-        {
-            sender.sendMessage(ChatColor.RED + "Invalid permissions");
-            return false;
-        }
-
         if (args.length == 0)
         {
             sender.sendMessage("/vgregion <option>");
@@ -103,26 +98,44 @@ public class RegionCommand implements TabExecutor
         {
             sender.sendMessage("Command must be sent from a player");
         }
-        if (args.length >= 6)
+        if (args.length >= 3)
         {
             final String regionName = args[1];
-            int x1 = 0, z1 = 0, x2 = 0, z2 = 0;
-            try
-            {
-                x1 = Integer.parseInt(args[2]);
-                z1 = Integer.parseInt(args[3]);
-                x2 = Integer.parseInt(args[4]);
-                z2 = Integer.parseInt(args[5]);
-            }
-            catch(final NumberFormatException e)
-            {
-                sender.sendMessage("Error in  parsing arguments: invalid syntax");
-                sender.sendMessage(e.getMessage());
-            }
+            boolean isGlobal = false;
+            Location pointOne = null;
+            Location pointTwo = null;
             final World regionWorld = ((Player) sender).getWorld();
+            if (args[2].equalsIgnoreCase("global"))
+            {
+                isGlobal = true;
+            }
+
+            if (!isGlobal)
+            {
+                if (args.length >= 6)
+                {
+                    int x1 = 0, z1 = 0, x2 = 0, z2 = 0;
+                    try
+                    {
+                        x1 = Integer.parseInt(args[2]);
+                        z1 = Integer.parseInt(args[3]);
+                        x2 = Integer.parseInt(args[4]);
+                        z2 = Integer.parseInt(args[5]);
+                    }
+                    catch(final NumberFormatException e)
+                    {
+                        sender.sendMessage("Error in  parsing arguments: invalid syntax");
+                        sender.sendMessage(e.getMessage());
+                    }
+                    pointOne = new Location(regionWorld, x1, 0, z1);
+                    pointTwo = new Location(regionWorld, x2, regionWorld.getMaxHeight(), z2);
+                }
+                else
+                {
+                    sender.sendMessage("Improper number of arguments for a nonglobal region");
+                }
+            }
             final Map<CommandFlags, String> flags = CommandFlags.parseFlags(args); //Flag and state in a map
-            final Location pointOne = new Location(regionWorld, x1, 0, z1);
-            final Location pointTwo = new Location(regionWorld, x2, regionWorld.getMaxHeight(), z2);
             final Region newRegion = new Region(regionWorld.getName(), pointOne, pointTwo, regionName);
             RegionCommand.processFlags(flags, newRegion);
             this.regionModule.getRegionManager().addRegion(newRegion);
@@ -228,6 +241,9 @@ public class RegionCommand implements TabExecutor
             case LEAF_DECAY_ALLOWED:
                 region.setLeafDecayAllowed(RegionCommand.parseCommandBool(flag.getValue()));
                 break;
+            case PHYSICS_ALLOWED:
+                region.setPhysicsAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                break;
             case LIGHTNING_DAMMAGE_ALLOWED:
                 region.setLightningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
                 break;
@@ -325,7 +341,7 @@ public class RegionCommand implements TabExecutor
         }
         if (args.length == 2)
         {
-            if (args[0].equalsIgnoreCase("remove"))
+            if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit"))
             {
                 for(String regionName : this.regionModule.getRegionManager().getRegionNames())
                 {

@@ -71,6 +71,8 @@ public class Region
     @DatabaseField
     private boolean iceFormationAllowed = false;
     @DatabaseField
+    private boolean physicsAllowed = false;
+    @DatabaseField
     private boolean enchantingAllowed = false;
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private List<Integer> bannedBlocks = new ArrayList<>();
@@ -432,6 +434,14 @@ public class Region
     public void setEnchantingAllowed(final boolean enchantingAllowed)
     {
         this.enchantingAllowed = enchantingAllowed;
+    }
+
+    public boolean isPhysicsAllowed() {
+        return physicsAllowed;
+    }
+
+    public void setPhysicsAllowed(boolean physicsAllowed) {
+        this.physicsAllowed = physicsAllowed;
     }
 
     public List<Integer> getBannedBlocks()
