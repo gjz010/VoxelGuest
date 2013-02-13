@@ -52,10 +52,10 @@ public enum CommandFlags
     }
 
     /**
-     * 
+     * Parses the various region flags from region commands to map.
      *
-     * @param args
-     * @return
+     * @param args arguments to parse
+     * @return A Map containing the flags chosen as the key and unparsed state of the flag as the value
      */
     public static Map<CommandFlags, String> parseFlags(String[] args)
     {
@@ -86,10 +86,8 @@ public enum CommandFlags
         return cmdFlag;
     }
 
-    /**
-     * @return the name
-     */
-    public String getName()
+    @Override
+    public String toString()
     {
         return name;
     }

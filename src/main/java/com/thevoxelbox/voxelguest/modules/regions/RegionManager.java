@@ -21,16 +21,28 @@ public class RegionManager
         this.initRegions();
     }
 
-    public boolean addRegion(Region newRegion)
+    /**
+     * Adds a new region to the currently active list. Also, saves region to persistence.
+     *
+     * @param newRegion Region adding
+     * @return True if successfully added to the active list.
+     */
+    public boolean addRegion(final Region newRegion)
     {
         Persistence.getInstance().save(newRegion);
         return this.activeRegions.add(newRegion);
     }
 
-    public void removeRegion(Region oldRegion)
+    /**
+     * removes a old region from the currently active list. Also, removes region from persistence.
+     *
+     * @param oldRegion Region removing
+     * @return True if successfully removed from the active list.
+     */
+    public boolean removeRegion(final Region oldRegion)
     {
         Persistence.getInstance().delete(oldRegion);
-        this.activeRegions.remove(oldRegion);
+        return this.activeRegions.remove(oldRegion);
     }
 
     /**
@@ -51,9 +63,17 @@ public class RegionManager
         return null;
     }
 
+    /**
+     * Returns the first region that the location is residing in.
+     * This should not be used because it does not support nested regions.
+     *
+     * @deprecated Use getRegionsAtLoc(final Location loc)
+     * @param loc Location to find zone
+     * @return The region that location is at
+     */
+    @Deprecated
     public Region getRegionAtLoc(final Location loc)
     {
-        //TODO: create smarter algorithms to deal with nested and partially nested zones
         for (Region region : this.activeRegions)
         {
             if (region.inBounds(loc))
@@ -64,6 +84,12 @@ public class RegionManager
         return null;
     }
 
+    /**
+     * Returns a list of all of the regions at the specified location.
+     *
+     * @param loc Location to find regions from
+     * @return A list of all of the regions at the specified location
+     */
     public List<Region> getRegionsAtLoc(final Location loc)
     {
         final List<Region> regionsInBounds = new ArrayList<>();
@@ -76,16 +102,18 @@ public class RegionManager
         }
         return regionsInBounds;
     }
-    
-    public void initRegions()
-    {
-        final List<Region> regionObjects = Persistence.getInstance().loadAll(Region.class);
-        for (Region region : regionObjects)
-        {
-            this.activeRegions.add(region);
-        }
-    }
-    public boolean canPlayerModify(Player player, Location loc)
+
+    /**
+     * Checks if a player can modify the region.
+     * It is important to note that this is safe for nested and partially nested zones.
+     * This is the least selective way of determining access if there are nested zones.
+     * Such as a player only needs to be able to build in one of the regions that that are in to return true.
+     *
+     * @param player Player to check for building access
+     * @param loc Location of the edit event
+     * @return true if the player can edit the zone they are in
+     */
+    public boolean canPlayerModify(final Player player, final Location loc)
     {
         final List<Region> regionsInbounds = this.getRegionsAtLoc(loc);
         boolean canModify = false;
@@ -97,5 +125,29 @@ public class RegionManager
             }
         }
         return canModify;
+    }
+
+    /**
+     * Creates a list of all the names of the currently active regions.
+     * 
+     * @return list of region names
+     */
+    public List<String> getRegionNames()
+    {
+        List<String> nameList = new ArrayList<>();
+        for (Region region : this.activeRegions)
+        {
+            nameList.add(region.getRegionName());
+        }
+        return nameList;
+    }
+
+    public void initRegions()
+    {
+        final List<Region> regionObjects = Persistence.getInstance().loadAll(Region.class);
+        for (Region region : regionObjects)
+        {
+            this.activeRegions.add(region);
+        }
     }
 }
