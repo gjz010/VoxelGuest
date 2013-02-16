@@ -11,6 +11,11 @@ public class TPSTicker implements Runnable
     private static long lastTimestamp = System.currentTimeMillis() - (pollInterval * 50);
     private static long lastDifference = pollInterval;
 
+    /**
+     * Calculates the number of ticks in a second
+     *
+     * @return
+     */
     public static double calculateTPS()
     {
         if (lastDifference == 0)

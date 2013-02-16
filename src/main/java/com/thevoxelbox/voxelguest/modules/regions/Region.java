@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -634,12 +635,12 @@ public class Region
         this.foodChangeAllowed = foodChangeAllowed;
     }
 
-    public boolean isGlobalRegion()
+    public boolean isGlobal()
     {
         return globalRegion;
     }
 
-    public void setGlobalRegion(final boolean globalRegion)
+    public void setGlobal(final boolean globalRegion)
     {
         this.globalRegion = globalRegion;
     }
@@ -652,5 +653,34 @@ public class Region
     public void setBuildingRestricted(final boolean buildingRestricted)
     {
         this.buildingRestricted = buildingRestricted;
+    }
+    
+    public String toColoredString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append(ChatColor.GRAY + "Region info for: " + ChatColor.GREEN + this.getRegionName() + ChatColor.GRAY + ":\n");
+        builder.append(ChatColor.GRAY + "World: " + ChatColor.GREEN + this.getPointOne().getWorld().getName() + "\n");
+        builder.append(ChatColor.GRAY + "Type: " + ChatColor.GREEN + this.isGlobal() + "\n");
+        if (!this.isGlobal())
+        {
+            builder.append(ChatColor.GRAY + "Point one: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + this.getPointOne().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + this.getPointOne().getZ() + ChatColor.DARK_GRAY + ")\n");
+            builder.append(ChatColor.GRAY + "Point two: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + this.getPointTwo().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + this.getPointTwo().getZ() + ChatColor.DARK_GRAY + ")\n");
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Region info for: " + this.getRegionName() + ":\n");
+        builder.append("World: " + this.getPointOne().getWorld().getName() + "\n");
+        builder.append("Type: " + this.isGlobal() + "\n");
+        if (!this.isGlobal())
+        {
+            builder.append("Point one: (" + this.getPointOne().getX() + ", " + this.getPointOne().getZ() + ")\n");
+            builder.append("Point two: (" + this.getPointTwo().getX() + ", " + this.getPointTwo().getZ() + ")\n");
+        }
+        return builder.toString();
     }
 }

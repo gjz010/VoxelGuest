@@ -12,8 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author MikeMatrix
@@ -117,10 +115,5 @@ public class VoxelGuest extends JavaPlugin
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         setPerms(rsp.getProvider());
         return VoxelGuest.getPerms() != null;
-    }
-
-    static
-    {
-        Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
     }
 }

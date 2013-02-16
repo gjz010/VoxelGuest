@@ -133,6 +133,7 @@ public class RegionCommand implements TabExecutor
                 else
                 {
                     sender.sendMessage("Improper number of arguments for a nonglobal region");
+                    return;
                 }
             }
             final Map<CommandFlags, String> flags = CommandFlags.parseFlags(args); //Flag and state in a map

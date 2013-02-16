@@ -24,6 +24,10 @@ public class GreylistModule extends GuestModule
     private GreylistCommandExecutor greylistCommandExecutor;
     private UngreylistCommandExecutor ungreylistCommandExecutor;
     private boolean explorationMode = false;
+    private boolean streamGraylisting = false;
+    private StreamThread streamTask;
+    private String streamPasswordHash = "changeme";
+    private int streamPort = 8080;
     private String notGreylistedKickMessage = "You are not greylisted.";
 
     /**
@@ -40,8 +44,20 @@ public class GreylistModule extends GuestModule
     @Override
     public final void onEnable()
     {
-
-        super.onEnable();
+        if (this.isStreamGraylisting())
+        {
+            this.streamTask = new StreamThread(this);
+            this.streamTask.start();
+            super.onEnable();
+        }
+    }
+    @Override
+    public final void onDisable()
+    {
+        if (streamTask != null) {
+            streamTask.killProcesses();
+        }
+        super.onDisable();
     }
 
     @Override
@@ -149,5 +165,35 @@ public class GreylistModule extends GuestModule
             }
         }
 
+    }
+
+    @ConfigurationGetter("stream-port")
+    public int getStreamPort() {
+        return streamPort;
+    }
+
+    @ConfigurationSetter("stream-port")
+    public void setStreamPort(int streamPort) {
+        this.streamPort = streamPort;
+    }
+
+    @ConfigurationGetter("stream-password")
+    public String getStreamPasswordHash() {
+        return streamPasswordHash;
+    }
+
+    @ConfigurationSetter("stream-password")
+    public void setStreamPasswordHash(String streamPasswordHash) {
+        this.streamPasswordHash = streamPasswordHash;
+    }
+
+    @ConfigurationGetter("stream-enable")
+    public boolean isStreamGraylisting() {
+        return streamGraylisting;
+    }
+
+    @ConfigurationSetter("stream-enable")
+    public void setStreamGraylisting(boolean streamGraylisting) {
+        this.streamGraylisting = streamGraylisting;
     }
 }
