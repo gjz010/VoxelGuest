@@ -140,20 +140,12 @@ public class RegionCommand implements TabExecutor
             final Region newRegion = new Region(regionWorld.getName(), pointOne, pointTwo, regionName);
             RegionCommand.processFlags(flags, newRegion);
             this.regionModule.getRegionManager().addRegion(newRegion);
-            this.printRegionInfo(sender, newRegion);
+            sender.sendMessage(newRegion.toColoredString());
         }
         else
         {
             sender.sendMessage("No arguments defined, invalid syntax");
         }
-    }
-
-    private void printRegionInfo(final CommandSender cs, final Region region)
-    {
-        cs.sendMessage(ChatColor.GRAY + "Region info for: " + ChatColor.GREEN + region.getRegionName() + ChatColor.GRAY + ":");
-        cs.sendMessage(ChatColor.GRAY + "World: " + ChatColor.GREEN + region.getPointOne().getWorld().getName());
-        cs.sendMessage(ChatColor.GRAY + "Point one: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + region.getPointOne().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + region.getPointOne().getZ() + ChatColor.DARK_GRAY + ")");
-        cs.sendMessage(ChatColor.GRAY + "Point two: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + region.getPointTwo().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + region.getPointTwo().getZ() + ChatColor.DARK_GRAY + ")");
     }
 
     /**
@@ -311,11 +303,11 @@ public class RegionCommand implements TabExecutor
      */
     private static boolean parseCommandBool(final String str)
     {
-        if (str.startsWith("t"))
+        if (str.toLowerCase().startsWith("t"))
         {
             return true;
         }
-        if (str.startsWith("y"))
+        if (str.toLowerCase().startsWith("y"))
         {
             return true;
         }
