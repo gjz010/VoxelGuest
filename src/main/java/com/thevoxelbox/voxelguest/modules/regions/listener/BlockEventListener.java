@@ -63,13 +63,29 @@ public class BlockEventListener implements Listener
     public final void onBlockDrop(final BlockBreakEvent event)
     {
         Preconditions.checkNotNull(event);
-        //TODO: Define as region based
-        Block selectedBlock = event.getBlock();
-        if (selectedBlock != null)
+        Block eventLoc = event.getBlock();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc.getLocation());
+        if (regions.isEmpty())
         {
-            event.getBlock().setType(Material.AIR);
+            event.setCancelled(true);
         }
-        event.setCancelled(true);
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isBlockDropAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+        if (eventLoc != null)
+        {
+            eventLoc.setType(Material.AIR);
+        }
     }
 
     @EventHandler
@@ -103,18 +119,24 @@ public class BlockEventListener implements Listener
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            if (!region.isLeafDecayAllowed())
-            {
-                event.setCancelled(true);
-            }
-            return;
+            event.setCancelled(true);
         }
-        event.setCancelled(true);
-        return;
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isBlockSpreadAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -122,18 +144,24 @@ public class BlockEventListener implements Listener
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isBlockGrowthAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
-        return;
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -141,18 +169,24 @@ public class BlockEventListener implements Listener
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
-        return;
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -160,18 +194,24 @@ public class BlockEventListener implements Listener
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
-        return;
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -179,18 +219,24 @@ public class BlockEventListener implements Listener
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
-        return;
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -198,36 +244,48 @@ public class BlockEventListener implements Listener
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isFireSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
-        return;
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
     public final void onBlockSpread(final BlockSpreadEvent event)
     {
         final Location eventLoc = event.getBlock().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
-        return;
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
     
     @EventHandler
@@ -311,7 +369,7 @@ public class BlockEventListener implements Listener
         default:
             break;
         }
-            
+
         final Location eventLoc = event.getBlock().getLocation();
         final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
         if (regions.isEmpty())
