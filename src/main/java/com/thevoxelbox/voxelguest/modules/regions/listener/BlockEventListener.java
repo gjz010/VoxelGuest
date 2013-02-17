@@ -284,6 +284,8 @@ public class BlockEventListener implements Listener
             return;
         case STONE_PLATE:
             return;
+        case WOOD_PLATE:
+            return;
         case STORAGE_MINECART:
             return;
         case STRING:
