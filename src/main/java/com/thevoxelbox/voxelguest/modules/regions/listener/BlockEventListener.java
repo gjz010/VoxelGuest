@@ -302,6 +302,10 @@ public class BlockEventListener implements Listener
             return;
         case WOOD_DOOR:
             return;
+        case LEVER:
+            return;
+        case STONE_BUTTON:
+            return;
         default:
             break;
         }
