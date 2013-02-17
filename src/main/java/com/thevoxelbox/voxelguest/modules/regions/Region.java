@@ -76,9 +76,9 @@ public class Region
     @DatabaseField
     private boolean enchantingAllowed = false;
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private List<Integer> bannedBlocks = new ArrayList<>();
+    private ArrayList<Integer> bannedBlocks = new ArrayList<>();
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private List<Integer> bannedItems = new ArrayList<>();
+    private ArrayList<Integer> bannedItems = new ArrayList<>();
     //Player
     @DatabaseField
     private boolean pvpDamageAllowed = false;
@@ -452,7 +452,9 @@ public class Region
 
     public void setBannedBlocks(final List<Integer> bannedBlocks)
     {
-        this.bannedBlocks = bannedBlocks;
+        ArrayList<Integer> newList = new ArrayList<Integer>();
+        newList.addAll(bannedBlocks);
+        this.bannedBlocks = newList;
     }
 
     public List<Integer> getBannedItems()
@@ -462,7 +464,9 @@ public class Region
 
     public void setBannedItems(final List<Integer> bannedItems)
     {
-        this.bannedItems = bannedItems;
+        ArrayList<Integer> newList = new ArrayList<Integer>();
+        newList.addAll(bannedItems);
+        this.bannedItems = newList;
     }
 
     public boolean isPvpDamageAllowed()
