@@ -233,6 +233,79 @@ public class BlockEventListener implements Listener
     @EventHandler
     public final void onBlockPhysics(final BlockPhysicsEvent event)
     {
+        final Material mat = event.getChangedType();
+        switch (mat)
+        {
+        case COMMAND:
+            return;
+        case DETECTOR_RAIL:
+            return;
+        case DIODE:
+            return;
+        case DIODE_BLOCK_OFF:
+            return;
+        case DIODE_BLOCK_ON:
+            return;
+        case DISPENSER:
+            return;
+        case GLOWING_REDSTONE_ORE:
+            return;
+        case IRON_DOOR:
+            return;
+        case IRON_DOOR_BLOCK:
+            return;
+        case MINECART:
+            return;
+        case NOTE_BLOCK:
+            return;
+        case PISTON_BASE:
+            return;
+        case PISTON_EXTENSION:
+            return;
+        case PISTON_MOVING_PIECE:
+            return;
+        case PISTON_STICKY_BASE:
+            return;
+        case POWERED_RAIL:
+            return;
+        case REDSTONE:
+            return;
+        case REDSTONE_LAMP_OFF:
+            return;
+        case REDSTONE_LAMP_ON:
+            return;
+        case REDSTONE_ORE:
+            return;
+        case REDSTONE_TORCH_OFF:
+            return;
+        case REDSTONE_TORCH_ON:
+            return;
+        case REDSTONE_WIRE:
+            return;
+        case STONE_PLATE:
+            return;
+        case STORAGE_MINECART:
+            return;
+        case STRING:
+            return;
+        case TNT:
+            return;
+        case TRAP_DOOR:
+            return;
+        case TRIPWIRE:
+            return;
+        case TRIPWIRE_HOOK:
+            return;
+        case WOODEN_DOOR:
+            return;
+        case WOOD_BUTTON:
+            return;
+        case WOOD_DOOR:
+            return;
+        default:
+            break;
+        }
+            
         final Location eventLoc = event.getBlock().getLocation();
         final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
         if (regions.isEmpty())
