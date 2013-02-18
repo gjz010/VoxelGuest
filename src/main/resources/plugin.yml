@@ -85,3 +85,7 @@ commands:
     aliases: [afk, vafk]
     permission: voxelguest.general.afk
     description: Tells the server the the player is away from their keyboard
+  watchtps:
+    aliases: [watchtps, vwatchtps]
+    permission: voxelguest.general.watchtps
+    description: Makes the exp bar a lag meter

@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelguest.modules.general.command.SystemCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VanishCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VpgCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VtpCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.general.command.WatchTPSCommadExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.WhoCommandExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -36,6 +37,7 @@ public class GeneralModule extends GuestModule
     private final FakequitCommandExecutor fakequitCommandExecutor;
     private final WhoCommandExecutor whoCommandExecutor;
     private final AfkCommandExecutor afkCommandExecutor;
+    private final WatchTPSCommadExecutor watchTPSCommadExecutor;
 
     private final SystemCommandExecutor systemCommandExecutor;
     private final VpgCommandExecutor vpgCommandExecutor;
@@ -48,6 +50,9 @@ public class GeneralModule extends GuestModule
     //TPS ticker
     private final TPSTicker ticker = new TPSTicker();
     private int tpsTickerTaskId = -1;
+
+    //Lag Meter thread and helper
+    private final LagMeterHelper Lagmeter = new LagMeterHelper();
 
     //Handlers
     private final AfkManager afkManager;
@@ -69,6 +74,7 @@ public class GeneralModule extends GuestModule
         this.fakequitCommandExecutor = new FakequitCommandExecutor(this);
         this.whoCommandExecutor = new WhoCommandExecutor(this);
         this.afkCommandExecutor = new AfkCommandExecutor(this);
+        this.watchTPSCommadExecutor = new WatchTPSCommadExecutor(this);
         this.systemCommandExecutor = new SystemCommandExecutor();
         this.vpgCommandExecutor = new VpgCommandExecutor();
         this.vtpCommandExecutor = new VtpCommandExecutor();
@@ -83,6 +89,8 @@ public class GeneralModule extends GuestModule
 
         tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.getPollInterval());
         permGenMonitorTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), permGenMonitor, 20, 20 * 5);
+        this.Lagmeter.setDaemon(true);
+        this.Lagmeter.start();
 
         super.onEnable();
     }
@@ -90,11 +98,20 @@ public class GeneralModule extends GuestModule
     @Override
     public final void onDisable()
     {
+        this.Lagmeter.setStopped(true);
         Bukkit.getScheduler().cancelTask(tpsTickerTaskId);
         Bukkit.getScheduler().cancelTask(permGenMonitorTaskId);
 
         tpsTickerTaskId = -1;
         permGenMonitorTaskId = -1;
+        if (Lagmeter.isAlive())
+        {
+            try {
+                Lagmeter.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         super.onDisable();
     }
@@ -121,6 +138,7 @@ public class GeneralModule extends GuestModule
         commandMappings.put("sys", this.systemCommandExecutor);
         commandMappings.put("vpg", this.vpgCommandExecutor);
         commandMappings.put("vtp", this.vtpCommandExecutor);
+        commandMappings.put("watchtps", this.watchTPSCommadExecutor);
 
         return commandMappings;
     }
@@ -150,5 +168,12 @@ public class GeneralModule extends GuestModule
         int onlinePlayers = Bukkit.getOnlinePlayers().length;
         onlinePlayers -= this.getVanishFakequitHandler().getFakequitSize();
         return msg.replace("$no", Integer.toString(onlinePlayers)).replace("$n", playerName);
+    }
+
+    /**
+     * @return the lagmeter
+     */
+    public LagMeterHelper getLagmeter() {
+        return Lagmeter;
     }
 }
