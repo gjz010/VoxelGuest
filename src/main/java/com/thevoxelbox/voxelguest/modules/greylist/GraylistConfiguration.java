@@ -9,8 +9,10 @@ public class GraylistConfiguration
     private int streamPort = 8080;
     private String notGreylistedKickMessage = "You are not greylisted.";
     private String whitelistGroupName = "Member";
+    private String graylistGroupName = "Guest";
     private boolean explorationMode = false;
     private boolean streamGraylisting = false;
+    private boolean setGroupOnGraylist = true;
 
     @ConfigurationGetter("exploration-mode")
     public final boolean isExplorationMode()
@@ -82,5 +84,25 @@ public class GraylistConfiguration
     public void setWhitelistGroupName(final String whitelistGroupName)
     {
         this.whitelistGroupName = whitelistGroupName;
+    }
+
+    @ConfigurationGetter("set-group-on-graylist")
+    public boolean isSetGroupOnGraylist() {
+        return setGroupOnGraylist;
+    }
+
+    @ConfigurationSetter("set-group-on-graylist")
+    public void setSetGroupOnGraylist(boolean setGroupOnGraylist) {
+        this.setGroupOnGraylist = setGroupOnGraylist;
+    }
+
+    @ConfigurationGetter("gl-group-name")
+    public String getGraylistGroupName() {
+        return graylistGroupName;
+    }
+
+    @ConfigurationSetter("gl-group-name")
+    public void setGraylistGroupName(String graylistGroupName) {
+        this.graylistGroupName = graylistGroupName;
     }
 }

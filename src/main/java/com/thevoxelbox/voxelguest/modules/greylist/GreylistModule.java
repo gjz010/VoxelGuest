@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
+import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
@@ -7,6 +8,8 @@ import com.thevoxelbox.voxelguest.modules.greylist.command.WhitelistCommandExecu
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 
@@ -124,7 +127,13 @@ public class GreylistModule extends GuestModule
         }
         Persistence.getInstance().save(new Greylistee(name.toLowerCase()));
 
-
+        if (this.config.isSetGroupOnGraylist())
+        {
+            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), name, this.config.getGraylistGroupName()))
+            {
+                VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new graylisted player to group");
+            }
+        }
     }
 
     public void ungreylist(final String name)
