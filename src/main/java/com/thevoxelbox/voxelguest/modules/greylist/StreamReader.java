@@ -99,7 +99,7 @@ class StreamReader extends Thread {
     {
         String[] args = input.split("\\:");
 
-        if (args[0].equals(this.module.getStreamPasswordHash())) {
+        if (args[0].equals(this.module.getConfig().getStreamPasswordHash())) {
             String user = args[1];
             boolean accepted = Boolean.parseBoolean(args[2]);
 

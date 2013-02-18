@@ -13,7 +13,7 @@ class StreamThread extends Thread {
     {
         this.module = module;
         try {
-            this.serverSocket = new ServerSocket(module.getStreamPort());
+            this.serverSocket = new ServerSocket(module.getConfig().getStreamPort());
         } catch (IOException ex) {
             this.serverSocket = null;
             //VoxelGuest.log(name, "Could not bind to port " + streamPort + ". Perhaps it is already in use?", 2);

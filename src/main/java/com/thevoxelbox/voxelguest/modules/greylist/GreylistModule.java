@@ -1,10 +1,9 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
-import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
-import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.greylist.command.WhitelistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
@@ -23,39 +22,38 @@ public class GreylistModule extends GuestModule
     private GreylistListener greylistListener;
     private GreylistCommandExecutor greylistCommandExecutor;
     private UngreylistCommandExecutor ungreylistCommandExecutor;
-    private boolean explorationMode = false;
-    private boolean streamGraylisting = false;
+    private WhitelistCommandExecutor whitelistCommandExecutor;
+
+    private GraylistConfiguration config;
     private StreamThread streamTask;
-    private String streamPasswordHash = "changeme";
-    private int streamPort = 8080;
-    private String notGreylistedKickMessage = "You are not greylisted.";
 
     /**
      *
      */
     public GreylistModule()
     {
-        setName("Greylist Module");
+        this.setName("Greylist Module");
         greylistListener = new GreylistListener(this);
         greylistCommandExecutor = new GreylistCommandExecutor(this);
         ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
+        whitelistCommandExecutor = new WhitelistCommandExecutor(this);
     }
 
     @Override
     public final void onEnable()
     {
-        if (this.isStreamGraylisting())
+        if (config.isStreamGraylisting())
         {
             this.streamTask = new StreamThread(this);
             this.streamTask.start();
-            super.onEnable();
         }
+        super.onEnable();
     }
     @Override
     public final void onDisable()
     {
-        if (streamTask != null) {
-            streamTask.killProcesses();
+        if (this.streamTask != null) {
+            this.streamTask.killProcesses();
         }
         super.onDisable();
     }
@@ -63,7 +61,7 @@ public class GreylistModule extends GuestModule
     @Override
     public final Object getConfiguration()
     {
-        return this;
+        return this.config;
     }
 
     @Override
@@ -80,31 +78,9 @@ public class GreylistModule extends GuestModule
         HashMap<String, CommandExecutor> commandMapping = new HashMap<>();
         commandMapping.put("greylist", greylistCommandExecutor);
         commandMapping.put("ungreylist", ungreylistCommandExecutor);
+        commandMapping.put("whitelist", whitelistCommandExecutor);
+
         return commandMapping;
-    }
-
-    @ConfigurationGetter("exploration-mode")
-    public final boolean isExplorationMode()
-    {
-        return explorationMode;
-    }
-
-    @ConfigurationSetter("exploration-mode")
-    public final void setExplorationMode(final boolean explorationMode)
-    {
-        this.explorationMode = explorationMode;
-    }
-
-    @ConfigurationGetter("not-greylisted-kick-message")
-    public final String getNotGreylistedKickMessage()
-    {
-        return notGreylistedKickMessage;
-    }
-
-    @ConfigurationSetter("not-greylisted-kick-message")
-    public final void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
-    {
-        this.notGreylistedKickMessage = notGreylistedKickMessage;
     }
 
     public final boolean isOnPersistentGreylist(final String name)
@@ -164,36 +140,9 @@ public class GreylistModule extends GuestModule
                 Persistence.getInstance().delete(greylistee);
             }
         }
-
     }
-
-    @ConfigurationGetter("stream-port")
-    public int getStreamPort() {
-        return streamPort;
-    }
-
-    @ConfigurationSetter("stream-port")
-    public void setStreamPort(int streamPort) {
-        this.streamPort = streamPort;
-    }
-
-    @ConfigurationGetter("stream-password")
-    public String getStreamPasswordHash() {
-        return streamPasswordHash;
-    }
-
-    @ConfigurationSetter("stream-password")
-    public void setStreamPasswordHash(String streamPasswordHash) {
-        this.streamPasswordHash = streamPasswordHash;
-    }
-
-    @ConfigurationGetter("stream-enable")
-    public boolean isStreamGraylisting() {
-        return streamGraylisting;
-    }
-
-    @ConfigurationSetter("stream-enable")
-    public void setStreamGraylisting(boolean streamGraylisting) {
-        this.streamGraylisting = streamGraylisting;
+    public GraylistConfiguration getConfig()
+    {
+        return this.config;
     }
 }

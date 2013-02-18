@@ -24,7 +24,7 @@ public class GreylistListener implements Listener
     {
         Preconditions.checkNotNull(event);
 
-        if (greylistModule.isExplorationMode())
+        if (greylistModule.getConfig().isExplorationMode())
         {
             return;
         }
@@ -32,7 +32,7 @@ public class GreylistListener implements Listener
         final Player player = event.getPlayer();
         if (!player.hasPermission("voxelguest.greylist.override") && !greylistModule.isOnPersistentGreylist(player.getName()))
         {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, greylistModule.getNotGreylistedKickMessage());
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, greylistModule.getConfig().getNotGreylistedKickMessage());
         }
     }
 }
