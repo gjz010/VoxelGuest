@@ -36,6 +36,7 @@ public class GreylistModule extends GuestModule
     public GreylistModule()
     {
         this.setName("Greylist Module");
+        config = new GraylistConfiguration();
         greylistListener = new GreylistListener(this);
         greylistCommandExecutor = new GreylistCommandExecutor(this);
         ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
@@ -131,7 +132,7 @@ public class GreylistModule extends GuestModule
         {
             if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), name, this.config.getGraylistGroupName()))
             {
-                VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new graylisted player to group");
+                VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new graylisted player to group.");
             }
         }
     }
