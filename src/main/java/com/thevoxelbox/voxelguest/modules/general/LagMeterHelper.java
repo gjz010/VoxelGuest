@@ -21,13 +21,14 @@ public class LagMeterHelper extends Thread
 
     public void togglePlayer(Player player)
     {
-        if (!this.activePlayers.add(player))
+        if (this.activePlayers.contains(player))
         {
             this.activePlayers.remove(player);
             player.sendMessage(ChatColor.GRAY + "Your experence bar will nolonger reperesnts the servers TPS.");
         }
         else
         {
+            this.activePlayers.add(player);
             player.sendMessage(ChatColor.GRAY + "Your experence bar will now reperesnt the servers TPS.");
         }
     }
