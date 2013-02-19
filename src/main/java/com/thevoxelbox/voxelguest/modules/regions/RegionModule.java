@@ -58,8 +58,8 @@ public class RegionModule extends GuestModule
     public final HashSet<Listener> getListeners()
     {
         final HashSet<Listener> listeners = new HashSet<>();
-        listeners.add(blockEventListener);
-        listeners.add(playerEventListener);
+        listeners.add(this.blockEventListener);
+        listeners.add(this.playerEventListener);
 
         return listeners;
     }
@@ -68,7 +68,7 @@ public class RegionModule extends GuestModule
     public HashMap<String, CommandExecutor> getCommandMappings()
     {
         HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
-        commandMappings.put("vgregion", regionCommand);
+        commandMappings.put("vgregion", this.regionCommand);
         return commandMappings;
     }
 
@@ -76,7 +76,7 @@ public class RegionModule extends GuestModule
      * @return The region manager
      */
     public RegionManager getRegionManager() {
-        return regionManager;
+        return this.regionManager;
     }
 
 }

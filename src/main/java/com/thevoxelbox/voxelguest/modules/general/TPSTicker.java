@@ -7,14 +7,14 @@ package com.thevoxelbox.voxelguest.modules.general;
  */
 public class TPSTicker implements Runnable
 {
-    private static final long pollInterval = 60;
+    private static final long pollInterval = 60L;
     private static long lastTimestamp = System.currentTimeMillis() - (pollInterval * 50);
     private static long lastDifference = pollInterval;
 
     /**
      * Calculates the number of ticks in a second
      *
-     * @return
+     * @return Number of ticks in a second
      */
     public static double calculateTPS()
     {

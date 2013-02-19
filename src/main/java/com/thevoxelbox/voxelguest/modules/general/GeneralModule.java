@@ -170,9 +170,6 @@ public class GeneralModule extends GuestModule
         return msg.replace("$no", Integer.toString(onlinePlayers)).replace("$n", playerName);
     }
 
-    /**
-     * @return the lagmeter
-     */
     public LagMeterHelper getLagmeter() {
         return Lagmeter;
     }

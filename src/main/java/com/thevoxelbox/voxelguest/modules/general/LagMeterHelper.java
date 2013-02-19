@@ -9,31 +9,53 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+/**
+ *
+ * @author TheCryoknight
+ */
 public class LagMeterHelper extends Thread
 {
-    private Set<Player> activePlayers = new HashSet<>();
+    private final Set<Player> activePlayers = new HashSet<>();
     private volatile boolean isStoped = false;
+
 
     public LagMeterHelper()
     {
         
     }
 
-    public void togglePlayer(Player player)
+    public void setPlayerWatchState(final Player player, final boolean state)
+    {
+        if (state)
+        {
+            this.activePlayers.add(player);
+        }
+        else
+        {
+            this.activePlayers.remove(player);
+        }
+    }
+
+    /**
+     * Toggles whether or not the players is watching TPS
+     *
+     * @param player player to toggle
+     */
+    public void togglePlayer(final Player player)
     {
         if (this.activePlayers.contains(player))
         {
-            this.activePlayers.remove(player);
+            this.setPlayerWatchState(player, false);
             player.sendMessage(ChatColor.GRAY + "Your experence bar will nolonger reperesnts the servers TPS.");
         }
         else
         {
-            this.activePlayers.add(player);
+            this.setPlayerWatchState(player, true);
             player.sendMessage(ChatColor.GRAY + "Your experence bar will now reperesnt the servers TPS.");
         }
     }
     
-    public boolean isPlayerOnTpsWatch(Player player)
+    public boolean isPlayerOnTpsWatch(final Player player)
     {
         return this.activePlayers.contains(player);
     }
@@ -47,24 +69,36 @@ public class LagMeterHelper extends Thread
     public void run()
     {
         float tps = 0;
-        while (!this.isStoped)
-        {
-            for (Player player : this.activePlayers)
+        try {
+            while (!this.isStoped)
             {
-                final CraftPlayer cPlayer = (CraftPlayer) player;
-                tps = (float) TPSTicker.calculateTPS();
-                if (tps > 20)
+                for (Player player : this.activePlayers.toArray(new Player[0]))
                 {
-                    tps = 20;
+                    final CraftPlayer cPlayer = (CraftPlayer) player;
+                    tps = (float) TPSTicker.calculateTPS();
+                    if (tps > 20)
+                    {
+                        tps = 20;
+                    }
+                    if (cPlayer.isOnline())
+                    {
+                        final Packet43SetExperience packet = new Packet43SetExperience(tps / 20.0F, 0, (int) tps);
+                        cPlayer.getHandle().playerConnection.sendPacket(packet); 
+                    }
                 }
-                final Packet43SetExperience packet = new Packet43SetExperience(tps / 20.0F, 0, (int) tps);
-                cPlayer.getHandle().playerConnection.sendPacket(packet);
+                try
+                {
+                    Thread.sleep(0xbb8);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }
