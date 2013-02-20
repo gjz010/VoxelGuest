@@ -73,7 +73,7 @@ public enum CommandFlags
             {
                 for (CommandFlags flag : CommandFlags.values())
                 {
-                    if (arg.equalsIgnoreCase(flag.getCommandFlag()))
+                    if (parseArg[0].equalsIgnoreCase(flag.getCommandFlag()))
                     {
                         parsedFlags.put(flag, parseArg[1]);
                         break;
