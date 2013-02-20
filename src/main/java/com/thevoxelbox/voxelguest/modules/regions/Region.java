@@ -75,6 +75,8 @@ public class Region
     private boolean physicsAllowed = false;
     @DatabaseField
     private boolean enchantingAllowed = false;
+    @DatabaseField
+    private boolean creatureSpawnAllowed = false;
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<Integer> bannedBlocks = new ArrayList<>();
     @DatabaseField(dataType = DataType.SERIALIZABLE)
@@ -443,6 +445,20 @@ public class Region
 
     public void setPhysicsAllowed(boolean physicsAllowed) {
         this.physicsAllowed = physicsAllowed;
+    }
+
+    /**
+     * @return the creatureSpawnAllowed
+     */
+    public boolean isCreatureSpawnAllowed() {
+        return creatureSpawnAllowed;
+    }
+
+    /**
+     * @param creatureSpawnAllowed the creatureSpawnAllowed to set
+     */
+    public void setCreatureSpawnAllowed(boolean creatureSpawnAllowed) {
+        this.creatureSpawnAllowed = creatureSpawnAllowed;
     }
 
     public List<Integer> getBannedBlocks()

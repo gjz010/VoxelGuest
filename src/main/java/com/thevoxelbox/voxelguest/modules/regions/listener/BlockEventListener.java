@@ -24,6 +24,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -202,10 +203,21 @@ public class BlockEventListener implements Listener
         boolean isNotAllowed = false;
         for (Region region : regions)
         {
-            if (!region.isBlockSpreadAllowed())
+            if (event.getBlock().getType().equals(Material.SNOW))
             {
-                isNotAllowed = true;
-                break;
+                if (!region.isSnowMeltingAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
+            }
+            else if (event.getBlock().getType().equals(Material.ICE))
+            {
+                if (!region.isIceMeltingAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
             }
         }
         if (isNotAllowed)
@@ -227,10 +239,21 @@ public class BlockEventListener implements Listener
         boolean isNotAllowed = false;
         for (Region region : regions)
         {
-            if (!region.isBlockSpreadAllowed())
+            if (event.getBlock().getType().equals(Material.SNOW))
             {
-                isNotAllowed = true;
-                break;
+                if (!region.isSnowFormationAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
+            }
+            else if (event.getBlock().getType().equals(Material.ICE))
+            {
+                if (!region.isIceFormationAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
             }
         }
         if (isNotAllowed)
@@ -420,17 +443,49 @@ public class BlockEventListener implements Listener
     public final void onEntityExplode(final EntityExplodeEvent event)
     {
         final Location eventLoc = event.getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
-
-        if (region != null)
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isCreeperExplosionAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
-            return;
         }
-        event.setCancelled(true);
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+        return;
+    }
+
+    @EventHandler
+    public final void onCreatureSpawn(final CreatureSpawnEvent event)
+    {
+        final Location eventLoc = event.getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isCreatureSpawnAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
         return;
     }
 
