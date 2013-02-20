@@ -366,6 +366,14 @@ public class BlockEventListener implements Listener
             return;
         case STONE_BUTTON:
             return;
+        case WATER:
+            return;
+        case STATIONARY_WATER:
+            return;
+        case LAVA:
+            return;
+        case STATIONARY_LAVA:
+            return;
         default:
             break;
         }

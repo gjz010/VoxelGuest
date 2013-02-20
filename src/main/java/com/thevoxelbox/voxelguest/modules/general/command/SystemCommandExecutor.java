@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class SystemCommandExecutor implements TabExecutor
 {
-    private static final String[] commandFlags = {"gc", "mem"};
+    private static final String[] commandFlags = {"gc", "mem", "lag"};
     private static final int TPS_PER_SECOND_THRESHOLD = 20;
     private static final int BAR_SEGMENTS = 20;
     private static final int BYTES_PER_MB = 1048576;
@@ -55,6 +55,11 @@ public class SystemCommandExecutor implements TabExecutor
             if (args[0].equalsIgnoreCase("mem"))
             {
                 printMemInfo(sender, true);
+            }
+
+            if (args[0].equalsIgnoreCase("lag"))
+            {
+                sender.sendMessage("§7TPS§f: " + DisplayUtils.renderTPSBar(TPSTicker.calculateTPS(), TPS_PER_SECOND_THRESHOLD));
             }
         }
 
