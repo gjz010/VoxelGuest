@@ -13,6 +13,7 @@ public class GraylistConfiguration
     private boolean explorationMode = false;
     private boolean streamGraylisting = false;
     private boolean setGroupOnGraylist = true;
+    private String authToken = "changeme";
 
     @ConfigurationGetter("exploration-mode")
     public final boolean isExplorationMode()
@@ -104,5 +105,17 @@ public class GraylistConfiguration
     @ConfigurationSetter("gl-group-name")
     public void setGraylistGroupName(String graylistGroupName) {
         this.graylistGroupName = graylistGroupName;
+    }
+
+    @ConfigurationGetter("injection-auth-token")
+    public String getAuthToken()
+    {
+        return authToken;
+    }
+
+    @ConfigurationSetter("injection-auth-token")
+    public void setAuthToken(final String authToken)
+    {
+        this.authToken = authToken;
     }
 }

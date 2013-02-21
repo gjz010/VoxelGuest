@@ -3,6 +3,9 @@ package com.thevoxelbox.voxelguest.modules.greylist;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * @deprecated This will be replaced with a new and safer system.
+ */
 class StreamThread extends Thread {
 
     private final GreylistModule module;

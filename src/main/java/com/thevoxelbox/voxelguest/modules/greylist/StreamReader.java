@@ -12,6 +12,9 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+/**
+ * @deprecated This will be replaced with a new and safer system.
+ */
 class StreamReader extends Thread {
 
     private final Socket socket;

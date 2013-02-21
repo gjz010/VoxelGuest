@@ -1,13 +1,17 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
+import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.greylist.command.WhitelistCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.greylist.injector.SocketListener;
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
@@ -29,7 +33,6 @@ public class GreylistModule extends GuestModule
     private BukkitTask socketListenerTask;
     private boolean explorationMode = false;
     private String notGreylistedKickMessage = "You are not greylisted.";
-    private String authToken = "changeme";
 
     private GraylistConfiguration config;
     private StreamThread streamTask;
@@ -52,6 +55,7 @@ public class GreylistModule extends GuestModule
     {
         socketListener = new SocketListener(11368, this);
         socketListenerTask = Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), socketListener);
+
         if (config.isStreamGraylisting())
         {
             this.streamTask = new StreamThread(this);
@@ -62,21 +66,17 @@ public class GreylistModule extends GuestModule
     @Override
     public final void onDisable()
     {
-        if (this.streamTask != null) {
-            this.streamTask.killProcesses();
-        }
-        super.onDisable();
-    }
-
-    @Override
-    public void onDisable()
-    {
         super.onDisable();
 
         socketListener.setRun(false);
         socketListenerTask.cancel();
         socketListener = null;
         socketListenerTask = null;
+
+        if (this.streamTask != null) {
+            this.streamTask.killProcesses();
+        }
+        super.onDisable();
     }
 
     @Override
@@ -126,18 +126,6 @@ public class GreylistModule extends GuestModule
     public final void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
     {
         this.notGreylistedKickMessage = notGreylistedKickMessage;
-    }
-
-    @ConfigurationGetter("injection-auth-token")
-    public String getAuthToken()
-    {
-        return authToken;
-    }
-
-    @ConfigurationSetter("injection-auth-token")
-    public void setAuthToken(final String authToken)
-    {
-        this.authToken = authToken;
     }
 
     public final boolean isOnPersistentGreylist(final String name)

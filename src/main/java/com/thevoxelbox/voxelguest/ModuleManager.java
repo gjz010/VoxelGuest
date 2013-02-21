@@ -282,4 +282,9 @@ public class ModuleManager      // implements ModuleManager -- TODO: export API 
 
         registeredModules.clear();
     }
+
+    public HashMap<Module, HashSet<Listener>> getRegisteredModules()
+    {
+        return registeredModules;
+    }
 }

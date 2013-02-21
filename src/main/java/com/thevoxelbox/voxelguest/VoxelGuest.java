@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest;
 
+import com.thevoxelbox.voxelguest.commands.ModulesCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
@@ -23,6 +24,8 @@ public class VoxelGuest extends JavaPlugin
     private static VoxelGuest pluginInstance = null;
     private static ModuleManager moduleManagerInstance = null;
     private static Permission perms = null;
+
+    private static ModulesCommandExecutor modulesCommandExecutor;
 
     public static VoxelGuest getPluginInstance()
     {
@@ -76,6 +79,7 @@ public class VoxelGuest extends JavaPlugin
             e.printStackTrace();
         }
 
+        getCommand("vmodules").setExecutor(null);
         VoxelGuest.getModuleManagerInstance().shutdown();
 
     }
@@ -105,6 +109,9 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new HelperModule(), false);
+
+        modulesCommandExecutor = new ModulesCommandExecutor();
+        getCommand("vmodules").setExecutor(modulesCommandExecutor);
 
         VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
