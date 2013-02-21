@@ -89,3 +89,15 @@ commands:
     aliases: [watchtps, vwatchtps]
     permission: voxelguest.general.watchtps
     description: Makes the exp bar a lag meter
+  wlreview:
+    aliases: [wlreview, vwlreview]
+    permission: voxelguest.helper.wlreview
+    description: Submits a Whitelist review ticket
+  helper:
+    aliases: [helper, vhelper]
+    permission: voxelguest.helper.control
+    description: Helps mannage helpers
+  helperreview:
+    aliases: [helperreview, vhelper]
+    permission: voxelguest.helper.review
+    description: Reviews a Whitelist review ticket

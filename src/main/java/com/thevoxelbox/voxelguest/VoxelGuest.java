@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelguest;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
+import com.thevoxelbox.voxelguest.modules.helper.HelperModule;
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 import net.milkbowl.vault.permission.Permission;
@@ -103,11 +104,13 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new AsshatModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GreylistModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
+        VoxelGuest.getModuleManagerInstance().registerGuestModule(new HelperModule(), false);
 
         VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(GreylistModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(GeneralModule.class);
+        VoxelGuest.getModuleManagerInstance().enableModuleByType(HelperModule.class);
     }
 
     private boolean setupPermissions()

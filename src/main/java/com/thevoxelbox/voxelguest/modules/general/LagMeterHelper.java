@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest.modules.general;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player;
  */
 public class LagMeterHelper extends Thread
 {
-    private final Set<Player> activePlayers = new HashSet<>();
+    private final Set<Player> activePlayers = Collections.synchronizedSet(new HashSet<Player>());
     private volatile boolean isStoped = false;
 
 
