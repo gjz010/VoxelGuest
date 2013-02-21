@@ -14,7 +14,12 @@ commands:
     aliases: [ungraylist, ugl]
     permission: voxelguest.greylist.ungreylist
     description: Removes a player name to the graylist
+  whitelist:
+    aliases: [whitelist, wl]
+    permission: voxelguest.greylist.whitelist
+    description: Whitelists a player.
   vgregion:
+    aliases: [vgregion, vregion]
     permission: voxelguest.regions.modifyregion
   ban:
     aliases: [vban]
@@ -80,3 +85,19 @@ commands:
     aliases: [afk, vafk]
     permission: voxelguest.general.afk
     description: Tells the server the the player is away from their keyboard
+  watchtps:
+    aliases: [watchtps, vwatchtps]
+    permission: voxelguest.general.watchtps
+    description: Makes the exp bar a lag meter
+  wlreview:
+    aliases: [wlreview, vwlreview]
+    permission: voxelguest.helper.wlreview
+    description: Submits a Whitelist review ticket
+  helper:
+    aliases: [helper, vhelper]
+    permission: voxelguest.helper.control
+    description: Helps mannage helpers
+  helperreview:
+    aliases: [helperreview, vhelper]
+    permission: voxelguest.helper.review
+    description: Reviews a Whitelist review ticket

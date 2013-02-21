@@ -17,6 +17,8 @@ public class GeneralModuleConfiguration
     private String guestColor = ChatColor.GRAY.toString();
     private String visitorColor = ChatColor.DARK_GRAY.toString();
     private String vipColor = ChatColor.DARK_AQUA.toString();
+    private boolean randomAfkMsgs = true;
+    private boolean defaultWatchTPSState = true;
 
     private String kickFormat = ChatColor.DARK_GRAY
             + "(" + ChatColor.GOLD + "$no" + ChatColor.DARK_GRAY + ") "
@@ -202,5 +204,29 @@ public class GeneralModuleConfiguration
     public void setPermGenWarningThreshold(final int permGenWarningThreshold)
     {
         this.permGenWarningThreshold = permGenWarningThreshold;
+    }
+
+    @ConfigurationGetter("random-afk-messages")
+    public boolean isRandomAfkMsgs()
+    {
+        return randomAfkMsgs;
+    }
+
+    @ConfigurationSetter("random-afk-messages")
+    public void setRandomAfkMsgs(boolean randomAfkMsgs)
+    {
+        this.randomAfkMsgs = randomAfkMsgs;
+    }
+
+    @ConfigurationGetter("force-watch-tps")
+    public boolean getDefaultWatchTPSState()
+    {
+        return defaultWatchTPSState;
+    }
+
+    @ConfigurationSetter("force-watch-tps")
+    public void setDefaultWatchTPSState(boolean defaultWatchTPSState)
+    {
+        this.defaultWatchTPSState = defaultWatchTPSState;
     }
 }

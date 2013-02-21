@@ -1,18 +1,22 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 
 /**
  * Executes /unban commands.
  *
  * @author Monofraps
  */
-public class UnbanCommandExecutor implements CommandExecutor
+public class UnbanCommandExecutor implements TabExecutor
 {
     private final AsshatModuleConfiguration configuration;
     private final AsshatModule module;
@@ -80,5 +84,31 @@ public class UnbanCommandExecutor implements CommandExecutor
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    {
+        if (sender.hasPermission("voxelguest.asshat.unmute"))
+        {
+            final List<String> bannedNamesList = this.module.getBanlist().getBannedNames();
+            if (args.length == 0)
+            {
+                return bannedNamesList;
+            }
+            else
+            {
+                final List<String> tmpMatchList = new ArrayList<>();
+                final String completingParam = args[args.length - 1];
+                for (String bannedName : bannedNamesList)
+                {
+                    if (bannedName.toLowerCase().startsWith(completingParam.toLowerCase())) {
+                        tmpMatchList.add(bannedName);
+                    }
+                }
+                return tmpMatchList;
+            }
+        }
+        return Collections.emptyList();
     }
 }

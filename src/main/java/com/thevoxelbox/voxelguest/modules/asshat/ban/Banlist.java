@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelguest.modules.asshat.ban;
 import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +48,17 @@ public class Banlist
 
         Persistence.getInstance().delete(getBannedPlayer(playerName));
         return true;
+    }
+
+    public List<String> getBannedNames()
+    {
+        final List<BannedPlayer> bannedPlayers = Persistence.getInstance().loadAll(BannedPlayer.class);
+        final List<String> bannedNames = new ArrayList<>();
+        for (BannedPlayer bannedPlayer : bannedPlayers)
+        {
+            bannedNames.add(bannedPlayer.getPlayerName());
+        }
+        return bannedNames;
     }
 
     private BannedPlayer getBannedPlayer(final String playerName)

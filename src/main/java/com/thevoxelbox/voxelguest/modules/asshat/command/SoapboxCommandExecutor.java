@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelguest.modules.asshat.command;
 
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 
@@ -46,6 +45,6 @@ public class SoapboxCommandExecutor implements TabExecutor
     @Override
     public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
     {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

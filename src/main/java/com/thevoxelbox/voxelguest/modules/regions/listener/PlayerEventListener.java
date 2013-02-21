@@ -34,7 +34,7 @@ public class PlayerEventListener implements Listener
             return;
         }
 
-        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        Region region = regionModule.getRegionManager().getRegionAtLoc(event.getEntity().getLocation());
         if (region == null)
         {
             return;
@@ -62,7 +62,7 @@ public class PlayerEventListener implements Listener
     @EventHandler
     public final void onDamageByEntity(final EntityDamageByEntityEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        Region region = regionModule.getRegionManager().getRegionAtLoc(event.getEntity().getLocation());
         if (region == null)
         {
             return;
@@ -119,7 +119,7 @@ public class PlayerEventListener implements Listener
     @EventHandler
     public final void onEntityDamage(final EntityDamageEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        Region region = regionModule.getRegionManager().getRegionAtLoc(event.getEntity().getLocation());
         if (region == null)
         {
             return;
@@ -207,7 +207,7 @@ public class PlayerEventListener implements Listener
     @EventHandler
     public final void onFoodChange(final FoodLevelChangeEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
+        Region region = regionModule.getRegionManager().getRegionAtLoc(event.getEntity().getLocation());
         if (region == null)
         {
             return;

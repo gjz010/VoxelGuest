@@ -2,15 +2,13 @@ package com.thevoxelbox.voxelguest.modules.regions;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -74,7 +72,11 @@ public class Region
     @DatabaseField
     private boolean iceFormationAllowed = false;
     @DatabaseField
+    private boolean physicsAllowed = false;
+    @DatabaseField
     private boolean enchantingAllowed = false;
+    @DatabaseField
+    private boolean creatureSpawnAllowed = false;
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<Integer> bannedBlocks = new ArrayList<>();
     @DatabaseField(dataType = DataType.SERIALIZABLE)
@@ -117,6 +119,7 @@ public class Region
 
     public Region()
     {
+        
     }
 
     public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName)
@@ -143,7 +146,7 @@ public class Region
         this.regionName = regionName;
     }
 
-    public final boolean isLocationInRegion(final Location locationToCheck)
+    public final boolean inBounds(final Location locationToCheck)
     {
         if (!locationToCheck.getWorld().equals(getPointOne().getWorld()))
         {
@@ -436,24 +439,50 @@ public class Region
         this.enchantingAllowed = enchantingAllowed;
     }
 
-    public ArrayList<Integer> getBannedBlocks()
+    public boolean isPhysicsAllowed() {
+        return physicsAllowed;
+    }
+
+    public void setPhysicsAllowed(boolean physicsAllowed) {
+        this.physicsAllowed = physicsAllowed;
+    }
+
+    /**
+     * @return the creatureSpawnAllowed
+     */
+    public boolean isCreatureSpawnAllowed() {
+        return creatureSpawnAllowed;
+    }
+
+    /**
+     * @param creatureSpawnAllowed the creatureSpawnAllowed to set
+     */
+    public void setCreatureSpawnAllowed(boolean creatureSpawnAllowed) {
+        this.creatureSpawnAllowed = creatureSpawnAllowed;
+    }
+
+    public List<Integer> getBannedBlocks()
     {
         return bannedBlocks;
     }
 
-    public void setBannedBlocks(final ArrayList<Integer> bannedBlocks)
+    public void setBannedBlocks(final List<Integer> bannedBlocks)
     {
-        this.bannedBlocks = bannedBlocks;
+        ArrayList<Integer> newList = new ArrayList<Integer>();
+        newList.addAll(bannedBlocks);
+        this.bannedBlocks = newList;
     }
 
-    public ArrayList<Integer> getBannedItems()
+    public List<Integer> getBannedItems()
     {
         return bannedItems;
     }
 
-    public void setBannedItems(final ArrayList<Integer> bannedItems)
+    public void setBannedItems(final List<Integer> bannedItems)
     {
-        this.bannedItems = bannedItems;
+        ArrayList<Integer> newList = new ArrayList<Integer>();
+        newList.addAll(bannedItems);
+        this.bannedItems = newList;
     }
 
     public boolean isPvpDamageAllowed()
@@ -626,12 +655,12 @@ public class Region
         this.foodChangeAllowed = foodChangeAllowed;
     }
 
-    public boolean isGlobalRegion()
+    public boolean isGlobal()
     {
         return globalRegion;
     }
 
-    public void setGlobalRegion(final boolean globalRegion)
+    public void setGlobal(final boolean globalRegion)
     {
         this.globalRegion = globalRegion;
     }
@@ -644,5 +673,34 @@ public class Region
     public void setBuildingRestricted(final boolean buildingRestricted)
     {
         this.buildingRestricted = buildingRestricted;
+    }
+    
+    public String toColoredString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append(ChatColor.GRAY + "Region info for: " + ChatColor.GREEN + this.getRegionName() + ChatColor.GRAY + ":\n");
+        builder.append(ChatColor.GRAY + "World: " + ChatColor.GREEN + this.getPointOne().getWorld().getName() + "\n");
+        builder.append(ChatColor.GRAY + "Type: " + ChatColor.GREEN + this.isGlobal() + "\n");
+        if (!this.isGlobal())
+        {
+            builder.append(ChatColor.GRAY + "Point one: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + this.getPointOne().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + this.getPointOne().getZ() + ChatColor.DARK_GRAY + ")\n");
+            builder.append(ChatColor.GRAY + "Point two: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + this.getPointTwo().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + this.getPointTwo().getZ() + ChatColor.DARK_GRAY + ")\n");
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Region info for: " + this.getRegionName() + ":\n");
+        builder.append("World: " + this.getPointOne().getWorld().getName() + "\n");
+        builder.append("Type: " + this.isGlobal() + "\n");
+        if (!this.isGlobal())
+        {
+            builder.append("Point one: (" + this.getPointOne().getX() + ", " + this.getPointOne().getZ() + ")\n");
+            builder.append("Point two: (" + this.getPointTwo().getX() + ", " + this.getPointTwo().getZ() + ")\n");
+        }
+        return builder.toString();
     }
 }

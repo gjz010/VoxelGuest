@@ -184,6 +184,7 @@
                                     <exclude>org.bukkit:craftbukkit</exclude>
                                     <exclude>org.bukkit:bukkit</exclude>
                                     <exclude>com.google.guava:guava</exclude>
+                                    <exclude>org.xerial:sqlite-jdbc</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>

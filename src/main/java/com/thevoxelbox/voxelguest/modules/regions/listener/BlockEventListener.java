@@ -1,10 +1,15 @@
 package com.thevoxelbox.voxelguest.modules.regions.listener;
 
+import java.util.List;
+
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.regions.Region;
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Painting;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,11 +19,12 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -29,7 +35,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class BlockEventListener implements Listener
 {
 
-    private final String CANT_BUILD_HERE = "§4You cannot build here";
+    private final String CANT_BUILD_HERE = "§cYou cannot build here";
     private RegionModule regionModule;
 
     public BlockEventListener(final RegionModule regionModule)
@@ -40,19 +46,12 @@ public class BlockEventListener implements Listener
     @EventHandler(ignoreCancelled = true)
     public final void onBlockBreak(final BlockBreakEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getPlayer());
+        Preconditions.checkNotNull(event.getBlock());
+        if (!this.regionModule.getRegionManager().canPlayerModify(event.getPlayer(), event.getBlock().getLocation()))
         {
-            return;
-        }
-
-        if (region.isBuildingRestricted())
-        {
-            if (!event.getPlayer().hasPermission(RegionModule.REGION_MODIFY_PERMISSION_PREFIX + region.getRegionName()))
-            {
-                event.getPlayer().sendMessage(CANT_BUILD_HERE);
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(CANT_BUILD_HERE);
         }
     }
 
@@ -64,38 +63,41 @@ public class BlockEventListener implements Listener
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public final void onBlockDrop(final BlockBreakEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event);
+        Block eventLoc = event.getBlock();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc.getLocation());
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        event.getBlock().setType(Material.AIR);
-        event.setCancelled(true);
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isBlockDropAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+        if (eventLoc != null)
+        {
+            eventLoc.setType(Material.AIR);
+        }
     }
 
     @EventHandler
     public final void onBlockPlace(final BlockPlaceEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getPlayer());
+        Preconditions.checkNotNull(event.getBlock());
+        if (!this.regionModule.getRegionManager().canPlayerModify(event.getPlayer(), event.getBlock().getLocation()))
         {
-            return;
-        }
-
-        if (region.isBuildingRestricted())
-        {
-            if (!event.getPlayer().hasPermission(RegionModule.REGION_MODIFY_PERMISSION_PREFIX + region.getRegionName()))
-            {
-                event.getPlayer().sendMessage(CANT_BUILD_HERE);
-                event.setCancelled(true);
-            }
-        }
-
-        if (region.getBannedBlocks().contains(event.getBlockPlaced().getTypeId()))
-        {
-            event.getPlayer().sendMessage(CANT_BUILD_HERE);
             event.setCancelled(true);
+            event.getPlayer().sendMessage(CANT_BUILD_HERE);
         }
     }
 
@@ -106,42 +108,33 @@ public class BlockEventListener implements Listener
         {
             return;
         }
-
-        Region region = regionModule.getRegionAtLocation(event.getClickedBlock().getLocation());
-        if (region == null)
+        if (!this.regionModule.getRegionManager().canPlayerModify(event.getPlayer(), event.getClickedBlock().getLocation()))
         {
-            return;
-        }
-
-        if (region.isBuildingRestricted())
-        {
-            if (!event.getPlayer().hasPermission(RegionModule.REGION_MODIFY_PERMISSION_PREFIX + region.getRegionName()))
-            {
-                event.getPlayer().sendMessage(CANT_BUILD_HERE);
-                event.setCancelled(true);
-            }
-        }
-
-        if (event.getItem() != null)
-        {
-            if (region.getBannedItems().contains(event.getItem().getTypeId()))
-            {
-                event.getPlayer().sendMessage(CANT_BUILD_HERE);
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(CANT_BUILD_HERE);
         }
     }
 
     @EventHandler
     public final void onLeafDecay(final LeavesDecayEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getBlock());
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        if (!region.isLeafDecayAllowed())
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isBlockSpreadAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
         {
             event.setCancelled(true);
         }
@@ -150,13 +143,23 @@ public class BlockEventListener implements Listener
     @EventHandler
     public final void onBlockGrow(final BlockGrowEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getBlock());
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        if (!region.isBlockGrowthAllowed())
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isBlockGrowthAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
         {
             event.setCancelled(true);
         }
@@ -165,180 +168,349 @@ public class BlockEventListener implements Listener
     @EventHandler
     public final void onFromTo(final BlockFromToEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getBlock());
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        final Block movedBlock = event.getBlock();
-        if ((movedBlock.getType() == Material.STATIONARY_WATER) || (movedBlock.getType() == Material.WATER))
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
-            if (!region.isWaterFlowAllowed())
+            if (!region.isBlockSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
         }
-
-        if ((movedBlock.getType() == Material.STATIONARY_LAVA) || (movedBlock.getType() == Material.LAVA))
+        if (isNotAllowed)
         {
-            if (!region.isLavaFlowAllowed())
-            {
-                event.setCancelled(true);
-            }
-        }
-
-        if (movedBlock.getType() == Material.DRAGON_EGG)
-        {
-            if (!region.isDragonEggMovementAllowed())
-            {
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public final void onBlockFade(final BlockFadeEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getBlock());
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        final Block fadedBlock = event.getBlock();
-        if (fadedBlock.getType() == Material.ICE)
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
-            if (!region.isIceMeltingAllowed())
+            if (event.getBlock().getType().equals(Material.SNOW))
             {
-                event.setCancelled(true);
+                if (!region.isSnowMeltingAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
+            }
+            else if (event.getBlock().getType().equals(Material.ICE))
+            {
+                if (!region.isIceMeltingAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
             }
         }
-
-        if (fadedBlock.getType() == Material.SNOW)
+        if (isNotAllowed)
         {
-            if (!region.isSnowMeltingAllowed())
-            {
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public final void onBlockForm(final BlockFormEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getBlock());
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        final Block formedBlock = event.getBlock();
-        if ((formedBlock.getType() == Material.WATER) || (formedBlock.getType() == Material.STATIONARY_WATER))
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
-            if (!region.isIceFormationAllowed())
+            if (event.getBlock().getType().equals(Material.SNOW))
             {
-                event.setCancelled(true);
+                if (!region.isSnowFormationAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
+            }
+            else if (event.getBlock().getType().equals(Material.ICE))
+            {
+                if (!region.isIceFormationAllowed())
+                {
+                    isNotAllowed = true;
+                    break;
+                }
             }
         }
-
-        if (formedBlock.getType() == Material.AIR)
+        if (isNotAllowed)
         {
-            if (!region.isSnowFormationAllowed())
-            {
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public final void onBlockIgnite(final BlockIgniteEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        Preconditions.checkNotNull(event.getBlock());
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            return;
+            event.setCancelled(true);
         }
-
-        if ((event.getCause() == IgniteCause.SPREAD) || (event.getCause() == IgniteCause.LAVA) || (event.getCause() == IgniteCause.LIGHTNING))
+        boolean isNotAllowed = false;
+        for (Region region : regions)
         {
             if (!region.isFireSpreadAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
         }
-
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
     public final void onBlockSpread(final BlockSpreadEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getBlock().getLocation());
-        if (region == null)
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isBlockSpreadAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler
+    public final void onBlockPhysics(final BlockPhysicsEvent event)
+    {
+        final Material mat = event.getChangedType();
+        switch (mat)
+        {
+        case COMMAND:
             return;
+        case DETECTOR_RAIL:
+            return;
+        case DIODE:
+            return;
+        case DIODE_BLOCK_OFF:
+            return;
+        case DIODE_BLOCK_ON:
+            return;
+        case DISPENSER:
+            return;
+        case GLOWING_REDSTONE_ORE:
+            return;
+        case IRON_DOOR:
+            return;
+        case IRON_DOOR_BLOCK:
+            return;
+        case MINECART:
+            return;
+        case NOTE_BLOCK:
+            return;
+        case PISTON_BASE:
+            return;
+        case PISTON_EXTENSION:
+            return;
+        case PISTON_MOVING_PIECE:
+            return;
+        case PISTON_STICKY_BASE:
+            return;
+        case POWERED_RAIL:
+            return;
+        case REDSTONE:
+            return;
+        case REDSTONE_LAMP_OFF:
+            return;
+        case REDSTONE_LAMP_ON:
+            return;
+        case REDSTONE_ORE:
+            return;
+        case REDSTONE_TORCH_OFF:
+            return;
+        case REDSTONE_TORCH_ON:
+            return;
+        case REDSTONE_WIRE:
+            return;
+        case STONE_PLATE:
+            return;
+        case WOOD_PLATE:
+            return;
+        case STORAGE_MINECART:
+            return;
+        case STRING:
+            return;
+        case TNT:
+            return;
+        case TRAP_DOOR:
+            return;
+        case TRIPWIRE:
+            return;
+        case TRIPWIRE_HOOK:
+            return;
+        case WOODEN_DOOR:
+            return;
+        case WOOD_BUTTON:
+            return;
+        case WOOD_DOOR:
+            return;
+        case LEVER:
+            return;
+        case STONE_BUTTON:
+            return;
+        case WATER:
+            return;
+        case STATIONARY_WATER:
+            return;
+        case LAVA:
+            return;
+        case STATIONARY_LAVA:
+            return;
+        default:
+            break;
         }
 
-        if (event.getNewState().getType() == Material.FIRE)
+        final Location eventLoc = event.getBlock().getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
-            if (!region.isFireSpreadAllowed())
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isPhysicsAllowed())
             {
-                event.setCancelled(true);
+                isNotAllowed = true;
+                break;
             }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public final void onEnchant(final EnchantItemEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getEnchanter().getLocation());
-        if (region == null)
+        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(event.getEnchantBlock().getLocation());
+
+        if (region != null)
         {
+            if (!region.isEnchantingAllowed())
+            {
+                event.setCancelled(true);
+            }
             return;
         }
-
-        if (!region.isEnchantingAllowed())
-        {
-            event.setCancelled(true);
-        }
-
-        if (region.getBannedItems().contains(event.getItem().getTypeId()))
-        {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
+        return;
     }
 
     @EventHandler
     public final void onEntityExplode(final EntityExplodeEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getLocation());
-        if (region == null)
-        {
-            return;
-        }
-
-        if (!region.isCreeperExplosionAllowed())
+        final Location eventLoc = event.getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
         {
             event.setCancelled(true);
         }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isCreeperExplosionAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+        return;
+    }
+
+    @EventHandler
+    public final void onCreatureSpawn(final CreatureSpawnEvent event)
+    {
+        final Location eventLoc = event.getLocation();
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
+        if (regions.isEmpty())
+        {
+            event.setCancelled(true);
+        }
+        boolean isNotAllowed = false;
+        for (Region region : regions)
+        {
+            if (!region.isCreatureSpawnAllowed())
+            {
+                isNotAllowed = true;
+                break;
+            }
+        }
+        if (isNotAllowed)
+        {
+            event.setCancelled(true);
+        }
+        return;
     }
 
     @EventHandler
     public final void onPaintingBreak(final HangingBreakByEntityEvent event)
     {
-        Region region = regionModule.getRegionAtLocation(event.getEntity().getLocation());
-        if (region == null)
+        final Location eventLoc = event.getEntity().getLocation();
+        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
+
+        if (region != null)
         {
+            if (!region.isBuildingRestricted())
+            {
+                if (event.getRemover() instanceof Player)
+                {
+                    if (!this.regionModule.getRegionManager().canPlayerModify((Player) event.getRemover(), event.getEntity().getLocation()))
+                    {
+                        event.setCancelled(true);
+                    }
+                }
+            }
             return;
         }
-
-        if (event.getEntity() instanceof Painting)
-        {
-            if (!region.isTntBreakingPaintingsAllowed())
-            {
-                event.setCancelled(true);
-            }
-        }
+        event.setCancelled(true);
+        return;
     }
 
 }

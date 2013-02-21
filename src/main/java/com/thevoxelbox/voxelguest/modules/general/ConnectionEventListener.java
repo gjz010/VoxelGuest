@@ -27,6 +27,11 @@ public class ConnectionEventListener implements Listener
     {
         Player player = event.getPlayer();
 
+        if (this.configuration.getDefaultWatchTPSState())
+        {
+            this.module.getLagmeter().setPlayerWatchState(player, true);
+        }
+
         event.setJoinMessage(this.module.formatJoinLeaveMessage(configuration.getJoinFormat(), player.getName()));
         this.module.getVanishFakequitHandler().handleConnect(player);
         if (this.module.getVanishFakequitHandler().isPlayerFakequit(player))
@@ -40,6 +45,11 @@ public class ConnectionEventListener implements Listener
     {
         Player player = event.getPlayer();
 
+        if (this.module.getLagmeter().isPlayerOnTpsWatch(player))
+        {
+            this.module.getLagmeter().setPlayerWatchState(player, false);
+        }
+
         event.setQuitMessage(this.module.formatJoinLeaveMessage(configuration.getLeaveFormat(), player.getName()));
         
         if (this.module.getVanishFakequitHandler().handleDisconnect(player))
@@ -52,6 +62,11 @@ public class ConnectionEventListener implements Listener
     public final void onPlayerKick(final PlayerKickEvent event)
     {
         Player player = event.getPlayer();
+
+        if (this.module.getLagmeter().isPlayerOnTpsWatch(player))
+        {
+            this.module.getLagmeter().setPlayerWatchState(player, false);
+        }
 
         event.setLeaveMessage(this.module.formatJoinLeaveMessage(configuration.getKickFormat(), player.getName()));
 

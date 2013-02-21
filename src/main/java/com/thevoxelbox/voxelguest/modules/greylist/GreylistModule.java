@@ -1,16 +1,13 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
-import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
-import com.thevoxelbox.voxelguest.modules.greylist.injector.SocketListener;
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
@@ -27,21 +24,27 @@ public class GreylistModule extends GuestModule
     private GreylistListener greylistListener;
     private GreylistCommandExecutor greylistCommandExecutor;
     private UngreylistCommandExecutor ungreylistCommandExecutor;
+    private WhitelistCommandExecutor whitelistCommandExecutor;
     private SocketListener socketListener;
     private BukkitTask socketListenerTask;
     private boolean explorationMode = false;
     private String notGreylistedKickMessage = "You are not greylisted.";
     private String authToken = "changeme";
 
+    private GraylistConfiguration config;
+    private StreamThread streamTask;
+
     /**
      *
      */
     public GreylistModule()
     {
-        setName("Greylist Module");
+        this.setName("Greylist Module");
+        config = new GraylistConfiguration();
         greylistListener = new GreylistListener(this);
         greylistCommandExecutor = new GreylistCommandExecutor(this);
         ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
+        whitelistCommandExecutor = new WhitelistCommandExecutor(this);
     }
 
     @Override
@@ -49,7 +52,20 @@ public class GreylistModule extends GuestModule
     {
         socketListener = new SocketListener(11368, this);
         socketListenerTask = Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), socketListener);
+        if (config.isStreamGraylisting())
+        {
+            this.streamTask = new StreamThread(this);
+            this.streamTask.start();
+        }
         super.onEnable();
+    }
+    @Override
+    public final void onDisable()
+    {
+        if (this.streamTask != null) {
+            this.streamTask.killProcesses();
+        }
+        super.onDisable();
     }
 
     @Override
@@ -66,8 +82,7 @@ public class GreylistModule extends GuestModule
     @Override
     public final Object getConfiguration()
     {
-
-        return this;
+        return this.config;
     }
 
     @Override
@@ -84,6 +99,8 @@ public class GreylistModule extends GuestModule
         HashMap<String, CommandExecutor> commandMapping = new HashMap<>();
         commandMapping.put("greylist", greylistCommandExecutor);
         commandMapping.put("ungreylist", ungreylistCommandExecutor);
+        commandMapping.put("whitelist", whitelistCommandExecutor);
+
         return commandMapping;
     }
 
@@ -164,7 +181,13 @@ public class GreylistModule extends GuestModule
         }
         Persistence.getInstance().save(new Greylistee(name.toLowerCase()));
 
-
+        if (this.config.isSetGroupOnGraylist())
+        {
+            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), name, this.config.getGraylistGroupName()))
+            {
+                VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new graylisted player to group.");
+            }
+        }
     }
 
     public void ungreylist(final String name)
@@ -180,6 +203,9 @@ public class GreylistModule extends GuestModule
                 Persistence.getInstance().delete(greylistee);
             }
         }
-
+    }
+    public GraylistConfiguration getConfig()
+    {
+        return this.config;
     }
 }

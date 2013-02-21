@@ -4,7 +4,6 @@ import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import java.lang.IllegalStateException;
 
 import java.io.File;
 
