@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelguest.modules.greylist;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 
-public class GraylistConfiguration
+public class GreylistConfiguration
 {
     private String streamPasswordHash = "changeme";
     private int streamPort = 8080;
@@ -14,6 +14,19 @@ public class GraylistConfiguration
     private boolean streamGraylisting = false;
     private boolean setGroupOnGraylist = true;
     private String authToken = "changeme";
+    private boolean broadcastGreylists = true;
+
+    @ConfigurationGetter("broadcast-greylists")
+    public boolean isBroadcastGreylists()
+    {
+        return broadcastGreylists;
+    }
+
+    @ConfigurationSetter("broadcast-greylists")
+    public void setBroadcastGreylists(final boolean broadcastGreylists)
+    {
+        this.broadcastGreylists = broadcastGreylists;
+    }
 
     @ConfigurationGetter("exploration-mode")
     public final boolean isExplorationMode()

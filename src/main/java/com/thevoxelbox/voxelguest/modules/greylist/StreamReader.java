@@ -56,7 +56,6 @@ class StreamReader extends Thread {
             for (String name : list)
             {
                 this.module.greylist(name);
-                Bukkit.broadcastMessage(ChatColor.GRAY + name + ChatColor.DARK_GRAY + " was added to the greylist.");
             }
 
         } catch (IOException ex) {

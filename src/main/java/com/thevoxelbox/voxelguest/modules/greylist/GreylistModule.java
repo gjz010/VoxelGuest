@@ -7,6 +7,9 @@ import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.WhitelistCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerGreylistEvent;
+import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerGreylistedEvent;
+import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerUngreylistedEvent;
 import com.thevoxelbox.voxelguest.modules.greylist.injector.SocketListener;
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
@@ -33,8 +36,7 @@ public class GreylistModule extends GuestModule
     private BukkitTask socketListenerTask;
     private boolean explorationMode = false;
     private String notGreylistedKickMessage = "You are not greylisted.";
-
-    private GraylistConfiguration config;
+    private GreylistConfiguration config;
     private StreamThread streamTask;
 
     /**
@@ -43,7 +45,7 @@ public class GreylistModule extends GuestModule
     public GreylistModule()
     {
         this.setName("Greylist Module");
-        config = new GraylistConfiguration();
+        config = new GreylistConfiguration();
         greylistListener = new GreylistListener(this);
         greylistCommandExecutor = new GreylistCommandExecutor(this);
         ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
@@ -63,6 +65,7 @@ public class GreylistModule extends GuestModule
         }
         super.onEnable();
     }
+
     @Override
     public final void onDisable()
     {
@@ -73,7 +76,8 @@ public class GreylistModule extends GuestModule
         socketListener = null;
         socketListenerTask = null;
 
-        if (this.streamTask != null) {
+        if (this.streamTask != null)
+        {
             this.streamTask.killProcesses();
         }
         super.onDisable();
@@ -154,13 +158,26 @@ public class GreylistModule extends GuestModule
         return false;
     }
 
-    public void greylist(final String name)
+    public final void greylist(final String name)
     {
+        try
+        {
+            final PlayerGreylistEvent playerGreylistEvent = new PlayerGreylistEvent(name);
+            Bukkit.getPluginManager().callEvent(playerGreylistEvent);
+            if (playerGreylistEvent.isCancelled())
+            {
+                return;
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
         final HashMap<String, Object> selectRestrictions = new HashMap<>();
         selectRestrictions.put("name", name.toLowerCase());
         final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, selectRestrictions);
 
-        for (Greylistee greylistee : greylistees)
+        for (final Greylistee greylistee : greylistees)
         {
             if (greylistee.getName().equalsIgnoreCase(name))
             {
@@ -169,16 +186,17 @@ public class GreylistModule extends GuestModule
         }
         Persistence.getInstance().save(new Greylistee(name.toLowerCase()));
 
-        if (this.config.isSetGroupOnGraylist())
+        try
         {
-            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), name, this.config.getGraylistGroupName()))
-            {
-                VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new graylisted player to group.");
-            }
+            final PlayerGreylistedEvent playerGreylistedEvent = new PlayerGreylistedEvent(name);
+            Bukkit.getPluginManager().callEvent(playerGreylistedEvent);
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 
-    public void ungreylist(final String name)
+    public final void ungreylist(final String name)
     {
         HashMap<String, Object> selectRestrictions = new HashMap<>();
         selectRestrictions.put("name", name.toLowerCase());
@@ -191,8 +209,18 @@ public class GreylistModule extends GuestModule
                 Persistence.getInstance().delete(greylistee);
             }
         }
+
+        try
+        {
+            final PlayerUngreylistedEvent playerUngreylistedEvent = new PlayerUngreylistedEvent(name);
+            Bukkit.getPluginManager().callEvent(playerUngreylistedEvent);
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
-    public GraylistConfiguration getConfig()
+
+    public GreylistConfiguration getConfig()
     {
         return this.config;
     }
