@@ -30,4 +30,22 @@ public class ReviewRequest
         return guest;
     }
 
+    @Override
+    public boolean equals(final Object other)
+    {
+        if (!(other instanceof ReviewRequest))
+        {
+            return false;
+        }
+        final ReviewRequest otherReq = (ReviewRequest) other;
+        if (!this.getGuest().equals(otherReq.getGuest()))
+        {
+            return false;
+        }
+        if (!this.getLoc().equals(otherReq.getLoc()))
+        {
+            return false;
+        }
+        return true;
+    }
 }

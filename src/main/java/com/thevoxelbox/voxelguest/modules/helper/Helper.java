@@ -13,11 +13,13 @@ public class Helper
     @DatabaseField(generatedId = true)
     private long id;
     @DatabaseField
-    private final String name;
+    private String name = "";
     @DatabaseField
     private int reviews = 0;
     @DatabaseField
     private long lastReview = 0;
+
+    public Helper() {}
 
     public Helper(final String name)
     {
@@ -46,5 +48,24 @@ public class Helper
     public long getTimeOfLastReview()
     {
         return this.lastReview;
+    }
+    
+    @Override
+    public boolean equals(final Object other)
+    {
+        if (!(other instanceof Helper))
+        {
+            return false;
+        }
+        final Helper otherHelper = (Helper) other;
+        if (!this.name.equalsIgnoreCase(otherHelper.getName()))
+        {
+            return false;
+        }
+        if (this.getTimeOfLastReview() != otherHelper.getTimeOfLastReview())
+        {
+            return false;
+        }
+        return true;
     }
 }

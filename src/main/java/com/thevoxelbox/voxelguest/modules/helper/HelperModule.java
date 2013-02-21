@@ -23,7 +23,6 @@ public class HelperModule extends GuestModule
     private final HelperCommand helperCommand;
     private final HelperReviewCommand helperReviewCommand;
 
-
     private final HelperManager manager;
 
     public HelperModule()
@@ -40,13 +39,6 @@ public class HelperModule extends GuestModule
     {
         this.getManager().initHelperList();
         super.onEnable();
-    }
-
-    @Override
-    public void onDisable()
-    {
-        
-        super.onDisable();
     }
 
     @Override

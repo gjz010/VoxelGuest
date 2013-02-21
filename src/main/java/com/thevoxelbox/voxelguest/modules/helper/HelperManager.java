@@ -26,17 +26,21 @@ public class HelperManager
     private final Set<ReviewRequest> activeReviews = new HashSet<>();
     private final Map<String, Helper> helpers = new HashMap<>();
     private final Map<Player, GuestHistoryEntry> lastReview = new HashMap<>();
+    private static final long minTimeBetween = 0x124f80;
 
     /**
-     * Opens up a new review request for the player provided
+     * Opens up a new review request for the player provided.
      *
      * @param player Player to create review for.
      */
     public void newReview(Player player)
     {
-        ReviewRequest review = new ReviewRequest(player, player.getLocation());
-        this.activeReviews.add(review);
-        this.notifyForNewReview(review);
+        if (this.canMakeNewReview(player))
+        {
+            ReviewRequest review = new ReviewRequest(player, player.getLocation());
+            this.activeReviews.add(review);
+            this.notifyForNewReview(review);
+        }
     }
 
     public ReviewRequest getReview(final Player guest)
@@ -49,6 +53,30 @@ public class HelperManager
             }
         }
         return null;
+    }
+
+    /**
+     * Checks to see if a guest can make a new review.
+     *
+     * @param guest
+     * @return
+     */
+    public boolean canMakeNewReview(Player guest)
+    {
+        final ReviewRequest review = this.getReview(guest);
+        if (review == null)
+        {
+            List<GuestHistoryEntry> tmpList = this.getGuestHistory(guest.getName());
+            Collections.sort(tmpList);
+            final long lastReview = tmpList.get(tmpList.size() - 1).getReviewTime();
+            final long timeSinceLastReview = System.currentTimeMillis() - lastReview;
+            if (timeSinceLastReview >= HelperManager.minTimeBetween)
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -164,7 +192,8 @@ public class HelperManager
         {
             if (request.getGuest().isOnline())
             {
-                stringBuilder.append(ChatColor.GRAY + "Name" + ChatColor.WHITE + ":" + ChatColor.GOLD + request.getGuest().getName() + "(" + ChatColor.DARK_AQUA + this.getGuestHistory(request.getGuest().getName()).size() + ")\n");
+                stringBuilder.append(ChatColor.GRAY + "Name" + ChatColor.WHITE + ":" + ChatColor.GOLD + request.getGuest().getName()
+                        + "(" + ChatColor.DARK_AQUA + this.getGuestHistory(request.getGuest().getName()).size() + ")\n");
             }
         }
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
@@ -196,16 +225,7 @@ public class HelperManager
     {
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            boolean isHelper = false;
-            if (this.helpers.containsKey(player.getName()))
-            {
-                isHelper = true;
-            }
-            else if (player.hasPermission("voxelguest.helper.adminhelper"))
-            {
-                isHelper = true;
-            }
-            if (isHelper)
+            if (this.isHelper(player))
             {
                 player.sendMessage(messageForHelpers);
             }
@@ -225,6 +245,12 @@ public class HelperManager
         return Persistence.getInstance().loadAll(GuestHistoryEntry.class, selectRestrictions);
     }
 
+    /**
+     * Creates, formats, and sends a message to the specified helper, informing them of review history of a specified guest.
+     *
+     * @param helper The helper requesting the history
+     * @param guestName The guest 
+     */
     public void sendHelperGuestHistory(Player helper, String guestName)
     {
         final List<GuestHistoryEntry> history = this.getGuestHistory(guestName); 
@@ -245,11 +271,30 @@ public class HelperManager
             final GuestHistoryEntry entry = reviewListItr.next();
             final Calendar date = new GregorianCalendar();
             date.setTimeInMillis(entry.getReviewTime());
-            String dateStr = date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ". " + date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR) + " at " + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE);
-            stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD + reviewListItr.previousIndex() + ChatColor.DARK_AQUA + ")" + ChatColor.GRAY + " by " + ChatColor.GOLD + entry.getReviewerName() + ChatColor.GRAY + " on " + ChatColor.DARK_AQUA + dateStr + ChatColor.GRAY + ChatColor.ITALIC + "- " + entry.getComment() + "\n");
+
+            String dateStr = date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ". "
+                    + date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR) + " at "
+                    + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE);
+
+            stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD + reviewListItr.previousIndex() + ChatColor.DARK_AQUA + ")"
+                    + ChatColor.GRAY + " by " + ChatColor.GOLD + entry.getReviewerName() + ChatColor.GRAY + " on "
+                    + ChatColor.DARK_AQUA + dateStr + ChatColor.GRAY + ChatColor.ITALIC + "- " + entry.getComment() + "\n");
+
         }
         stringBuilder.append(ChatColor.DARK_GRAY + "=====================================\n");
 
         helper.sendMessage(stringBuilder.toString());
+    }
+    public boolean isHelper(Player player)
+    {
+        if (this.helpers.containsKey(player.getName()))
+        {
+            return true;
+        }
+        if (player.hasPermission("voxelguest.helper.adminhelper"))
+        {
+            return true;
+        }
+        return false;
     }
 }

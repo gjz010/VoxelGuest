@@ -27,7 +27,7 @@ public class HelperReviewCommand implements TabExecutor
         if (sender instanceof Player)
         {
             final Player player = (Player) sender;
-            if (sender.hasPermission("voxelguest.helper.adminhelper") ? true : this.module.getManager().getHelper(player) != null)
+            if (this.module.getManager().isHelper(player))
             {
                 if (args.length >= 1)
                 {

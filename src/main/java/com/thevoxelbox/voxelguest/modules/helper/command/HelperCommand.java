@@ -35,16 +35,19 @@ public class HelperCommand implements TabExecutor {
                 {
                     this.module.getManager().addHelper(matches.get(0));
                     sender.sendMessage(ChatColor.GRAY + "Sucessfully added!");
+                    return true;
                 }
                 else
                 {
                     if (matches.size() > 1)
                     {
                         sender.sendMessage(ChatColor.DARK_RED + "Multiple matches found for \"" + args[1] + "\"");
+                        return true;
                     }
                     else
                     {
                         sender.sendMessage(ChatColor.DARK_RED + "No matches found for \"" + args[1] + "\"");
+                        return true;
                     }
                 }
             }
@@ -58,10 +61,12 @@ public class HelperCommand implements TabExecutor {
                     {
                         this.module.getManager().removeHelper(oldHelper);
                         sender.sendMessage(ChatColor.GRAY + "Sucessfully added!");
+                        return true;
                     }
                     else
                     {
                         sender.sendMessage(ChatColor.DARK_RED + "Player called \"" + matches.get(0).getName() + "\" is not a helper");
+                        return true;
                     }
                 }
                 else
@@ -69,10 +74,12 @@ public class HelperCommand implements TabExecutor {
                     if (matches.size() > 1)
                     {
                         sender.sendMessage(ChatColor.DARK_RED + "Multiple matches found for \"" + args[1] + "\"");
+                        return true;
                     }
                     else
                     {
                         sender.sendMessage(ChatColor.DARK_RED + "No matches found for \"" + args[1] + "\"");
+                        return true;
                     }
                 }
             }
