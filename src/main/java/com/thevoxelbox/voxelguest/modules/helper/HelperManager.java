@@ -33,17 +33,23 @@ public class HelperManager
      *
      * @param player Player to create review for.
      */
-    public void newReview(Player player)
+    public void newReview(final Player player)
     {
         if (this.canMakeNewReview(player))
         {
-            ReviewRequest review = new ReviewRequest(player, player.getLocation());
+            final ReviewRequest review = new ReviewRequest(player, player.getLocation());
             this.activeReviews.add(review);
             this.notifyForNewReview(review);
             player.sendMessage(ChatColor.GRAY + "Please wait for a helper to come and review your build");
         }
     }
 
+    /**
+     * Gets a review that matches the player provided of null if no match exists.
+     *
+     * @param guest Player to query a review for
+     * @return Review for the specified guest
+     */
     public ReviewRequest getReview(final Player guest)
     {
         for (ReviewRequest review : this.activeReviews)
@@ -62,12 +68,12 @@ public class HelperManager
      * @param guest
      * @return
      */
-    public boolean canMakeNewReview(Player guest)
+    public boolean canMakeNewReview(final Player guest)
     {
         final ReviewRequest review = this.getReview(guest);
         if (review == null)
         {
-            List<GuestHistoryEntry> tmpList = this.getGuestHistory(guest.getName());
+            final List<GuestHistoryEntry> tmpList = this.getGuestHistory(guest.getName());
             if (tmpList.size() != 0)
             {
                 Collections.sort(tmpList);
@@ -94,13 +100,13 @@ public class HelperManager
      * @param helper The helper closing the review
      * @param review The review to be closed
      */
-    public void closeReview(Player helper, ReviewRequest review)
+    public void closeReview(final Player helper, final ReviewRequest review)
     {
         this.activeReviews.remove(review);
-        GuestHistoryEntry reviewHistorical = new GuestHistoryEntry(review.getGuest().getName(), helper.getName());
+        final GuestHistoryEntry reviewHistorical = new GuestHistoryEntry(review.getGuest().getName(), helper.getName());
         Persistence.getInstance().save(reviewHistorical);
         this.lastReview.put(helper, reviewHistorical);
-        Helper helperObj = this.getHelper(helper);
+        final Helper helperObj = this.getHelper(helper);
         if (helperObj != null)
         {
             helperObj.review();
@@ -114,7 +120,7 @@ public class HelperManager
      * @param helper Helper adding a comment
      * @param comment The comment being added
      */
-    public void addComment(Player helper, String comment)
+    public void addComment(final Player helper, final String comment)
     {
         final GuestHistoryEntry historyEntry = this.lastReview.get(helper);
         if (historyEntry != null)
@@ -135,7 +141,7 @@ public class HelperManager
      *
      * @param newHelper Player to add as a helper
      */
-    public void addHelper(Player newHelper)
+    public void addHelper(final Player newHelper)
     {
         final Helper newHelperObj = new Helper(newHelper.getName());
         Persistence.getInstance().save(newHelperObj);
@@ -147,7 +153,7 @@ public class HelperManager
      * 
      * @param oldHelper
      */
-    public boolean removeHelper(Helper oldHelper)
+    public boolean removeHelper(final Helper oldHelper)
     {
         if (this.helpers.containsKey(oldHelper.getName()))
         {
@@ -176,7 +182,7 @@ public class HelperManager
      * @param helper Player to find corresponding helper object
      * @return helper object corresponding with the player
      */
-    public Helper getHelper(Player helper)
+    public Helper getHelper(final Player helper)
     {
         return this.helpers.get(helper.getName());
     }
@@ -195,7 +201,7 @@ public class HelperManager
         {
             return null;
         }
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
         stringBuilder.append(ChatColor.DARK_AQUA + "Whitelist Requests\n");
         for (ReviewRequest request : this.activeReviews)
@@ -218,12 +224,12 @@ public class HelperManager
      *
      * @param review
      */
-    public void notifyForNewReview(ReviewRequest review)
+    public void notifyForNewReview(final ReviewRequest review)
     {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
         stringBuilder.append(ChatColor.DARK_AQUA + "New Whitelist Review\n");
-        stringBuilder.append(ChatColor.GRAY + "Name" + ChatColor.WHITE + ": " + ChatColor.GOLD + review.getGuest().getName() + "\n");
+        stringBuilder.append(ChatColor.GREEN + "Name" + ChatColor.GRAY + ": " + ChatColor.GOLD + review.getGuest().getName() + "\n");
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
 
         this.notifyHelpers(stringBuilder.toString());
@@ -234,7 +240,7 @@ public class HelperManager
      *
      * @param messageForHelpers
      */
-    public void notifyHelpers(String messageForHelpers)
+    public void notifyHelpers(final String messageForHelpers)
     {
         for (Player player : Bukkit.getOnlinePlayers())
         {
@@ -251,9 +257,9 @@ public class HelperManager
      * @param playerName Name of the guest to search for history
      * @return List of all review history
      */
-    public List<GuestHistoryEntry> getGuestHistory(String playerName)
+    public List<GuestHistoryEntry> getGuestHistory(final String playerName)
     {
-        HashMap<String, Object> selectRestrictions = new HashMap<>();
+        final HashMap<String, Object> selectRestrictions = new HashMap<>();
         selectRestrictions.put("guestName", playerName);
         return Persistence.getInstance().loadAll(GuestHistoryEntry.class, selectRestrictions);
     }
@@ -264,7 +270,7 @@ public class HelperManager
      * @param helper The helper requesting the history
      * @param guestName The guest 
      */
-    public void sendHelperGuestHistory(Player helper, String guestName)
+    public void sendHelperGuestHistory(final Player helper, final String guestName)
     {
         final List<GuestHistoryEntry> history = this.getGuestHistory(guestName); 
         if (history.isEmpty())
@@ -272,9 +278,9 @@ public class HelperManager
             return;
         }
         Collections.sort(history);
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.DARK_GRAY + "=====================================\n");
-        stringBuilder.append(ChatColor.DARK_AQUA + "Whitelist Review History for" + ChatColor.GRAY + ": " + guestName + "\n");
+        stringBuilder.append(ChatColor.DARK_AQUA + "Whitelist Review History for" + ChatColor.DARK_GRAY + ": " + ChatColor.GOLD + guestName + "\n");
         stringBuilder.append(ChatColor.DARK_GRAY + "=====================================\n");
 
         final ListIterator<GuestHistoryEntry> reviewListItr = history.listIterator();
@@ -285,16 +291,17 @@ public class HelperManager
             final Calendar date = new GregorianCalendar();
             date.setTimeInMillis(entry.getReviewTime());
 
-            String dateStr = date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ". "
+            final String dateStr = date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + ". "
                     + date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR) + " at "
                     + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE);
 
-            stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD + reviewListItr.previousIndex() + ChatColor.DARK_AQUA + ")"
+            stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD + (reviewListItr.previousIndex() + 1) + ChatColor.DARK_AQUA + ")"
                     + ChatColor.GRAY + " by " + ChatColor.GOLD + entry.getReviewerName() + ChatColor.GRAY + " on "
                     + ChatColor.DARK_AQUA + dateStr);
+
             if (!entry.getComment().equals(""))
             {
-                stringBuilder.append("" + ChatColor.GRAY + ChatColor.ITALIC + "- " + entry.getComment() + "\n");
+                stringBuilder.append(ChatColor.GRAY.toString() + ChatColor.ITALIC + " - " + entry.getComment() + "\n");
             }
             else
             {
@@ -305,7 +312,7 @@ public class HelperManager
 
         helper.sendMessage(stringBuilder.toString());
     }
-    public boolean isHelper(Player player)
+    public boolean isHelper(final Player player)
     {
         if (this.helpers.containsKey(player.getName()))
         {

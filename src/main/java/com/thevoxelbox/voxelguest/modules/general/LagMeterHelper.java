@@ -89,7 +89,7 @@ public class LagMeterHelper extends Thread
                 }
                 try
                 {
-                    Thread.sleep(0xbb8);
+                    Thread.sleep(3000);
                 }
                 catch (InterruptedException e)
                 {

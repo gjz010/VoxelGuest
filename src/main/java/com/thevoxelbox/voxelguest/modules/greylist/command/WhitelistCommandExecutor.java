@@ -14,18 +14,21 @@ import org.bukkit.entity.Player;
 import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 
-public class WhitelistCommandExecutor implements TabExecutor {
+public class WhitelistCommandExecutor implements TabExecutor
+{
     private final GreylistModule module;
 
-    public WhitelistCommandExecutor(final GreylistModule module) {
+    public WhitelistCommandExecutor(final GreylistModule module)
+    {
         this.module = module;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
         if (args.length == 1)
         {
-            List<Player> matchPlayer = Bukkit.matchPlayer(args[0]);
+            final List<Player> matchPlayer = Bukkit.matchPlayer(args[0]);
             if (matchPlayer.size() == 1)
             {
                 Player match = matchPlayer.get(0);
@@ -33,7 +36,7 @@ public class WhitelistCommandExecutor implements TabExecutor {
                 {
                     if (groupName.equalsIgnoreCase(this.module.getConfig().getWhitelistGroupName()))
                     {
-                        for (final String oldGroupName : VoxelGuest.getPerms().getPlayerGroups(match))
+                        for (String oldGroupName : VoxelGuest.getPerms().getPlayerGroups(match))
                         {
                             VoxelGuest.getPerms().playerRemoveGroup(match, oldGroupName);
                         }
@@ -84,7 +87,7 @@ public class WhitelistCommandExecutor implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         return null;
     }
 }

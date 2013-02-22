@@ -51,6 +51,7 @@ public class HelperReviewCommand implements TabExecutor
                             if (matches.size() == 1)
                             {
                                 this.module.getManager().sendHelperGuestHistory(player, matches.get(0).getName());
+                                return true;
                             }
                             else
                             {
@@ -120,7 +121,8 @@ public class HelperReviewCommand implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+    {
         return null;
     }
 }
