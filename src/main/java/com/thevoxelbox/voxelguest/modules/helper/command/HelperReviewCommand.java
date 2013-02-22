@@ -45,9 +45,9 @@ public class HelperReviewCommand implements TabExecutor
                     }
                     if (args[0].equalsIgnoreCase("-h"))
                     {
-                        if (args.length == 3)
+                        if (args.length == 2)
                         {
-                            final List<Player> matches = Bukkit.matchPlayer(args[2]);
+                            final List<Player> matches = Bukkit.matchPlayer(args[1]);
                             if (matches.size() == 1)
                             {
                                 this.module.getManager().sendHelperGuestHistory(player, matches.get(0).getName());
@@ -57,19 +57,22 @@ public class HelperReviewCommand implements TabExecutor
                                 if (matches.size() > 1)
                                 {
                                     sender.sendMessage(ChatColor.DARK_RED + "Multiple matches found for \"" + args[1] + "\"");
+                                    return true;
                                 }
                                 else
                                 {
                                     sender.sendMessage(ChatColor.DARK_RED + "No matches found for \"" + args[1] + "\"");
+                                    return true;
                                 }
                             }
                         }
                         else
                         {
                             sender.sendMessage("Please specify a player!");
+                            return true;
                         }
                     }
-                    List<Player> matches = Bukkit.matchPlayer(args[1]);
+                    List<Player> matches = Bukkit.matchPlayer(args[0]);
                     if (matches.size() == 1)
                     {
                         final Player guest = matches.get(0);
@@ -80,6 +83,7 @@ public class HelperReviewCommand implements TabExecutor
                             guest.teleport(player);
                             this.module.getManager().closeReview(player, review);
                             this.module.getManager().sendHelperGuestHistory(player, guest.getName());
+                            return true;
                         }
                     }
                     else
@@ -87,10 +91,12 @@ public class HelperReviewCommand implements TabExecutor
                         if (matches.size() > 1)
                         {
                             sender.sendMessage(ChatColor.DARK_RED + "Multiple matches found for \"" + args[1] + "\"");
+                            return true;
                         }
                         else
                         {
                             sender.sendMessage(ChatColor.DARK_RED + "No matches found for \"" + args[1] + "\"");
+                            return true;
                         }
                     }
                 }
@@ -100,10 +106,12 @@ public class HelperReviewCommand implements TabExecutor
                     if (reviews != null)
                     {
                         player.sendMessage(reviews);
+                        return true;
                     }
                     else
                     {
                         player.sendMessage("There are currenly no WL reviews");
+                        return true;
                     }
                 }
             }

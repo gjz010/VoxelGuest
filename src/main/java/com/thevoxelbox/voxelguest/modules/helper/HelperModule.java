@@ -23,6 +23,8 @@ public class HelperModule extends GuestModule
     private final HelperCommand helperCommand;
     private final HelperReviewCommand helperReviewCommand;
 
+    private final HelperListener connectionListener;
+
     private final HelperManager manager;
 
     public HelperModule()
@@ -32,6 +34,7 @@ public class HelperModule extends GuestModule
         this.helperCommand = new HelperCommand(this);
         this.helperReviewCommand = new HelperReviewCommand(this);
         this.manager = new HelperManager();
+        this.connectionListener = new HelperListener(this);
     }
 
     @Override

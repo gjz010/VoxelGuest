@@ -26,7 +26,7 @@ public class HelperManager
     private final Set<ReviewRequest> activeReviews = new HashSet<>();
     private final Map<String, Helper> helpers = new HashMap<>();
     private final Map<Player, GuestHistoryEntry> lastReview = new HashMap<>();
-    private static final long minTimeBetween = 0x124f80;
+    private static final long minTimeBetween = 1200000;
 
     /**
      * Opens up a new review request for the player provided.
@@ -40,6 +40,7 @@ public class HelperManager
             ReviewRequest review = new ReviewRequest(player, player.getLocation());
             this.activeReviews.add(review);
             this.notifyForNewReview(review);
+            player.sendMessage(ChatColor.GRAY + "Please wait for a helper to come and review your build");
         }
     }
 
@@ -67,13 +68,21 @@ public class HelperManager
         if (review == null)
         {
             List<GuestHistoryEntry> tmpList = this.getGuestHistory(guest.getName());
-            Collections.sort(tmpList);
-            final long lastReview = tmpList.get(tmpList.size() - 1).getReviewTime();
-            final long timeSinceLastReview = System.currentTimeMillis() - lastReview;
-            if (timeSinceLastReview >= HelperManager.minTimeBetween)
+            if (tmpList.size() != 0)
+            {
+                Collections.sort(tmpList);
+                final long lastReview = tmpList.get(tmpList.size() - 1).getReviewTime();
+                final long timeSinceLastReview = System.currentTimeMillis() - lastReview;
+                if (timeSinceLastReview >= HelperManager.minTimeBetween)
+                {
+                    return true;
+                }
+            }
+            else
             {
                 return true;
             }
+            guest.sendMessage(ChatColor.RED + "You can not currently submit a review");
             return false;
         }
         return false;
@@ -110,6 +119,7 @@ public class HelperManager
         final GuestHistoryEntry historyEntry = this.lastReview.get(helper);
         if (historyEntry != null)
         {
+            Persistence.getInstance().delete(historyEntry);
             historyEntry.setComment(comment);
             Persistence.getInstance().save(historyEntry);
             helper.sendMessage(ChatColor.GRAY + "Comment successfuly added");
@@ -192,8 +202,11 @@ public class HelperManager
         {
             if (request.getGuest().isOnline())
             {
-                stringBuilder.append(ChatColor.GRAY + "Name" + ChatColor.WHITE + ":" + ChatColor.GOLD + request.getGuest().getName()
-                        + "(" + ChatColor.DARK_AQUA + this.getGuestHistory(request.getGuest().getName()).size() + ")\n");
+                stringBuilder.append(ChatColor.GREEN + "Name" + ChatColor.WHITE + ": "
+                        + ChatColor.DARK_AQUA + request.getGuest().getName()
+                        + ChatColor.DARK_GRAY + "(" + ChatColor.GOLD
+                        + this.getGuestHistory(request.getGuest().getName()).size()
+                        + ChatColor.DARK_GRAY + ")\n");
             }
         }
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
@@ -278,8 +291,15 @@ public class HelperManager
 
             stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD + reviewListItr.previousIndex() + ChatColor.DARK_AQUA + ")"
                     + ChatColor.GRAY + " by " + ChatColor.GOLD + entry.getReviewerName() + ChatColor.GRAY + " on "
-                    + ChatColor.DARK_AQUA + dateStr + ChatColor.GRAY + ChatColor.ITALIC + "- " + entry.getComment() + "\n");
-
+                    + ChatColor.DARK_AQUA + dateStr);
+            if (!entry.getComment().equals(""))
+            {
+                stringBuilder.append("" + ChatColor.GRAY + ChatColor.ITALIC + "- " + entry.getComment() + "\n");
+            }
+            else
+            {
+                stringBuilder.append("\n");
+            }
         }
         stringBuilder.append(ChatColor.DARK_GRAY + "=====================================\n");
 
