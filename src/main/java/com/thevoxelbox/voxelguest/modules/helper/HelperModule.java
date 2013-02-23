@@ -48,6 +48,7 @@ public class HelperModule extends GuestModule
     public Set<Listener> getListeners()
     {
         final Set<Listener> listeners = new HashSet<>();
+        listeners.add(this.connectionListener);
         return listeners;
     }
 

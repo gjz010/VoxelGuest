@@ -21,7 +21,7 @@ import com.thevoxelbox.voxelguest.persistence.Persistence;
  *
  * @author TheCryoknight
  */
-public class HelperManager
+public final class HelperManager
 {
     private final Set<ReviewRequest> activeReviews = new HashSet<>();
     private final Map<String, Helper> helpers = new HashMap<>();
@@ -45,7 +45,8 @@ public class HelperManager
     }
 
     /**
-     * Gets a review that matches the player provided of null if no match exists.
+     * Gets a review that matches the player provided
+     * or null if no match exists.
      *
      * @param guest Player to query a review for
      * @return Review for the specified guest
@@ -65,8 +66,8 @@ public class HelperManager
     /**
      * Checks to see if a guest can make a new review.
      *
-     * @param guest
-     * @return
+     * @param guest Player to check if they can create a new review
+     * @return true if player can create a review
      */
     public boolean canMakeNewReview(final Player guest)
     {
@@ -115,7 +116,7 @@ public class HelperManager
     }
 
     /**
-     * Adds a comment to the last review performed by the specified helper
+     * Adds a comment to the last review performed by the specified helper.
      *
      * @param helper Helper adding a comment
      * @param comment The comment being added
@@ -137,7 +138,8 @@ public class HelperManager
     }
 
     /**
-     * Adds a helper to the non-administrator list of helpers and saves them to the database (administrator list is permission based).
+     * Adds a helper to the non-administrator list of helpers and
+     * saves them to the database (administrator list is permission based).
      *
      * @param newHelper Player to add as a helper
      */
@@ -149,9 +151,11 @@ public class HelperManager
     }
 
     /**
-     * Removes a helper from the non-administrator list of helpers and deletes them to the database (administrator list is permission based).
-     * 
-     * @param oldHelper
+     * Removes a helper from the non-administrator list of helpers and deletes
+     * them to the database (administrator list is permission based).
+     *
+     * @param oldHelper Helper to remove
+     * @return True if successfully removed region
      */
     public boolean removeHelper(final Helper oldHelper)
     {
@@ -165,11 +169,11 @@ public class HelperManager
     }
 
     /**
-     * Initializes the list of non-administrator helpers to ram
+     * Initializes the list of non-administrator helpers to ram.
      */
     public void initHelperList()
     {
-        List<Helper> tmpHelperList = Persistence.getInstance().loadAll(Helper.class);
+        final List<Helper> tmpHelperList = Persistence.getInstance().loadAll(Helper.class);
         for (Helper helper : tmpHelperList)
         {
             this.helpers.put(helper.getName(), helper);
@@ -177,7 +181,8 @@ public class HelperManager
     }
 
     /**
-     * Gets the helper object corresponding with the player provided or returns null if no player on list.
+     * Gets the helper object corresponding with the player provided
+     * or returns null if no player on list.
      *
      * @param helper Player to find corresponding helper object
      * @return helper object corresponding with the player
@@ -220,7 +225,7 @@ public class HelperManager
     }
 
     /**
-     * Notifies all of the currently online helpers that there is a new whitelist review
+     * Notifies all of the currently online helpers that there is a new whitelist review.
      *
      * @param review
      */
@@ -229,7 +234,7 @@ public class HelperManager
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
         stringBuilder.append(ChatColor.DARK_AQUA + "New Whitelist Review\n");
-        stringBuilder.append(ChatColor.GREEN + "Name" + ChatColor.GRAY + ": " + ChatColor.GOLD + review.getGuest().getName() + "\n");
+        stringBuilder.append(ChatColor.DARK_AQUA + "Name" + ChatColor.GRAY + ": " + ChatColor.GOLD + review.getGuest().getName() + "\n");
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
 
         this.notifyHelpers(stringBuilder.toString());
@@ -238,7 +243,7 @@ public class HelperManager
     /**
      * Core notify method sends specified string to all online helpers.
      *
-     * @param messageForHelpers
+     * @param messageForHelpers Message to send
      */
     public void notifyHelpers(final String messageForHelpers)
     {
@@ -252,7 +257,8 @@ public class HelperManager
     }
 
     /**
-     * Searches through the database an finds all historical guest reviews for the name provided.
+     * Searches through the database and finds all historical
+     * guest reviews for the name provided.
      *
      * @param playerName Name of the guest to search for history
      * @return List of all review history
@@ -265,10 +271,11 @@ public class HelperManager
     }
 
     /**
-     * Creates, formats, and sends a message to the specified helper, informing them of review history of a specified guest.
+     * Creates, formats, and sends a message to the specified helper,
+     * informing them of review history of a specified guest.
      *
      * @param helper The helper requesting the history
-     * @param guestName The guest 
+     * @param guestName The guest
      */
     public void sendHelperGuestHistory(final Player helper, final String guestName)
     {
@@ -286,7 +293,7 @@ public class HelperManager
         final ListIterator<GuestHistoryEntry> reviewListItr = history.listIterator();
         while (reviewListItr.hasNext())
         {
-            //TODO: Time zone stuffs
+            //TODO : Time zone stuffs
             final GuestHistoryEntry entry = reviewListItr.next();
             final Calendar date = new GregorianCalendar();
             date.setTimeInMillis(entry.getReviewTime());
@@ -312,6 +319,13 @@ public class HelperManager
 
         helper.sendMessage(stringBuilder.toString());
     }
+
+    /**
+     * Checks to see if a player is a helper.
+     *
+     * @param player player to check
+     * @return true if player is a helper
+     */
     public boolean isHelper(final Player player)
     {
         if (this.helpers.containsKey(player.getName()))

@@ -26,7 +26,8 @@ public class HelperCommand implements TabExecutor
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command,
+            final String label, final String[] args)
     {
         if (args.length <= 2)
         {
@@ -95,7 +96,8 @@ public class HelperCommand implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public List<String> onTabComplete(final CommandSender sender, final Command command,
+            final String alias, final String[] args)
     {
         return null;
     }

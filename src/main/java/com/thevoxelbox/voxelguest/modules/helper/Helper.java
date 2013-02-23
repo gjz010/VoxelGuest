@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author TheCryoknight
  */
 @DatabaseTable(tableName = "helpers")
-public class Helper
+public final class Helper
 {
     @DatabaseField(generatedId = true)
     private long id;
@@ -35,21 +35,30 @@ public class Helper
         this.lastReview = System.currentTimeMillis();
     }
 
+    /**
+     * @return The number of reviews this helper has performed.
+     */
     public int getReviews()
     {
         return this.reviews;
     }
 
+    /**
+     * @return The in game name of the helper.
+     */
     public String getName()
     {
         return name;
     }
 
+    /**
+     * @return The time (as a long) of the last review from this helper
+     */
     public long getTimeOfLastReview()
     {
         return this.lastReview;
     }
-    
+
     @Override
     public boolean equals(final Object other)
     {
@@ -69,3 +78,4 @@ public class Helper
         return true;
     }
 }
+

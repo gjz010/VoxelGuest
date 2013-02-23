@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest.modules.helper.command;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,13 +18,17 @@ public class WLReviewCommand implements CommandExecutor
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {
             if(!sender.hasPermission("voxelguest.helper.wloveride"))
             {
                 this.module.getManager().newReview((Player) sender);
+            }
+            else
+            {
+                sender.sendMessage(ChatColor.RED + "You can no longer submit a whitelist review!");
             }
             return true;
         }

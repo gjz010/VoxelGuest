@@ -22,7 +22,8 @@ public class HelperReviewCommand implements TabExecutor
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command,
+            final String label, final String[] args)
     {
         if (sender instanceof Player)
         {
@@ -121,7 +122,7 @@ public class HelperReviewCommand implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         return null;
     }

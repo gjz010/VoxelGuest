@@ -6,6 +6,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ * 
+ * @author TheCryoknight
+ *
+ */
 public class HelperListener implements Listener
 {
     private final HelperModule module;
