@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.runnables;
 
 /**
  * Helps determine the number of ticks in a second by polling the system time at select intervals.

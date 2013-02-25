@@ -138,7 +138,7 @@ public class RegionManager
      */
     public List<String> getRegionNames()
     {
-        List<String> nameList = new ArrayList<>();
+        final List<String> nameList = new ArrayList<>();
         for (Region region : this.activeRegions)
         {
             nameList.add(region.getRegionName());
@@ -153,5 +153,16 @@ public class RegionManager
         {
             this.activeRegions.add(region);
         }
+    }
+
+    /**
+     * Creates an array that contains all of the currently active regions.
+     * Any modifications to this array will NOT effect the list of active regions.
+     *
+     * @return Array of active regions
+     */
+    public Region[] getActiveRegions()
+    {
+        return this.activeRegions.toArray(new Region[this.activeRegions.size()]);
     }
 }

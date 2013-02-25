@@ -17,6 +17,7 @@ public class GeneralModuleConfiguration
     private String guestColor = ChatColor.GRAY.toString();
     private String visitorColor = ChatColor.DARK_GRAY.toString();
     private String vipColor = ChatColor.DARK_AQUA.toString();
+    private String builderColor = ChatColor.BLUE.toString();
     private boolean randomAfkMsgs = true;
     private boolean defaultWatchTPSState = true;
 
@@ -134,6 +135,16 @@ public class GeneralModuleConfiguration
         this.vipColor = vipColor;
     }
 
+    @ConfigurationGetter("builder-color")
+    public String getBuilderColor() {
+        return builderColor;
+    }
+
+    @ConfigurationSetter("builder-color")
+    public void setBuilderColor(final String builderColor) {
+        this.builderColor = builderColor;
+    }
+
     @ConfigurationGetter("kick-format")
     public final String getKickFormat()
     {
@@ -213,7 +224,7 @@ public class GeneralModuleConfiguration
     }
 
     @ConfigurationSetter("random-afk-messages")
-    public void setRandomAfkMsgs(boolean randomAfkMsgs)
+    public void setRandomAfkMsgs(final boolean randomAfkMsgs)
     {
         this.randomAfkMsgs = randomAfkMsgs;
     }
@@ -225,7 +236,7 @@ public class GeneralModuleConfiguration
     }
 
     @ConfigurationSetter("force-watch-tps")
-    public void setDefaultWatchTPSState(boolean defaultWatchTPSState)
+    public void setDefaultWatchTPSState(final boolean defaultWatchTPSState)
     {
         this.defaultWatchTPSState = defaultWatchTPSState;
     }

@@ -84,7 +84,11 @@ commands:
   afk:
     aliases: [afk, vafk]
     permission: voxelguest.general.afk
-    description: Tells the server the the player is away from their keyboard
+    description: Tells the server the the player is away from their keyboard.
+  addafkmessage:
+    aliases: [addafkmessage, addafkmsg, vaddafkmsg]
+    permission: voxelguest.general.createafkmsg
+    description: adds a new afk message for the random afk message system.
   watchtps:
     aliases: [watchtps, vwatchtps]
     permission: voxelguest.general.watchtps
@@ -99,4 +103,4 @@ commands:
   helperreview:
     aliases: [helperreview, hreview]
     permission: voxelguest.helper.review
-    description: Reviews a Whitelist review ticket
+    description: Reviews a Whitelist review ticket    

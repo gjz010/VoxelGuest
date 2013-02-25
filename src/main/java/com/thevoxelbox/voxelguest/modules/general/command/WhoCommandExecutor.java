@@ -60,7 +60,7 @@ public class WhoCommandExecutor implements CommandExecutor
 
         for (String groupName : groups.keySet())
         {
-            header += ChatColor.DARK_GRAY + "[" + getColour(groupName) + groupName.substring(0, 1).toUpperCase() + ":" + groups.get(groupName).size() + ChatColor.DARK_GRAY + "] ";
+            header += ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + groupName.substring(0, 1).toUpperCase() + ":" + groups.get(groupName).size() + ChatColor.DARK_GRAY + "] ";
         }
 
         final int numOnlinePlayers = Bukkit.getOnlinePlayers().length - this.module.getVanishFakequitHandler().getFakequitSize();
@@ -70,10 +70,17 @@ public class WhoCommandExecutor implements CommandExecutor
         for (String groupName : groups.keySet())
         {
             final List<String> names = groups.get(groupName);
-            String groupOut = ChatColor.DARK_GRAY + "[" + getColour(groupName) + groupName.substring(0, 1).toUpperCase() + ChatColor.DARK_GRAY + "] ";
+            String groupOut = ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + groupName.substring(0, 1).toUpperCase() + ChatColor.DARK_GRAY + "] ";
             for (int i = 0; i < names.size(); i++)
             {
-                groupOut += ChatColor.WHITE + names.get(i);
+                if (this.module.getAfkManager().isPlayerAfk(Bukkit.getPlayer(names.get(i))))
+                {
+                    groupOut += ChatColor.GRAY + names.get(i);
+                }
+                else
+                {
+                    groupOut += ChatColor.WHITE + names.get(i);
+                }
                 if (i < names.size() - 1)
                 {
                     groupOut += ChatColor.GOLD + ", ";
@@ -87,7 +94,7 @@ public class WhoCommandExecutor implements CommandExecutor
         return true;
     }
 
-    private String getColour(final String groupStr)
+    private String getColor(final String groupStr)
     {
         if (groupStr.equalsIgnoreCase("admin"))
         {
@@ -127,6 +134,11 @@ public class WhoCommandExecutor implements CommandExecutor
         if (groupStr.equalsIgnoreCase("vip"))
         {
             return configuration.getVipColor();
+        }
+
+        if (groupStr.equalsIgnoreCase("builder"))
+        {
+            return configuration.getBuilderColor();
         }
 
         return ChatColor.WHITE.toString();

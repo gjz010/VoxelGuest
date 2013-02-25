@@ -80,7 +80,13 @@ public class RegionCommand implements TabExecutor
         }
         if (args[0].equalsIgnoreCase("regions"))
         {
-            //TODO: Iterate all active regions
+            sender.sendMessage(ChatColor.GREEN + "Active regions");
+            sender.sendMessage(ChatColor.GRAY + "-----------------------");
+            for (Region region : this.regionModule.getRegionManager().getActiveRegions())
+            {
+                sender.sendMessage(region.toColoredString());
+                sender.sendMessage(ChatColor.GRAY + "-----------------------");
+            }
             return true;
         }
 

@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.runnables;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,17 +10,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+
 /**
  *
  * @author TheCryoknight
  */
-public class LagMeterHelper extends Thread
+public class LagMeterHelperThread extends Thread
 {
     private final Set<Player> activePlayers = Collections.synchronizedSet(new HashSet<Player>());
     private volatile boolean isStoped = false;
 
 
-    public LagMeterHelper()
+    public LagMeterHelperThread()
     {
         
     }
