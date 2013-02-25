@@ -141,11 +141,11 @@ public final class HelperManager
      * Adds a helper to the non-administrator list of helpers and
      * saves them to the database (administrator list is permission based).
      *
-     * @param newHelper Player to add as a helper
+     * @param newHelper Player name to add as a helper
      */
-    public void addHelper(final Player newHelper)
+    public void addHelper(final String newHelper)
     {
-        final Helper newHelperObj = new Helper(newHelper.getName());
+        final Helper newHelperObj = new Helper(newHelper);
         Persistence.getInstance().save(newHelperObj);
         this.helpers.put(newHelperObj.getName(), newHelperObj);
     }

@@ -36,7 +36,7 @@ public class HelperCommand implements TabExecutor
                 List<Player> matches = Bukkit.matchPlayer(args[1]);
                 if (matches.size() == 1)
                 {
-                    this.module.getManager().addHelper(matches.get(0));
+                    this.module.getManager().addHelper(matches.get(0).getName());
                     sender.sendMessage(ChatColor.GRAY + "Sucessfully added!");
                     return true;
                 }
@@ -49,7 +49,9 @@ public class HelperCommand implements TabExecutor
                     }
                     else
                     {
-                        sender.sendMessage(ChatColor.DARK_RED + "No matches found for \"" + args[1] + "\"");
+                        sender.sendMessage(ChatColor.DARK_RED + "No online matches found for \"" + args[1] + "\"");
+                        this.module.getManager().addHelper(args[1]);
+                        sender.sendMessage(ChatColor.GRAY + "Sucessfully added offline player!");
                         return true;
                     }
                 }
