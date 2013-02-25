@@ -42,6 +42,10 @@ public final class HelperManager
             this.notifyForNewReview(review);
             player.sendMessage(ChatColor.GRAY + "Please wait for a helper to come and review your build");
         }
+        else
+        {
+            player.sendMessage(ChatColor.RED + "You can not currently make a new review.");
+        }
     }
 
     /**
@@ -74,6 +78,13 @@ public final class HelperManager
         final ReviewRequest review = this.getReview(guest);
         if (review == null)
         {
+            for (ReviewRequest request : this.activeReviews)
+            {
+                if (request.getGuest().getName().equalsIgnoreCase(guest.getName()))
+                {
+                    return false;
+                }
+            }
             final List<GuestHistoryEntry> tmpList = this.getGuestHistory(guest.getName());
             if (tmpList.size() != 0)
             {
@@ -282,6 +293,7 @@ public final class HelperManager
         final List<GuestHistoryEntry> history = this.getGuestHistory(guestName); 
         if (history.isEmpty())
         {
+            helper.sendMessage("Player has not yet been reviewed");
             return;
         }
         Collections.sort(history);

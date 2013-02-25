@@ -40,7 +40,7 @@ public class HelperReviewCommand implements TabExecutor
                             comment += args[i];
                             comment += " ";
                         }
-                        comment.trim();
+                        comment = comment.trim();
                         this.module.getManager().addComment(player, comment);
                         return true;
                     }
@@ -87,6 +87,10 @@ public class HelperReviewCommand implements TabExecutor
                             this.module.getManager().sendHelperGuestHistory(player, guest.getName());
                             return true;
                         }
+                        else
+                        {
+                            player.sendMessage(ChatColor.RED + "There is no open review from \"" + guest.getName() + "\"");
+                        }
                     }
                     else
                     {
@@ -116,6 +120,11 @@ public class HelperReviewCommand implements TabExecutor
                         return true;
                     }
                 }
+            }
+            else
+            {
+                player.sendMessage(ChatColor.RED + "You are not a helper you can not do this command");
+                return true;
             }
         }
         return false;
