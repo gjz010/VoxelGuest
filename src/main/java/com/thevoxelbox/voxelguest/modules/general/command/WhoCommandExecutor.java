@@ -4,6 +4,9 @@ import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
+
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,6 +17,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class WhoCommandExecutor implements CommandExecutor
 {
@@ -31,62 +37,47 @@ public class WhoCommandExecutor implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
-        final boolean admin = sender.hasPermission(GeneralModule.FAKEQUIT_PERM);
-
-        final HashMap<String, List<String>> groups = new HashMap<String, List<String>>();
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
-            final boolean fq = this.module.getVanishFakequitHandler().isPlayerFakequit(player);
-            if (fq && !admin)
-            {
-                continue;
-            }
-
-            final String group = VoxelGuest.getPerms().getPrimaryGroup(player);
-            final List<String> names = new ArrayList<>();
-
-            if (groups.containsKey(group))
-            {
-                names.addAll(groups.get(group));
-            }
-
-            names.add(fq ? configuration.getFakequitPrefix() + player.getDisplayName() : player.getDisplayName());
-            groups.put(group, names);
-
-        }
-
+        final boolean canSeeFQ = sender.hasPermission(GeneralModule.FAKEQUIT_PERM);
         sender.sendMessage(ChatColor.DARK_GRAY + "------------------------------");
-        String header = "";
+        sender.sendMessage(this.getHeader(canSeeFQ));
 
-        for (String groupName : groups.keySet())
+        for (Entry<String, List<Player>> entry : this.createGroupPlayerMap().entrySet())
         {
-            header += ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + groupName.substring(0, 1).toUpperCase() + ":" + groups.get(groupName).size() + ChatColor.DARK_GRAY + "] ";
-        }
-
-        final int numOnlinePlayers = Bukkit.getOnlinePlayers().length - this.module.getVanishFakequitHandler().getFakequitSize();
-        header += ChatColor.DARK_GRAY + "(" + ChatColor.WHITE + "O:" + String.valueOf(numOnlinePlayers) + ChatColor.DARK_GRAY + ")";
-        sender.sendMessage(header);
-
-        for (String groupName : groups.keySet())
-        {
-            final List<String> names = groups.get(groupName);
-            String groupOut = ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + groupName.substring(0, 1).toUpperCase() + ChatColor.DARK_GRAY + "] ";
-            for (int i = 0; i < names.size(); i++)
+            final String groupName = entry.getKey();
+            final StringBuilder groupStrBuilder = new StringBuilder();
+            groupStrBuilder.append(ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + this.getGroupChar(groupName) + ChatColor.DARK_GRAY + "] ");
+            final ListIterator<Player> playerItr = entry.getValue().listIterator();
+            while (playerItr.hasNext())
             {
-                if (this.module.getAfkManager().isPlayerAfk(Bukkit.getPlayer(names.get(i))))
+                Player player = playerItr.next();
+                if (this.module.getVanishFakequitHandler().isPlayerFakequit(player))
                 {
-                    groupOut += ChatColor.GRAY + names.get(i);
+                    if (!canSeeFQ)
+                    {
+                        continue;
+                    }
+                    groupStrBuilder.append(ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "FQ" + ChatColor.DARK_GRAY + "] ");
+                }
+
+                if (player.hasMetadata("isHelper"))
+                {
+                    groupStrBuilder.append(ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "H" + ChatColor.DARK_GRAY + "] ");
+                }
+
+                if (this.module.getAfkManager().isPlayerAfk(player))
+                {
+                    groupStrBuilder.append(ChatColor.GRAY + player.getDisplayName());
                 }
                 else
                 {
-                    groupOut += ChatColor.WHITE + names.get(i);
+                    groupStrBuilder.append(ChatColor.WHITE + player.getDisplayName());
                 }
-                if (i < names.size() - 1)
+                if (playerItr.hasNext())
                 {
-                    groupOut += ChatColor.GOLD + ", ";
+                    groupStrBuilder.append(ChatColor.GOLD + ", ");
                 }
             }
-            sender.sendMessage(groupOut);
+            sender.sendMessage(groupStrBuilder.toString());
         }
 
         sender.sendMessage(ChatColor.DARK_GRAY + "------------------------------");
@@ -94,49 +85,203 @@ public class WhoCommandExecutor implements CommandExecutor
         return true;
     }
 
-    private String getColor(final String groupStr)
+    /**
+     * Creates a header that that contains all of the current groups
+     * on the server and how many people in the group are online. If
+     * a vault error occurs it sorts online players into OPs and Non-OPs.
+     *
+     * @param canSeeFQ Weather or not the player requesting the header can see people who are fake quit
+     * @return Preformated group information header
+     */
+    private String getHeader(final boolean canSeeFQ)
     {
-        if (groupStr.equalsIgnoreCase("admin"))
+        final Map<String, Integer> groupCount = new HashMap<>();
+
+        try
+        {
+            final Permission perms = VoxelGuest.getPerms();
+            for (String groupName : perms.getGroups())
+            {
+                groupCount.put(groupName, 0);
+                for (Player player : Bukkit.getOnlinePlayers())
+                {
+                    if (this.module.getVanishFakequitHandler().isPlayerFakequit(player))
+                    {
+                        if (!canSeeFQ)
+                        {
+                            continue;
+                        }
+                    }
+                    if (perms.playerInGroup(player, groupName))
+                    {
+                        groupCount.put(groupName, groupCount.get(groupName) + 1);
+                    }
+                }
+            }
+            final StringBuilder stringBuilder = new StringBuilder();
+            for (String groupName : groupCount.keySet())
+            {
+                final int groupSize = groupCount.get(groupName);
+                final char groupChar = this.getGroupChar(groupName);
+                stringBuilder.append(ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + groupChar + ":" + groupSize + ChatColor.DARK_GRAY + "] ");
+            }
+            final int onlinePlayers = canSeeFQ ? Bukkit.getOnlinePlayers().length : Bukkit.getOnlinePlayers().length - this.module.getVanishFakequitHandler().getFakequitSize();
+            stringBuilder.append(ChatColor.DARK_GRAY + "(" + ChatColor.WHITE + "O:" + onlinePlayers + ChatColor.DARK_GRAY + ")");
+            return stringBuilder.toString();
+        }
+        catch (final Exception e)
+        {
+            groupCount.clear();
+
+            groupCount.put("OPs", 0);
+            groupCount.put("Players", 0);
+
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
+                if (this.module.getVanishFakequitHandler().isPlayerFakequit(player))
+                {
+                    if (!canSeeFQ)
+                    {
+                        continue;
+                    }
+                }
+                if (player.isOp())
+                {
+                    groupCount.put("OPs", groupCount.get("OPs") + 1);
+                }
+                else
+                {
+                    groupCount.put("Players", groupCount.get("Players") + 1);
+                }
+            }
+            final StringBuilder stringBuilder = new StringBuilder();
+            for (String groupName : groupCount.keySet())
+            {
+                final int groupSize = groupCount.get(groupName);
+                final char groupChar = this.getGroupChar(groupName);
+                stringBuilder.append(ChatColor.DARK_GRAY + "[" + this.getColor(groupName) + groupChar + ":" + groupSize + ChatColor.DARK_GRAY + "] ");
+            }
+            final int onlinePlayers = canSeeFQ ? Bukkit.getOnlinePlayers().length : Bukkit.getOnlinePlayers().length - this.module.getVanishFakequitHandler().getFakequitSize();
+            stringBuilder.append(ChatColor.DARK_GRAY + "(" + ChatColor.WHITE + "O:" + onlinePlayers + ChatColor.DARK_GRAY + ")");
+            return stringBuilder.toString();
+        }
+    }
+
+    /**
+     * Gets the char to refer to this group as.
+     *
+     * @param groupName name of the group to create the char for
+     * @return char to refer to this group with
+     */
+    private char getGroupChar(final String groupName)
+    {
+        return groupName.toUpperCase().charAt(0);
+    }
+
+    /**
+     * Creates a map containing all the groups who have someone currently
+     * online to represent them as a key, and in the value it store the
+     * list of online players that are part of the corresponding group.
+     * <br />
+     * If a vault error occurs it sorts players into OPs and Non-OPs.
+     * Non-OPs will be listed under players and OPs will be listed under
+     * Players.
+     *
+     * @return Map with represented groups as the key and players in the group as the values
+     */
+    public Map<String, List<Player>> createGroupPlayerMap()
+    {
+        final Map<String, List<Player>> groupPlayerMap = new HashMap<>();
+        try
+        {
+            final Permission perms = VoxelGuest.getPerms();
+    
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
+                final String groupName = perms.getPrimaryGroup(player);
+                if (groupPlayerMap.containsKey(groupName))
+                {
+                    List<Player> newGroupList = new ArrayList<>();
+                    newGroupList.add(player);
+                    groupPlayerMap.put(groupName, newGroupList);
+                }
+                else
+                {
+                    groupPlayerMap.get(groupName).add(player);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            groupPlayerMap.clear();
+            groupPlayerMap.put("OPs", new ArrayList<Player>());
+            groupPlayerMap.put("Players", new ArrayList<Player>());
+
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
+                if (player.isOp())
+                {
+                    groupPlayerMap.get("OPs").add(player);
+                }
+                else
+                {
+                    groupPlayerMap.get("Players").add(player);
+                }
+            }
+        }
+        return groupPlayerMap;
+    }
+
+    /**
+     * Gets the color that should appear in /who for the specified group name.
+     *
+     * @param groupName Name of group to find color foe
+     * @return String containing the chat color that should be used
+     */
+    private String getColor(final String groupName)
+    {
+        //TODO: More flexible group system
+        if (groupName.equalsIgnoreCase("admin"))
         {
             return configuration.getAdminColor();
         }
 
-        if (groupStr.equalsIgnoreCase("curator"))
+        if (groupName.equalsIgnoreCase("curator"))
         {
             return configuration.getCuratorColor();
         }
 
-        if (groupStr.equalsIgnoreCase("sniper"))
+        if (groupName.equalsIgnoreCase("sniper"))
         {
             return configuration.getSniperColor();
         }
 
-        if (groupStr.equalsIgnoreCase("litesniper"))
+        if (groupName.equalsIgnoreCase("litesniper"))
         {
             return configuration.getLiteSniperColor();
         }
 
-        if (groupStr.equalsIgnoreCase("member"))
+        if (groupName.equalsIgnoreCase("member"))
         {
             return configuration.getMemberColor();
         }
 
-        if (groupStr.equalsIgnoreCase("guest"))
+        if (groupName.equalsIgnoreCase("guest"))
         {
             return configuration.getGuestColor();
         }
 
-        if (groupStr.equalsIgnoreCase("visitor"))
+        if (groupName.equalsIgnoreCase("visitor"))
         {
             return configuration.getVisitorColor();
         }
 
-        if (groupStr.equalsIgnoreCase("vip"))
+        if (groupName.equalsIgnoreCase("vip"))
         {
             return configuration.getVipColor();
         }
 
-        if (groupStr.equalsIgnoreCase("builder"))
+        if (groupName.equalsIgnoreCase("builder"))
         {
             return configuration.getBuilderColor();
         }

@@ -37,8 +37,8 @@ public class RegionCommand implements TabExecutor
     {
         if (args.length == 0)
         {
-            sender.sendMessage("/vgregion <option>");
-            sender.sendMessage("Ex: /vgregion help");
+            sender.sendMessage(ChatColor.GRAY + "/vgregion <option>");
+            sender.sendMessage(ChatColor.GRAY + "Ex: /vgregion help");
             return false;
         }
 
@@ -56,15 +56,30 @@ public class RegionCommand implements TabExecutor
 
         if (args[0].equalsIgnoreCase("edit"))
         {
-            //TODO: Write edit code
-            return true;
+            if (args.length == 2)
+            {
+                final Region editedRegion = this.regionModule.getRegionManager().getRegion(args[1]);
+                if (editedRegion != null)
+                {
+                    this.regionModule.getRegionManager().removeRegion(editedRegion);
+                    RegionCommand.processFlags(CommandFlags.parseFlags(args), editedRegion);
+                    this.regionModule.getRegionManager().addRegion(editedRegion);
+                    sender.sendMessage(ChatColor.GRAY + "Successfully edited region!");
+                    return true;
+                }
+                else
+                {
+                    sender.sendMessage(ChatColor.RED + "No such region found");
+                    return true;
+                }
+            }
         }
 
         if (args[0].equalsIgnoreCase("remove"))
         {
             if (args.length == 2)
             {
-                Region oldRegion = this.regionModule.getRegionManager().getRegion(args[1]);
+                final Region oldRegion = this.regionModule.getRegionManager().getRegion(args[1]);
                 if (oldRegion != null)
                 {
                     this.regionModule.getRegionManager().removeRegion(oldRegion);
@@ -95,7 +110,12 @@ public class RegionCommand implements TabExecutor
 
     private void printHelp(final CommandSender sender)
     {
-        sender.sendMessage("To create a new region syntax is: /vgregion create [name] [x1] [z1] [x2] [z2] <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "To create a new region syntax is: /vgregion create [name] [x1] [z1] [x2] [z2] <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "To create a new global region syntax is: /vgregion create [name] global <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "To remove a region syntax is: /vgregion remove [name]");
+        sender.sendMessage(ChatColor.GRAY + "To edit a region flags syntax is: /vgregion edit [name] <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "Proper syntax for boolean flags are: -[flag]:[T|F]");
+        sender.sendMessage(ChatColor.GRAY + "Proper syntax for list flags are: -[flag]:[id1,id2,id3...]");
     }
 
     private void createRegion(final CommandSender sender, final String[] args)

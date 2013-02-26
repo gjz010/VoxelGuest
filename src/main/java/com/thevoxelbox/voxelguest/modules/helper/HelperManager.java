@@ -350,4 +350,29 @@ public final class HelperManager
         }
         return false;
     }
+
+    public boolean isNonAdminHelper(final Player player)
+    {
+        if (this.helpers.containsKey(player.getName()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void handleLogin(final Player player)
+    {
+        if (this.isHelper(player))
+        {
+            final String msg = this.getActiveRequests();
+            if (msg != null)
+            {
+                player.sendMessage(msg);
+            }
+        }
+        if (this.isNonAdminHelper(player))
+        {
+            player.setMetadata("isHelper", null);
+        }
+    }
 }

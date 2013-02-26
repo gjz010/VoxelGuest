@@ -7,9 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
- * 
- * @author TheCryoknight
  *
+ * @author TheCryoknight
  */
 public class HelperListener implements Listener
 {
@@ -20,20 +19,13 @@ public class HelperListener implements Listener
         this.module = module;
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.MONITOR)
     public final void onPlayerJoin(final PlayerJoinEvent event)
     {
         Player newPlayer = event.getPlayer();
         if (newPlayer != null)
         {
-            if (this.module.getManager().isHelper(newPlayer))
-            {
-                final String msg = this.module.getManager().getActiveRequests();
-                if (msg != null)
-                {
-                    newPlayer.sendMessage(msg);
-                }
-            }
+            this.module.getManager().handleLogin(newPlayer);
         }
     }
 }
