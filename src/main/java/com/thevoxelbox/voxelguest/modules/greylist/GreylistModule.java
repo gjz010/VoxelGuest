@@ -27,7 +27,7 @@ public class GreylistModule extends GuestModule
     private UngreylistCommandExecutor ungreylistCommandExecutor;
     private WhitelistCommandExecutor whitelistCommandExecutor;
 
-    private GraylistConfiguration config;
+    private GreylistConfiguration config;
     private StreamThread streamTask;
 
     /**
@@ -36,7 +36,7 @@ public class GreylistModule extends GuestModule
     public GreylistModule()
     {
         this.setName("Greylist Module");
-        config = new GraylistConfiguration();
+        config = new GreylistConfiguration();
         greylistListener = new GreylistListener(this);
         greylistCommandExecutor = new GreylistCommandExecutor(this);
         ungreylistCommandExecutor = new UngreylistCommandExecutor(this);
@@ -46,7 +46,7 @@ public class GreylistModule extends GuestModule
     @Override
     public final void onEnable()
     {
-        if (config.isStreamGraylisting())
+        if (config.isStreamGreylisting())
         {
             this.streamTask = new StreamThread(this);
             this.streamTask.start();
@@ -128,9 +128,9 @@ public class GreylistModule extends GuestModule
         }
         Persistence.getInstance().save(new Greylistee(name.toLowerCase()));
 
-        if (this.config.isSetGroupOnGraylist())
+        if (this.config.isSetGroupOnGreylist())
         {
-            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), name, this.config.getGraylistGroupName()))
+            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), name, this.config.getGreylistGroupName()))
             {
                 VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new graylisted player to group.");
             }
@@ -151,7 +151,7 @@ public class GreylistModule extends GuestModule
             }
         }
     }
-    public GraylistConfiguration getConfig()
+    public GreylistConfiguration getConfig()
     {
         return this.config;
     }
