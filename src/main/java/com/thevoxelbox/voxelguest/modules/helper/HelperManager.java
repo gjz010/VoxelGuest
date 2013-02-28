@@ -372,7 +372,7 @@ public final class HelperManager
         }
         if (this.isNonAdminHelper(player))
         {
-            player.setMetadata("isHelper", null);
+            player.setMetadata("isHelper", this.getHelper(player));
         }
     }
 }
