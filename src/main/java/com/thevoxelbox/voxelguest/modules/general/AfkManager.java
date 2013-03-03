@@ -74,7 +74,7 @@ public class AfkManager
     {
         if(isAfk)
         {
-            if (message.isEmpty())
+            if (!message.isEmpty())
             {
                 Bukkit.broadcastMessage(ChatColor.DARK_AQUA + pName + ChatColor.DARK_GRAY + message);
                 return;
