@@ -59,7 +59,7 @@ public final class HelperManager
     {
         for (ReviewRequest review : this.activeReviews)
         {
-            if (review.getGuest().equals(guest))
+            if (review.getGuest().getName().equals(guest.getName()))
             {
                 return review;
             }
