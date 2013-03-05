@@ -50,7 +50,7 @@ commands:
     permission: voxelguest.asshat.unban
     description: Unbans a player
   unmute:
-    aliases: [vunmute]
+    aliases: [vunmute, ungag, vungag]
     permission: voxelguest.asshat.unmute
     description: Unmutes a player
   who:
@@ -84,20 +84,23 @@ commands:
   afk:
     aliases: [afk, vafk]
     permission: voxelguest.general.afk
-    description: Tells the server the the player is away from their keyboard
+    description: Tells the server the the player is away from their keyboard.
+  addafkmessage:
+    aliases: [addafkmessage, addafkmsg, vaddafkmsg]
+    permission: voxelguest.general.createafkmsg
+    description: adds a new afk message for the random afk message system.
   watchtps:
     aliases: [watchtps, vwatchtps]
     permission: voxelguest.general.watchtps
     description: Makes the exp bar a lag meter
   wlreview:
     aliases: [wlreview, vwlreview]
-    permission: voxelguest.helper.wlreview
     description: Submits a Whitelist review ticket
   helper:
     aliases: [helper, vhelper]
     permission: voxelguest.helper.control
     description: Helps mannage helpers
   helperreview:
-    aliases: [helperreview, vhelper]
+    aliases: [helperreview, hreview]
     permission: voxelguest.helper.review
-    description: Reviews a Whitelist review ticket
+    description: Reviews a Whitelist review ticket    

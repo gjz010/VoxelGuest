@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * @author TheCryoknight
  */
-public class VanishFakequitHandler
+public final class VanishFakequitHandler
 {
     private final GeneralModule module;
     private static final String VANISH_PERM = "voxelguest.general.vanish";
@@ -38,7 +38,7 @@ public class VanishFakequitHandler
      *
      * @return true if player is now vanished
      */
-    public final boolean toggleVanish(final Player player)
+    public boolean toggleVanish(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -70,7 +70,7 @@ public class VanishFakequitHandler
      *
      * @return true if player is now vanished
      */
-    public final boolean toggleFakeQuit(final Player player)
+    public boolean toggleFakeQuit(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -105,7 +105,7 @@ public class VanishFakequitHandler
      * @param player The player who disconnects.
      * @return Returns ?
      */
-    public final boolean handleDisconnect(final Player player)
+    public boolean handleDisconnect(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -114,7 +114,7 @@ public class VanishFakequitHandler
             this.offlineVanished.add(player.getName());
             this.vanished.remove(player);
         }
-        if (this.fakeQuit.contains(player.getName()))
+        if (this.fakeQuit.contains(player))
         {
             this.offlineFakeQuit.add(player.getName());
             this.fakeQuit.remove(player);
@@ -127,7 +127,7 @@ public class VanishFakequitHandler
      * Handles connects.
      * @param player The player who attempts to connect.
      */
-    public final void handleConnect(final Player player)
+    public void handleConnect(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -161,7 +161,7 @@ public class VanishFakequitHandler
      *
      * @return Returns a boolean indicating if the player is vanished (true) or not (false)
      */
-    public final boolean isPlayerVanished(final Player player)
+    public boolean isPlayerVanished(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -175,7 +175,7 @@ public class VanishFakequitHandler
      *
      * @return true if specified player is fakequit
      */
-    public final boolean isPlayerFakequit(final Player player)
+    public boolean isPlayerFakequit(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -186,7 +186,7 @@ public class VanishFakequitHandler
      *
      * @return Returns the number of fakequit players.
      */
-    public final int getFakequitSize()
+    public int getFakequitSize()
     {
         return this.fakeQuit.size();
     }

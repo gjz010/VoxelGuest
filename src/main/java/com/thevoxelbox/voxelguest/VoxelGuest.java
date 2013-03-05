@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.commands.ModulesCommandExecutor;
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
@@ -9,6 +10,8 @@ import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,8 +27,6 @@ public class VoxelGuest extends JavaPlugin
     private static VoxelGuest pluginInstance = null;
     private static ModuleManager moduleManagerInstance = null;
     private static Permission perms = null;
-
-    private static ModulesCommandExecutor modulesCommandExecutor;
 
     public static VoxelGuest getPluginInstance()
     {
@@ -57,6 +58,11 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.moduleManagerInstance = moduleManagerInstance;
     }
 
+    /**
+     * Gets the permission manager provided by Vault.
+     *
+     * @return permission manager
+     */
     public static Permission getPerms()
     {
         return perms;
@@ -68,7 +74,7 @@ public class VoxelGuest extends JavaPlugin
     }
 
     @Override
-    public void onDisable()
+    public final void onDisable()
     {
         try
         {
@@ -85,7 +91,7 @@ public class VoxelGuest extends JavaPlugin
     }
 
     @Override
-    public void onEnable()
+    public final void onEnable()
     {
         try
         {
@@ -110,7 +116,7 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new HelperModule(), false);
 
-        modulesCommandExecutor = new ModulesCommandExecutor();
+        final ModulesCommandExecutor modulesCommandExecutor = new ModulesCommandExecutor();
         getCommand("vmodules").setExecutor(modulesCommandExecutor);
 
         VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);

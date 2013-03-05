@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.runnables;
 
 /**
  * Helps determine the number of ticks in a second by polling the system time at select intervals.
@@ -7,7 +7,7 @@ package com.thevoxelbox.voxelguest.modules.general;
  */
 public class TPSTicker implements Runnable
 {
-    private static final long POLL_INTERVAL = 60L;
+    public static final long POLL_INTERVAL = 60L;
     private static long lastTimestamp = System.currentTimeMillis() - (POLL_INTERVAL * 50);
     private static long lastDifference = POLL_INTERVAL;
 

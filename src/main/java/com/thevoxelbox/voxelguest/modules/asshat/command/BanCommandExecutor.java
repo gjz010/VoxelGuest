@@ -124,7 +124,8 @@ public class BanCommandExecutor implements TabExecutor
             {
                 Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getBanBroadcastMsg(), playerName, commandSender.getName(), banReason));
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));

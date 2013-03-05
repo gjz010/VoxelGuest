@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
  *
  * @author Monofraps
  */
-public class PlayerGreylistEvent extends Event
+public final class PlayerGreylistEvent extends Event
 {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private String playerName;
@@ -25,27 +25,27 @@ public class PlayerGreylistEvent extends Event
     }
 
     @Override
-    public final HandlerList getHandlers()
+    public HandlerList getHandlers()
     {
         return HANDLER_LIST;
     }
 
-    public final String getPlayerName()
+    public String getPlayerName()
     {
         return playerName;
     }
 
-    public final void setPlayerName(final String playerName)
+    public void setPlayerName(final String playerName)
     {
         this.playerName = playerName;
     }
 
-    public final boolean isCancelled()
+    public boolean isCancelled()
     {
         return cancelled;
     }
 
-    public final void setCancelled(final boolean cancelled)
+    public void setCancelled(final boolean cancelled)
     {
         this.cancelled = cancelled;
     }

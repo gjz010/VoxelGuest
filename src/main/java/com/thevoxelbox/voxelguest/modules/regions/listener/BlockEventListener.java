@@ -31,10 +31,10 @@ import java.util.List;
 /**
  * @author Butters
  */
-public class BlockEventListener implements Listener
+public final class BlockEventListener implements Listener
 {
 
-    private final String CANT_BUILD_HERE = "§cYou cannot build here";
+    private static final String CANT_BUILD_HERE = "§cYou cannot build here";
     private RegionModule regionModule;
 
     public BlockEventListener(final RegionModule regionModule)
@@ -43,7 +43,7 @@ public class BlockEventListener implements Listener
     }
 
     @EventHandler(ignoreCancelled = true)
-    public final void onBlockBreak(final BlockBreakEvent event)
+    public void onBlockBreak(final BlockBreakEvent event)
     {
         Preconditions.checkNotNull(event.getPlayer());
         Preconditions.checkNotNull(event.getBlock());
@@ -60,7 +60,7 @@ public class BlockEventListener implements Listener
      * @param event
      */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public final void onBlockDrop(final BlockBreakEvent event)
+    public void onBlockDrop(final BlockBreakEvent event)
     {
         Preconditions.checkNotNull(event);
         Block eventLoc = event.getBlock();
@@ -69,27 +69,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isBlockDropAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
-        }
-        if (eventLoc != null)
-        {
-            eventLoc.setType(Material.AIR);
         }
     }
 
     @EventHandler
-    public final void onBlockPlace(final BlockPlaceEvent event)
+    public void onBlockPlace(final BlockPlaceEvent event)
     {
         Preconditions.checkNotNull(event.getPlayer());
         Preconditions.checkNotNull(event.getBlock());
@@ -101,7 +93,7 @@ public class BlockEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerInteract(final PlayerInteractEvent event)
+    public void onPlayerInteract(final PlayerInteractEvent event)
     {
         if (event.getClickedBlock() == null)
         {
@@ -115,7 +107,7 @@ public class BlockEventListener implements Listener
     }
 
     @EventHandler
-    public final void onLeafDecay(final LeavesDecayEvent event)
+    public void onLeafDecay(final LeavesDecayEvent event)
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
@@ -124,23 +116,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public final void onBlockGrow(final BlockGrowEvent event)
+    public void onBlockGrow(final BlockGrowEvent event)
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
@@ -149,23 +137,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isBlockGrowthAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public final void onFromTo(final BlockFromToEvent event)
+    public void onFromTo(final BlockFromToEvent event)
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
@@ -174,23 +158,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public final void onBlockFade(final BlockFadeEvent event)
+    public void onBlockFade(final BlockFadeEvent event)
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
@@ -199,14 +179,14 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (event.getBlock().getType().equals(Material.SNOW))
             {
                 if (!region.isSnowMeltingAllowed())
                 {
-                    isNotAllowed = true;
+                    event.setCancelled(true);
                     break;
                 }
             }
@@ -214,19 +194,15 @@ public class BlockEventListener implements Listener
             {
                 if (!region.isIceMeltingAllowed())
                 {
-                    isNotAllowed = true;
+                    event.setCancelled(true);
                     break;
                 }
             }
         }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
-        }
     }
 
     @EventHandler
-    public final void onBlockForm(final BlockFormEvent event)
+    public void onBlockForm(final BlockFormEvent event)
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
@@ -235,14 +211,14 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (event.getBlock().getType().equals(Material.SNOW))
             {
                 if (!region.isSnowFormationAllowed())
                 {
-                    isNotAllowed = true;
+                    event.setCancelled(true);
                     break;
                 }
             }
@@ -250,19 +226,15 @@ public class BlockEventListener implements Listener
             {
                 if (!region.isIceFormationAllowed())
                 {
-                    isNotAllowed = true;
+                    event.setCancelled(true);
                     break;
                 }
             }
         }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
-        }
     }
 
     @EventHandler
-    public final void onBlockIgnite(final BlockIgniteEvent event)
+    public void onBlockIgnite(final BlockIgniteEvent event)
     {
         Preconditions.checkNotNull(event.getBlock());
         final Location eventLoc = event.getBlock().getLocation();
@@ -271,23 +243,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isFireSpreadAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public final void onBlockSpread(final BlockSpreadEvent event)
+    public void onBlockSpread(final BlockSpreadEvent event)
     {
         final Location eventLoc = event.getBlock().getLocation();
         final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
@@ -295,23 +263,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public final void onBlockPhysics(final BlockPhysicsEvent event)
+    public void onBlockPhysics(final BlockPhysicsEvent event)
     {
         final Material mat = event.getChangedType();
         switch (mat)
@@ -406,23 +370,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isPhysicsAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
-        }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public final void onEnchant(final EnchantItemEvent event)
+    public void onEnchant(final EnchantItemEvent event)
     {
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(event.getEnchantBlock().getLocation());
 
@@ -434,12 +394,12 @@ public class BlockEventListener implements Listener
             }
             return;
         }
+
         event.setCancelled(true);
-        return;
     }
 
     @EventHandler
-    public final void onEntityExplode(final EntityExplodeEvent event)
+    public void onEntityExplode(final EntityExplodeEvent event)
     {
         final Location eventLoc = event.getLocation();
         final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
@@ -447,24 +407,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isCreeperExplosionAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
         }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
-        }
-        return;
     }
 
     @EventHandler
-    public final void onCreatureSpawn(final CreatureSpawnEvent event)
+    public void onCreatureSpawn(final CreatureSpawnEvent event)
     {
         final Location eventLoc = event.getLocation();
         final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
@@ -472,24 +427,19 @@ public class BlockEventListener implements Listener
         {
             event.setCancelled(true);
         }
-        boolean isNotAllowed = false;
+
         for (Region region : regions)
         {
             if (!region.isCreatureSpawnAllowed())
             {
-                isNotAllowed = true;
+                event.setCancelled(true);
                 break;
             }
         }
-        if (isNotAllowed)
-        {
-            event.setCancelled(true);
-        }
-        return;
     }
 
     @EventHandler
-    public final void onPaintingBreak(final HangingBreakByEntityEvent event)
+    public void onPaintingBreak(final HangingBreakByEntityEvent event)
     {
         final Location eventLoc = event.getEntity().getLocation();
         final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
@@ -509,7 +459,6 @@ public class BlockEventListener implements Listener
             return;
         }
         event.setCancelled(true);
-        return;
     }
 
 }

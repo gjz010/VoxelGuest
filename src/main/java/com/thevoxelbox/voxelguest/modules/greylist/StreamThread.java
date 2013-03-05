@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 /**
  * @deprecated This will be replaced with a new and safer system.
  */
-class StreamThread extends Thread
+final class StreamThread extends Thread
 {
 
     private final GreylistModule module;
@@ -19,7 +19,8 @@ class StreamThread extends Thread
         try
         {
             this.serverSocket = new ServerSocket(module.getConfig().getStreamPort());
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             this.serverSocket = null;
             //VoxelGuest.log(name, "Could not bind to port " + streamPort + ". Perhaps it is already in use?", 2);
@@ -36,12 +37,10 @@ class StreamThread extends Thread
         try
         {
             serverSocket.close();
-        } catch (IOException ex)
+        }
+        catch (IOException | NullPointerException ex)
         {
-            //VoxelGuest.log(name, "Could not release port " + streamPort, 2);
-        } catch (NullPointerException ex)
-        {
-            //VoxelGuest.log(name, "Could not release socket because it is null.", 2);
+            ex.printStackTrace();
         }
     }
 
@@ -61,9 +60,10 @@ class StreamThread extends Thread
                 reader.start();
             }
 
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
-            // Shutting down...
+            ex.printStackTrace();
         }
     }
 }

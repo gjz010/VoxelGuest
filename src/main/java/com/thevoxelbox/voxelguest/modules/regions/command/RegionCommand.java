@@ -21,130 +21,15 @@ import java.util.Map.Entry;
  * @author Butters
  * @author TheCryoknight
  */
-public class RegionCommand implements TabExecutor
+public final class RegionCommand implements TabExecutor
 {
 
-    private RegionModule regionModule;
     private static String[] subcommands = {"create", "help", "edit", "remove", "regions"};
+    private RegionModule regionModule;
 
-    public RegionCommand(RegionModule regionModule)
+    public RegionCommand(final RegionModule regionModule)
     {
         this.regionModule = regionModule;
-    }
-
-    @Override
-    public boolean onCommand(final CommandSender sender, final Command cmnd, final String string, final String[] args)
-    {
-        if (args.length == 0)
-        {
-            sender.sendMessage("/vgregion <option>");
-            sender.sendMessage("Ex: /vgregion help");
-            return false;
-        }
-
-        if (args[0].equalsIgnoreCase("create"))
-        {
-            createRegion(sender, args);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("help"))
-        {
-            printHelp(sender);
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("edit"))
-        {
-            //TODO: Write edit code
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("remove"))
-        {
-            if (args.length == 2)
-            {
-                Region oldRegion = this.regionModule.getRegionManager().getRegion(args[1]);
-                if (oldRegion != null)
-                {
-                    this.regionModule.getRegionManager().removeRegion(oldRegion);
-                    sender.sendMessage(ChatColor.GRAY + "Successfully removed region " + ChatColor.GREEN + oldRegion.getRegionName());
-                    return true;
-                }
-                else
-                {
-                    sender.sendMessage(ChatColor.RED + "No such region found");
-                    return true;
-                }
-            }
-        }
-        if (args[0].equalsIgnoreCase("regions"))
-        {
-            //TODO: Iterate all active regions
-            return true;
-        }
-
-        return false;
-    }
-
-    private void printHelp(final CommandSender sender)
-    {
-        sender.sendMessage("To create a new region syntax is: /vgregion create [name] [x1] [z1] [x2] [z2] <-Flags>");
-    }
-
-    private void createRegion(final CommandSender sender, final String[] args)
-    {
-        if (!(sender instanceof Player))
-        {
-            sender.sendMessage("Command must be sent from a player");
-        }
-        if (args.length >= 3)
-        {
-            final String regionName = args[1];
-            boolean isGlobal = false;
-            Location pointOne = null;
-            Location pointTwo = null;
-            final World regionWorld = ((Player) sender).getWorld();
-            if (args[2].equalsIgnoreCase("global"))
-            {
-                isGlobal = true;
-            }
-
-            if (!isGlobal)
-            {
-                if (args.length >= 6)
-                {
-                    int x1 = 0, z1 = 0, x2 = 0, z2 = 0;
-                    try
-                    {
-                        x1 = Integer.parseInt(args[2]);
-                        z1 = Integer.parseInt(args[3]);
-                        x2 = Integer.parseInt(args[4]);
-                        z2 = Integer.parseInt(args[5]);
-                    } catch (final NumberFormatException e)
-                    {
-                        sender.sendMessage("Error in  parsing arguments: invalid syntax");
-                        sender.sendMessage(e.getMessage());
-                    }
-                    pointOne = new Location(regionWorld, x1, 0, z1);
-                    pointTwo = new Location(regionWorld, x2, regionWorld.getMaxHeight(), z2);
-                }
-                else
-                {
-                    sender.sendMessage("Improper number of arguments for a nonglobal region");
-                    return;
-                }
-            }
-            final Map<CommandFlags, String> flags = CommandFlags.parseFlags(args); //Flag and state in a map
-            final Region newRegion = new Region(regionWorld.getName(), pointOne, pointTwo, regionName);
-            RegionCommand.processFlags(flags, newRegion);
-            this.regionModule.getRegionManager().addRegion(newRegion);
-            sender.sendMessage(newRegion.toColoredString());
-        }
-        else
-        {
-            sender.sendMessage("No arguments defined, invalid syntax");
-        }
     }
 
     /**
@@ -288,29 +173,167 @@ public class RegionCommand implements TabExecutor
             {
                 bannedIds[i] = Integer.parseInt(cleanList[i]);
             }
-        } catch (final NumberFormatException e)
+        }
+        catch (final NumberFormatException e)
         {
-
+            e.printStackTrace();
         }
         return bannedIds;
     }
 
     /**
-     * @param str
+     * Translates 't' and 'y' into true. Everything else will result in false.
      *
-     * @return
+     * @param str The input string.
+     *
+     * @return Returns a beelean indicating if the string started with 't' or 'y'.
      */
     private static boolean parseCommandBool(final String str)
     {
-        if (str.toLowerCase().startsWith("t"))
+        return str.toLowerCase().startsWith("t") || str.toLowerCase().startsWith("y");
+    }
+
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command cmnd, final String string, final String[] args)
+    {
+        if (args.length == 0)
         {
+            sender.sendMessage(ChatColor.GRAY + "/vgregion <option>");
+            sender.sendMessage(ChatColor.GRAY + "Ex: /vgregion help");
+            return false;
+        }
+
+        if (args[0].equalsIgnoreCase("create"))
+        {
+            createRegion(sender, args);
             return true;
         }
-        if (str.toLowerCase().startsWith("y"))
+
+        if (args[0].equalsIgnoreCase("help"))
         {
+            printHelp(sender);
             return true;
         }
+
+        if (args[0].equalsIgnoreCase("edit"))
+        {
+            if (args.length == 2)
+            {
+                final Region editedRegion = this.regionModule.getRegionManager().getRegion(args[1]);
+                if (editedRegion != null)
+                {
+                    this.regionModule.getRegionManager().removeRegion(editedRegion);
+                    RegionCommand.processFlags(CommandFlags.parseFlags(args), editedRegion);
+                    this.regionModule.getRegionManager().addRegion(editedRegion);
+                    sender.sendMessage(ChatColor.GRAY + "Successfully edited region!");
+                    return true;
+                }
+                else
+                {
+                    sender.sendMessage(ChatColor.RED + "No such region found");
+                    return true;
+                }
+            }
+        }
+
+        if (args[0].equalsIgnoreCase("remove"))
+        {
+            if (args.length == 2)
+            {
+                final Region oldRegion = this.regionModule.getRegionManager().getRegion(args[1]);
+                if (oldRegion != null)
+                {
+                    this.regionModule.getRegionManager().removeRegion(oldRegion);
+                    sender.sendMessage(ChatColor.GRAY + "Successfully removed region " + ChatColor.GREEN + oldRegion.getRegionName());
+                    return true;
+                }
+                else
+                {
+                    sender.sendMessage(ChatColor.RED + "No such region found");
+                    return true;
+                }
+            }
+        }
+        if (args[0].equalsIgnoreCase("regions"))
+        {
+            sender.sendMessage(ChatColor.GREEN + "Active regions");
+            sender.sendMessage(ChatColor.GRAY + "-----------------------");
+            for (Region region : this.regionModule.getRegionManager().getActiveRegions())
+            {
+                sender.sendMessage(region.toColoredString());
+                sender.sendMessage(ChatColor.GRAY + "-----------------------");
+            }
+            return true;
+        }
+
         return false;
+    }
+
+    private void printHelp(final CommandSender sender)
+    {
+        sender.sendMessage(ChatColor.GRAY + "To create a new region syntax is: /vgregion create [name] [x1] [z1] [x2] [z2] <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "To create a new global region syntax is: /vgregion create [name] global <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "To remove a region syntax is: /vgregion remove [name]");
+        sender.sendMessage(ChatColor.GRAY + "To edit a region flags syntax is: /vgregion edit [name] <-Flags>");
+        sender.sendMessage(ChatColor.GRAY + "Proper syntax for boolean flags are: -[flag]:[T|F]");
+        sender.sendMessage(ChatColor.GRAY + "Proper syntax for list flags are: -[flag]:[id1,id2,id3...]");
+    }
+
+    private void createRegion(final CommandSender sender, final String[] args)
+    {
+        if (!(sender instanceof Player))
+        {
+            sender.sendMessage("Command must be sent from a player");
+        }
+
+        if (args.length >= 3)
+        {
+            final String regionName = args[1];
+            boolean isGlobal = false;
+            Location pointOne = null;
+            Location pointTwo = null;
+            final World regionWorld = ((Player) sender).getWorld();
+            if (args[2].equalsIgnoreCase("global"))
+            {
+                isGlobal = true;
+            }
+
+            if (!isGlobal)
+            {
+                if (args.length >= 6)
+                {
+                    int x1 = 0, z1 = 0, x2 = 0, z2 = 0;
+                    try
+                    {
+                        x1 = Integer.parseInt(args[2]);
+                        z1 = Integer.parseInt(args[3]);
+                        x2 = Integer.parseInt(args[4]);
+                        z2 = Integer.parseInt(args[5]);
+                    }
+                    catch (final NumberFormatException e)
+                    {
+                        sender.sendMessage("Error in  parsing arguments: invalid syntax");
+                        sender.sendMessage(e.getMessage());
+                    }
+                    pointOne = new Location(regionWorld, x1, 0, z1);
+                    pointTwo = new Location(regionWorld, x2, regionWorld.getMaxHeight(), z2);
+                }
+                else
+                {
+                    sender.sendMessage("Improper number of arguments for a nonglobal region");
+                    return;
+                }
+            }
+            final Map<CommandFlags, String> flags = CommandFlags.parseFlags(args); //Flag and state in a map
+            final Region newRegion = new Region(regionWorld.getName(), pointOne, pointTwo, regionName);
+            RegionCommand.processFlags(flags, newRegion);
+            this.regionModule.getRegionManager().addRegion(newRegion);
+            sender.sendMessage(newRegion.toColoredString());
+        }
+        else
+        {
+            sender.sendMessage("No arguments defined, invalid syntax");
+        }
     }
 
     @Override
@@ -320,7 +343,7 @@ public class RegionCommand implements TabExecutor
         {
             return Arrays.asList(RegionCommand.subcommands);
         }
-        List<String> matches = new ArrayList<String>();
+        List<String> matches = new ArrayList<>();
         if (args.length == 1)
         {
             for (String subcomm : RegionCommand.subcommands)

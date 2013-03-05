@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ * Handles /whitelist commands.
  */
-public class WhitelistCommandExecutor implements TabExecutor
+public final class WhitelistCommandExecutor implements TabExecutor
 {
     private final GreylistModule module;
 
@@ -30,7 +30,7 @@ public class WhitelistCommandExecutor implements TabExecutor
     }
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         if (args.length == 1)
         {
@@ -93,7 +93,7 @@ public class WhitelistCommandExecutor implements TabExecutor
     }
 
     @Override
-    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         return null;
     }

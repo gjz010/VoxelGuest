@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,10 +7,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
+import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
+
 /**
- *
+ * Handles messages on player join/quit/kick
  */
-public class ConnectionEventListener implements Listener
+public final class ConnectionEventListener implements Listener
 {
     private final GeneralModule module;
     private final GeneralModuleConfiguration configuration;
@@ -26,7 +29,7 @@ public class ConnectionEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerJoin(final PlayerJoinEvent event)
+    public void onPlayerJoin(final PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
 
@@ -44,7 +47,7 @@ public class ConnectionEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerQuit(final PlayerQuitEvent event)
+    public void onPlayerQuit(final PlayerQuitEvent event)
     {
         Player player = event.getPlayer();
 
@@ -54,7 +57,7 @@ public class ConnectionEventListener implements Listener
         }
 
         event.setQuitMessage(this.module.formatJoinLeaveMessage(configuration.getLeaveFormat(), player.getName()));
-
+        
         if (this.module.getVanishFakequitHandler().handleDisconnect(player))
         {
             event.setQuitMessage("");
@@ -62,7 +65,7 @@ public class ConnectionEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerKick(final PlayerKickEvent event)
+    public void onPlayerKick(final PlayerKickEvent event)
     {
         Player player = event.getPlayer();
 

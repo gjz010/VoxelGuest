@@ -3,6 +3,9 @@ package com.thevoxelbox.voxelguest.modules.asshat;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 
+/**
+ * Represents the asshat module configuration.
+ */
 public class AsshatModuleConfiguration
 {
     private String defaultAsshatReason = "asshat";

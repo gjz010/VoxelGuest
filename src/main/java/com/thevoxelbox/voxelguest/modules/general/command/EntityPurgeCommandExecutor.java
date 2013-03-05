@@ -20,10 +20,10 @@ import java.util.List;
 /**
  * Executes entity purge commands.
  */
-public class EntityPurgeCommandExecutor implements TabExecutor
+public final class EntityPurgeCommandExecutor implements TabExecutor
 {
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (args.length == 0)
         {
@@ -70,11 +70,15 @@ public class EntityPurgeCommandExecutor implements TabExecutor
     }
 
     @Override
-    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         if (sender.hasPermission("voxelguest.general.ep"))
         {
-            return this.getWorldNames();
+            final List<String> worldNames = this.getWorldNames();
+            if (args.length == 0)
+            {
+                return worldNames;
+            }
         }
         return Collections.emptyList();
     }
@@ -82,7 +86,7 @@ public class EntityPurgeCommandExecutor implements TabExecutor
     /**
      * @return Returns a list of names of all worlds currently loaded.
      */
-    public final List<String> getWorldNames()
+    public List<String> getWorldNames()
     {
         final List<String> worldNames = new ArrayList<>();
         for (World world : Bukkit.getWorlds())
@@ -92,6 +96,9 @@ public class EntityPurgeCommandExecutor implements TabExecutor
         return worldNames;
     }
 
+    /**
+     * Represents a runnable purge thread.
+     */
     private final class EntityPurgeThread extends Thread
     {
         private final World world;

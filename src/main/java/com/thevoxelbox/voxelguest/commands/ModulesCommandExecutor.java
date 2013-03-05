@@ -13,9 +13,11 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
+ * Handles /vmodules commands.
+ *
  * @author Monofraps
  */
-public class ModulesCommandExecutor implements TabExecutor
+public final class ModulesCommandExecutor implements TabExecutor
 {
     @Override
     public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
@@ -35,55 +37,75 @@ public class ModulesCommandExecutor implements TabExecutor
         switch (args[0].toLowerCase())
         {
             case "list":
-            {
-                final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
-                for (Module module : registeredModules.keySet())
-                {
-                    commandSender.sendMessage(module.getClass().getName());
-                }
-            }
-            break;
+                listModules(commandSender);
+                break;
 
             case "enable":
-            {
-                String moduleClassName = args[1];
-                final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
-                for (Module module : registeredModules.keySet())
+                if (enableModule(commandSender, args[1]))
                 {
-                    if (module.getClass().getName().equalsIgnoreCase(moduleClassName))
-                    {
-                        if (module.isEnabled())
-                        {
-                            commandSender.sendMessage("Module already enabled.");
-                            return true;
-                        }
-                        VoxelGuest.getModuleManagerInstance().enableModuleByType(module.getClass());
-                    }
+                    return true;
                 }
-            }
-            break;
+                break;
 
             case "disable":
-            {
-                String moduleClassName = args[1];
-                final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
-                for (Module module : registeredModules.keySet())
+                if (disableModule(commandSender, args[1]))
                 {
-                    if (module.getClass().getName().equalsIgnoreCase(moduleClassName))
-                    {
-                        if (!module.isEnabled())
-                        {
-                            commandSender.sendMessage("Module is not enabled.");
-                            return true;
-                        }
-                        VoxelGuest.getModuleManagerInstance().enableModuleByType(module.getClass());
-                    }
+                    return true;
                 }
-            }
-            break;
+                break;
+
+            default:
+                commandSender.sendMessage("Unknown sub command. Available: list, enable and disable");
         }
 
 
-        return true;
+        return false;
     }
+
+    private void listModules(final CommandSender commandSender)
+    {
+        final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
+        for (Module module : registeredModules.keySet())
+        {
+            commandSender.sendMessage(module.getClass().getName());
+        }
+    }
+
+    private boolean enableModule(final CommandSender commandSender, final String moduleClassName)
+    {
+        final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
+
+        for (Module module : registeredModules.keySet())
+        {
+            if (module.getClass().getName().equalsIgnoreCase(moduleClassName))
+            {
+                if (module.isEnabled())
+                {
+                    commandSender.sendMessage("Module already enabled.");
+                    return true;
+                }
+                VoxelGuest.getModuleManagerInstance().enableModuleByType(module.getClass());
+            }
+        }
+        return false;
+    }
+
+    private boolean disableModule(final CommandSender commandSender, final String moduleClassName)
+    {
+        final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
+        for (Module module : registeredModules.keySet())
+        {
+            if (module.getClass().getName().equalsIgnoreCase(moduleClassName))
+            {
+                if (!module.isEnabled())
+                {
+                    commandSender.sendMessage("Module is not enabled.");
+                    return true;
+                }
+                VoxelGuest.getModuleManagerInstance().enableModuleByType(module.getClass());
+            }
+        }
+        return false;
+    }
+
 }

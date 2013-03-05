@@ -15,11 +15,13 @@ import java.util.Set;
 /**
  * @author TheCryoknight
  */
-public class HelperModule extends GuestModule
+public final class HelperModule extends GuestModule
 {
     private final WLReviewCommand wLReviewCommand;
     private final HelperCommand helperCommand;
     private final HelperReviewCommand helperReviewCommand;
+
+    private final HelperListener connectionListener;
 
     private final HelperManager manager;
 
@@ -30,6 +32,7 @@ public class HelperModule extends GuestModule
         this.helperCommand = new HelperCommand(this);
         this.helperReviewCommand = new HelperReviewCommand(this);
         this.manager = new HelperManager();
+        this.connectionListener = new HelperListener(this);
     }
 
     @Override
@@ -43,6 +46,7 @@ public class HelperModule extends GuestModule
     public Set<Listener> getListeners()
     {
         final Set<Listener> listeners = new HashSet<>();
+        listeners.add(this.connectionListener);
         return listeners;
     }
 

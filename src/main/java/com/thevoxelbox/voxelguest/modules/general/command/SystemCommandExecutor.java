@@ -2,7 +2,8 @@ package com.thevoxelbox.voxelguest.modules.general.command;
 
 import com.google.common.base.Preconditions;
 import com.sun.management.OperatingSystemMXBean;
-import com.thevoxelbox.voxelguest.modules.general.TPSTicker;
+import com.thevoxelbox.voxelguest.modules.general.runnables.TPSTicker;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -25,7 +26,7 @@ import java.util.List;
  * @author TheCryoknight
  * @author Deamon
  */
-public class SystemCommandExecutor implements TabExecutor
+public final class SystemCommandExecutor implements TabExecutor
 {
     private static final String[] COMMAND_FLAGS = {"gc", "mem", "lag"};
     private static final int TPS_PER_SECOND_THRESHOLD = 20;
@@ -33,7 +34,7 @@ public class SystemCommandExecutor implements TabExecutor
     private static final int BYTES_PER_MB = 1048576;
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         Preconditions.checkNotNull(sender);
         Preconditions.checkNotNull(command);
@@ -221,7 +222,7 @@ public class SystemCommandExecutor implements TabExecutor
     }
 
     @Override
-    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         if (sender.hasPermission("voxelguest.gereral.sys"))
         {

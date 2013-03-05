@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 /**
  * @author MikeMatrix
  */
-public class GreylistCommandExecutor implements CommandExecutor
+public final class GreylistCommandExecutor implements CommandExecutor
 {
     private GreylistModule greylistModule;
 
@@ -24,7 +24,7 @@ public class GreylistCommandExecutor implements CommandExecutor
     }
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         Preconditions.checkNotNull(sender);
         Preconditions.checkNotNull(command);

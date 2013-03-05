@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  * Handles fakequit commands.
  */
-public class FakequitCommandExecutor implements CommandExecutor
+public final class FakequitCommandExecutor implements CommandExecutor
 {
     private final GeneralModule module;
 
@@ -23,7 +23,7 @@ public class FakequitCommandExecutor implements CommandExecutor
     }
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {

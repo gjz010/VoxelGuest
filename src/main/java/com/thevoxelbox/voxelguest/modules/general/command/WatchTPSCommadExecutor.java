@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  *
  */
-public class WatchTPSCommadExecutor implements CommandExecutor
+public final class WatchTPSCommadExecutor implements CommandExecutor
 {
     private final GeneralModule module;
 

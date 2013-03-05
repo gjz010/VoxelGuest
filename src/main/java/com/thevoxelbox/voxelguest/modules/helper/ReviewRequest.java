@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelguest.modules.helper;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class ReviewRequest
+public final class ReviewRequest
 {
     private final Location loc;
     private final Player guest;

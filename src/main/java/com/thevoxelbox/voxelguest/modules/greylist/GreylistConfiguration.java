@@ -6,17 +6,16 @@ import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 /**
  * Represents the greylist module configuration.
  */
-public class GreylistConfiguration
+public final class GreylistConfiguration
 {
     private String streamPasswordHash = "changeme";
     private int streamPort = 8080;
     private String notGreylistedKickMessage = "You are not greylisted.";
     private String whitelistGroupName = "Member";
-    private String graylistGroupName = "Guest";
+    private String greylistGroupName = "Guest";
     private boolean explorationMode = false;
-    private boolean streamGraylisting = false;
-    private boolean setGroupOnGraylist = true;
-    private String authToken = "changeme";
+    private boolean streamGreylisting = false;
+    private boolean setGroupOnGreylist = true;
     private boolean broadcastGreylists = true;
 
     @ConfigurationGetter("broadcast-greylists")
@@ -80,15 +79,15 @@ public class GreylistConfiguration
     }
 
     @ConfigurationGetter("stream-enable")
-    public boolean isStreamGraylisting()
+    public boolean isStreamGreylisting()
     {
-        return streamGraylisting;
+        return streamGreylisting;
     }
 
     @ConfigurationSetter("stream-enable")
-    public void setStreamGraylisting(final boolean streamGraylisting)
+    public void setStreamGreylisting(final boolean streamGraylisting)
     {
-        this.streamGraylisting = streamGraylisting;
+        this.streamGreylisting = streamGraylisting;
     }
 
     @ConfigurationGetter("wl-group-name")
@@ -104,38 +103,26 @@ public class GreylistConfiguration
     }
 
     @ConfigurationGetter("set-group-on-graylist")
-    public boolean isSetGroupOnGraylist()
+    public boolean isSetGroupOnGreylist()
     {
-        return setGroupOnGraylist;
+        return setGroupOnGreylist;
     }
 
     @ConfigurationSetter("set-group-on-graylist")
-    public void setSetGroupOnGraylist(boolean setGroupOnGraylist)
+    public void setSetGroupOnGreylist(final boolean setGroupOnGraylist)
     {
-        this.setGroupOnGraylist = setGroupOnGraylist;
+        this.setGroupOnGreylist = setGroupOnGraylist;
     }
 
     @ConfigurationGetter("gl-group-name")
-    public String getGraylistGroupName()
+    public String getGreylistGroupName()
     {
-        return graylistGroupName;
+        return greylistGroupName;
     }
 
     @ConfigurationSetter("gl-group-name")
-    public void setGraylistGroupName(String graylistGroupName)
+    public void setGreylistGroupName(final String graylistGroupName)
     {
-        this.graylistGroupName = graylistGroupName;
-    }
-
-    @ConfigurationGetter("injection-auth-token")
-    public String getAuthToken()
-    {
-        return authToken;
-    }
-
-    @ConfigurationSetter("injection-auth-token")
-    public void setAuthToken(final String authToken)
-    {
-        this.authToken = authToken;
+        this.greylistGroupName = graylistGroupName;
     }
 }

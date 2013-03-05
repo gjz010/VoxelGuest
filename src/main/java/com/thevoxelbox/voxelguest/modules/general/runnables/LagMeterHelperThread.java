@@ -1,6 +1,11 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.runnables;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.server.v1_4_R1.Packet43SetExperience;
+
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -10,12 +15,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *
  * @author TheCryoknight
  */
-public class LagMeterHelper extends Thread
+public class LagMeterHelperThread extends Thread
 {
     private final Set<Player> activePlayers = Collections.synchronizedSet(new HashSet<Player>());
     private volatile boolean isStoped = false;
+
+    public LagMeterHelperThread()
+    {
+        
+    }
 
     /**
      * Sets a players watch state.
@@ -44,12 +55,12 @@ public class LagMeterHelper extends Thread
         if (this.activePlayers.contains(player))
         {
             this.setPlayerWatchState(player, false);
-            player.sendMessage(ChatColor.GRAY + "Your experence bar will nolonger reperesnts the servers TPS.");
+            player.sendMessage(ChatColor.GRAY + "Your experience bar will no longer represent the server's TPS.");
         }
         else
         {
             this.setPlayerWatchState(player, true);
-            player.sendMessage(ChatColor.GRAY + "Your experence bar will now reperesnt the servers TPS.");
+            player.sendMessage(ChatColor.GRAY + "Your experience bar will now represent the server's TPS.");
         }
     }
 
@@ -92,8 +103,9 @@ public class LagMeterHelper extends Thread
                 }
                 try
                 {
-                    Thread.sleep(0xbb8);
-                } catch (InterruptedException e)
+                    Thread.sleep(3000);
+                }
+                catch (InterruptedException e)
                 {
                     e.printStackTrace();
                 }

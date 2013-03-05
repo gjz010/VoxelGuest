@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 /**
  * @author MikeMatrix
  */
-public class GreylistListener implements Listener
+public final class GreylistListener implements Listener
 {
     private final GreylistModule greylistModule;
     private final GreylistConfiguration moduleConfiguration;
@@ -50,9 +50,9 @@ public class GreylistListener implements Listener
     @EventHandler
     public final void onPlayerGreylisted(final PlayerGreylistedEvent event)
     {
-        if (moduleConfiguration.isSetGroupOnGraylist())
+        if (moduleConfiguration.isSetGroupOnGreylist())
         {
-            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), event.getPlayerName(), moduleConfiguration.getGraylistGroupName()))
+            if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), event.getPlayerName(), moduleConfiguration.getGreylistGroupName()))
             {
                 VoxelGuest.getPluginInstance().getLogger().warning("Error: Could not set new greylisted player to group.");
             }

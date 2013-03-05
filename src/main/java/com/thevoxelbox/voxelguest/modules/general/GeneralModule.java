@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelguest.modules.general;
 
 import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
+import com.thevoxelbox.voxelguest.modules.general.command.AddAfkMessageCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.AfkCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.EntityPurgeCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.FakequitCommandExecutor;
@@ -11,6 +12,11 @@ import com.thevoxelbox.voxelguest.modules.general.command.VpgCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.VtpCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.WatchTPSCommadExecutor;
 import com.thevoxelbox.voxelguest.modules.general.command.WhoCommandExecutor;
+import com.thevoxelbox.voxelguest.modules.general.listener.ConnectionEventListener;
+import com.thevoxelbox.voxelguest.modules.general.listener.PlayerEventListener;
+import com.thevoxelbox.voxelguest.modules.general.runnables.LagMeterHelperThread;
+import com.thevoxelbox.voxelguest.modules.general.runnables.PermGenMonitor;
+import com.thevoxelbox.voxelguest.modules.general.runnables.TPSTicker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
@@ -18,16 +24,17 @@ import org.bukkit.event.Listener;
 import java.util.HashMap;
 import java.util.HashSet;
 
+
 /**
+ * Core class for general module, manages all
+ * subcomponents of the general module.
+ *
  * @author TheCryoknight
  * @author Deamon5550
  */
 public class GeneralModule extends GuestModule
 {
     public static final String FAKEQUIT_PERM = "voxelguest.general.fakequit";
-
-    private GeneralModuleConfiguration configuration;
-
     //CommandExecuters
     private final EntityPurgeCommandExecutor entityPurgeCommandExecutor;
     private final VanishCommandExecutor vanishCommandExecutor;
@@ -35,26 +42,22 @@ public class GeneralModule extends GuestModule
     private final WhoCommandExecutor whoCommandExecutor;
     private final AfkCommandExecutor afkCommandExecutor;
     private final WatchTPSCommadExecutor watchTPSCommadExecutor;
-
     private final SystemCommandExecutor systemCommandExecutor;
     private final VpgCommandExecutor vpgCommandExecutor;
     private final VtpCommandExecutor vtpCommandExecutor;
-
+    private final AddAfkMessageCommandExecutor addAfkMessageCommandExecutor;
     //Listener
     private final ConnectionEventListener connectionEventListener;
     private final PlayerEventListener playerEventListener;
-
     //TPS ticker
     private final TPSTicker ticker = new TPSTicker();
-    private int tpsTickerTaskId = -1;
-
     //Lag Meter thread and helper
-    private final LagMeterHelper lagmeter = new LagMeterHelper();
-
+    private final LagMeterHelperThread lagmeter = new LagMeterHelperThread();
     //Handlers
     private final AfkManager afkManager;
     private final VanishFakequitHandler vanishFakequitHandler;
-
+    private GeneralModuleConfiguration configuration;
+    private int tpsTickerTaskId = -1;
     private int permGenMonitorTaskId = -1;
 
     /**
@@ -77,7 +80,9 @@ public class GeneralModule extends GuestModule
         this.systemCommandExecutor = new SystemCommandExecutor();
         this.vpgCommandExecutor = new VpgCommandExecutor();
         this.vtpCommandExecutor = new VtpCommandExecutor();
-        this.afkManager = new AfkManager();
+        this.addAfkMessageCommandExecutor = new AddAfkMessageCommandExecutor();
+
+        this.afkManager = new AfkManager(this);
         this.vanishFakequitHandler = new VanishFakequitHandler(this);
     }
 
@@ -86,7 +91,7 @@ public class GeneralModule extends GuestModule
     {
         final PermGenMonitor permGenMonitor = new PermGenMonitor(configuration);
 
-        tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.getPOLL_INTERVAL());
+        tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.POLL_INTERVAL);
         permGenMonitorTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), permGenMonitor, 20, 20 * 5);
         this.lagmeter.setDaemon(true);
         this.lagmeter.start();
@@ -108,13 +113,26 @@ public class GeneralModule extends GuestModule
             try
             {
                 lagmeter.join();
-            } catch (InterruptedException e)
+            }
+            catch (InterruptedException e)
             {
                 e.printStackTrace();
             }
         }
 
         super.onDisable();
+    }
+
+    @Override
+    public final String getConfigFileName()
+    {
+        return "GeneralModule";
+    }
+
+    @Override
+    public final Object getConfiguration()
+    {
+        return this.configuration;
     }
 
     @Override
@@ -144,20 +162,7 @@ public class GeneralModule extends GuestModule
         return commandMappings;
     }
 
-    @Override
-    public final Object getConfiguration()
-    {
-        return configuration;
-    }
-
-    @Override
-    public final String getConfigFileName()
-    {
-        return "general";
-    }
-
     /**
-     *
      * @return Returns the AFK manager.
      */
     public final AfkManager getAfkManager()
@@ -166,7 +171,6 @@ public class GeneralModule extends GuestModule
     }
 
     /**
-     *
      * @return Returns the fakequit handler.
      */
     public final VanishFakequitHandler getVanishFakequitHandler()
@@ -176,8 +180,10 @@ public class GeneralModule extends GuestModule
 
     /**
      * Replaces all occurrences of $no to the number of online players and replaces all $n with a given plazer name.
-     * @param msg The format string.
+     *
+     * @param msg        The format string.
      * @param playerName The player name to replace all occurrences of $n
+     *
      * @return Returns the formatted and replaced string.
      */
     public final String formatJoinLeaveMessage(final String msg, final String playerName)
@@ -188,10 +194,9 @@ public class GeneralModule extends GuestModule
     }
 
     /**
-     *
      * @return Returns the lagmeter instance.
      */
-    public final LagMeterHelper getLagmeter()
+    public final LagMeterHelperThread getLagmeter()
     {
         return lagmeter;
     }

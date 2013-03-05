@@ -13,7 +13,7 @@ import java.util.HashSet;
 /**
  * @author Butters
  */
-public class RegionModule extends GuestModule
+public final class RegionModule extends GuestModule
 {
     private final BlockEventListener blockEventListener;
     private final PlayerEventListener playerEventListener;
@@ -31,13 +31,13 @@ public class RegionModule extends GuestModule
     }
 
     @Override
-    public final void onEnable()
+    public void onEnable()
     {
         super.onEnable();
     }
 
     @Override
-    public final void onDisable()
+    public void onDisable()
     {
         super.onDisable();
     }
@@ -55,7 +55,7 @@ public class RegionModule extends GuestModule
     }
 
     @Override
-    public final HashSet<Listener> getListeners()
+    public HashSet<Listener> getListeners()
     {
         final HashSet<Listener> listeners = new HashSet<>();
         listeners.add(this.blockEventListener);

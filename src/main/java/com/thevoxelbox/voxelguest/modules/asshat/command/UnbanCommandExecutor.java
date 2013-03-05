@@ -79,7 +79,8 @@ public class UnbanCommandExecutor implements TabExecutor
             {
                 Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getUnbanBroadcastMsg(), playerName, commandSender.getName(), ""));
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));

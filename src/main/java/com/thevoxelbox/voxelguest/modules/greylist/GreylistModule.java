@@ -1,8 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.greylist;
 
-import com.thevoxelbox.voxelguest.VoxelGuest;
-import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
-import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 import com.thevoxelbox.voxelguest.modules.GuestModule;
 import com.thevoxelbox.voxelguest.modules.greylist.command.GreylistCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.greylist.command.UngreylistCommandExecutor;
@@ -10,14 +7,12 @@ import com.thevoxelbox.voxelguest.modules.greylist.command.WhitelistCommandExecu
 import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerGreylistEvent;
 import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerGreylistedEvent;
 import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerUngreylistedEvent;
-import com.thevoxelbox.voxelguest.modules.greylist.injector.SocketListener;
 import com.thevoxelbox.voxelguest.modules.greylist.listener.GreylistListener;
 import com.thevoxelbox.voxelguest.modules.greylist.model.Greylistee;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,16 +21,12 @@ import java.util.List;
 /**
  * @author MikeMatrix
  */
-public class GreylistModule extends GuestModule
+public final class GreylistModule extends GuestModule
 {
     private GreylistListener greylistListener;
     private GreylistCommandExecutor greylistCommandExecutor;
     private UngreylistCommandExecutor ungreylistCommandExecutor;
     private WhitelistCommandExecutor whitelistCommandExecutor;
-    private SocketListener socketListener;
-    private BukkitTask socketListenerTask;
-    private boolean explorationMode = false;
-    private String notGreylistedKickMessage = "You are not greylisted.";
     private GreylistConfiguration config;
     private StreamThread streamTask;
 
@@ -53,12 +44,9 @@ public class GreylistModule extends GuestModule
     }
 
     @Override
-    public final void onEnable()
+    public void onEnable()
     {
-        socketListener = new SocketListener(11368, this);
-        socketListenerTask = Bukkit.getScheduler().runTaskAsynchronously(VoxelGuest.getPluginInstance(), socketListener);
-
-        if (config.isStreamGraylisting())
+        if (config.isStreamGreylisting())
         {
             this.streamTask = new StreamThread(this);
             this.streamTask.start();
@@ -67,14 +55,9 @@ public class GreylistModule extends GuestModule
     }
 
     @Override
-    public final void onDisable()
+    public void onDisable()
     {
         super.onDisable();
-
-        socketListener.setRun(false);
-        socketListenerTask.cancel();
-        socketListener = null;
-        socketListenerTask = null;
 
         if (this.streamTask != null)
         {
@@ -84,13 +67,13 @@ public class GreylistModule extends GuestModule
     }
 
     @Override
-    public final Object getConfiguration()
+    public Object getConfiguration()
     {
         return this.config;
     }
 
     @Override
-    public final HashSet<Listener> getListeners()
+    public HashSet<Listener> getListeners()
     {
         final HashSet<Listener> listeners = new HashSet<>();
         listeners.add(greylistListener);
@@ -98,7 +81,7 @@ public class GreylistModule extends GuestModule
     }
 
     @Override
-    public final HashMap<String, CommandExecutor> getCommandMappings()
+    public HashMap<String, CommandExecutor> getCommandMappings()
     {
         HashMap<String, CommandExecutor> commandMapping = new HashMap<>();
         commandMapping.put("greylist", greylistCommandExecutor);
@@ -108,31 +91,7 @@ public class GreylistModule extends GuestModule
         return commandMapping;
     }
 
-    @ConfigurationGetter("exploration-mode")
-    public final boolean isExplorationMode()
-    {
-        return explorationMode;
-    }
-
-    @ConfigurationSetter("exploration-mode")
-    public final void setExplorationMode(final boolean explorationMode)
-    {
-        this.explorationMode = explorationMode;
-    }
-
-    @ConfigurationGetter("not-greylisted-kick-message")
-    public final String getNotGreylistedKickMessage()
-    {
-        return notGreylistedKickMessage;
-    }
-
-    @ConfigurationSetter("not-greylisted-kick-message")
-    public final void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
-    {
-        this.notGreylistedKickMessage = notGreylistedKickMessage;
-    }
-
-    public final boolean isOnPersistentGreylist(final String name)
+    public boolean isOnPersistentGreylist(final String name)
     {
         final List<Greylistee> greylistees;
 
@@ -142,7 +101,8 @@ public class GreylistModule extends GuestModule
             selectRestrictions.put("name", name.toLowerCase());
 
             greylistees = Persistence.getInstance().loadAll(Greylistee.class, selectRestrictions);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
             return false;
@@ -158,7 +118,7 @@ public class GreylistModule extends GuestModule
         return false;
     }
 
-    public final void greylist(final String name)
+    public void greylist(final String name)
     {
         try
         {
@@ -168,7 +128,8 @@ public class GreylistModule extends GuestModule
             {
                 return;
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
@@ -190,13 +151,14 @@ public class GreylistModule extends GuestModule
         {
             final PlayerGreylistedEvent playerGreylistedEvent = new PlayerGreylistedEvent(name);
             Bukkit.getPluginManager().callEvent(playerGreylistedEvent);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
     }
 
-    public final void ungreylist(final String name)
+    public void ungreylist(final String name)
     {
         HashMap<String, Object> selectRestrictions = new HashMap<>();
         selectRestrictions.put("name", name.toLowerCase());
@@ -214,7 +176,8 @@ public class GreylistModule extends GuestModule
         {
             final PlayerUngreylistedEvent playerUngreylistedEvent = new PlayerUngreylistedEvent(name);
             Bukkit.getPluginManager().callEvent(playerUngreylistedEvent);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }

@@ -16,7 +16,7 @@ import java.util.List;
  * @author Monofraps
  */
 @DatabaseTable(tableName = "regions")
-public class Region
+public final class Region
 {
     @DatabaseField(generatedId = true)
     private long id;
@@ -147,7 +147,7 @@ public class Region
         this.regionName = regionName;
     }
 
-    public final boolean inBounds(final Location locationToCheck)
+    public boolean inBounds(final Location locationToCheck)
     {
         if (!locationToCheck.getWorld().equals(getPointOne().getWorld()))
         {
@@ -683,13 +683,13 @@ public class Region
     public String toColoredString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append(ChatColor.GRAY + "Region info for: " + ChatColor.GREEN + this.getRegionName() + ChatColor.GRAY + ":\n");
-        builder.append(ChatColor.GRAY + "World: " + ChatColor.GREEN + this.getPointOne().getWorld().getName() + "\n");
-        builder.append(ChatColor.GRAY + "Type: " + ChatColor.GREEN + this.isGlobal() + "\n");
+        builder.append(ChatColor.GRAY + "Region info for: " + ChatColor.GREEN).append(this.getRegionName()).append(ChatColor.GRAY).append(":\n");
+        builder.append(ChatColor.GRAY + "World: " + ChatColor.GREEN).append(this.getPointOne().getWorld().getName()).append("\n");
+        builder.append(ChatColor.GRAY + "Type: " + ChatColor.GREEN).append(this.isGlobal()).append("\n");
         if (!this.isGlobal())
         {
-            builder.append(ChatColor.GRAY + "Point one: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + this.getPointOne().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + this.getPointOne().getZ() + ChatColor.DARK_GRAY + ")\n");
-            builder.append(ChatColor.GRAY + "Point two: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN + this.getPointTwo().getX() + ChatColor.DARK_GRAY + ", " + ChatColor.GREEN + this.getPointTwo().getZ() + ChatColor.DARK_GRAY + ")\n");
+            builder.append(ChatColor.GRAY + "Point one: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN).append(this.getPointOne().getX()).append(ChatColor.DARK_GRAY).append(", ").append(ChatColor.GREEN).append(this.getPointOne().getZ()).append(ChatColor.DARK_GRAY).append(")\n");
+            builder.append(ChatColor.GRAY + "Point two: " + ChatColor.DARK_GRAY + "(" + ChatColor.GREEN).append(this.getPointTwo().getX()).append(ChatColor.DARK_GRAY).append(", ").append(ChatColor.GREEN).append(this.getPointTwo().getZ()).append(ChatColor.DARK_GRAY).append(")\n");
         }
         return builder.toString();
     }
@@ -698,13 +698,13 @@ public class Region
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        builder.append("Region info for: " + this.getRegionName() + ":\n");
-        builder.append("World: " + this.getPointOne().getWorld().getName() + "\n");
-        builder.append("Type: " + this.isGlobal() + "\n");
+        builder.append("Region info for: ").append(this.getRegionName()).append(":\n");
+        builder.append("World: ").append(this.getPointOne().getWorld().getName()).append("\n");
+        builder.append("Type: ").append(this.isGlobal()).append("\n");
         if (!this.isGlobal())
         {
-            builder.append("Point one: (" + this.getPointOne().getX() + ", " + this.getPointOne().getZ() + ")\n");
-            builder.append("Point two: (" + this.getPointTwo().getX() + ", " + this.getPointTwo().getZ() + ")\n");
+            builder.append("Point one: (").append(this.getPointOne().getX()).append(", ").append(this.getPointOne().getZ()).append(")\n");
+            builder.append("Point two: (").append(this.getPointTwo().getX()).append(", ").append(this.getPointTwo().getZ()).append(")\n");
         }
         return builder.toString();
     }

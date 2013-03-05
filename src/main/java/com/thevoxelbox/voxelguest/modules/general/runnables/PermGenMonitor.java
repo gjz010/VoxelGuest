@@ -1,6 +1,8 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.runnables;
 
 import org.bukkit.Bukkit;
+
+import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;

@@ -11,12 +11,12 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 /**
- *
+ * Handles /vtp commands.
  */
-public class VtpCommandExecutor implements CommandExecutor
+public final class VtpCommandExecutor implements CommandExecutor
 {
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {
@@ -69,7 +69,8 @@ public class VtpCommandExecutor implements CommandExecutor
                                 {
                                     loc.setZ(loc.getZ() + Double.parseDouble(args[i].replace("z", "")));
                                 }
-                            } catch (NumberFormatException e)
+                            }
+                            catch (NumberFormatException e)
                             {
                                 player.sendMessage(ChatColor.RED + "Error parsing argument \"" + args[i] + "\"");
                                 return true;

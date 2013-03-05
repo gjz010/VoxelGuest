@@ -43,7 +43,7 @@ public abstract class GuestModule implements Module
         return name;
     }
 
-    protected void setName(String name)
+    protected void setName(final String name)
     {
         this.name = name;
     }

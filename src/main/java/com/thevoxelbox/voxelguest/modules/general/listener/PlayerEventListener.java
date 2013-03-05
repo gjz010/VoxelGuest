@@ -1,5 +1,6 @@
-package com.thevoxelbox.voxelguest.modules.general;
+package com.thevoxelbox.voxelguest.modules.general.listener;
 
+import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -13,14 +14,16 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 /**
  * @author TheCryoknight
  */
-public class PlayerEventListener implements Listener
+public final class PlayerEventListener implements Listener
 {
     private final GeneralModule module;
 
     /**
      * Creates a new player event listener instance.
+     *
      * @param generalModule The owning module.
      */
+
     public PlayerEventListener(final GeneralModule generalModule)
     {
         this.module = generalModule;
@@ -33,7 +36,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }
@@ -45,7 +49,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }
@@ -57,7 +62,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }
@@ -69,7 +75,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }
@@ -81,7 +88,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }
@@ -93,7 +101,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }
@@ -105,7 +114,8 @@ public class PlayerEventListener implements Listener
         {
             if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
             {
-                this.module.getAfkManager().toggleAfk(event.getPlayer());
+                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
+                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
             }
         }
     }

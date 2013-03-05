@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  *
  */
-public class VanishCommandExecutor implements CommandExecutor
+public final class VanishCommandExecutor implements CommandExecutor
 {
     private final GeneralModule module;
 
@@ -23,7 +23,7 @@ public class VanishCommandExecutor implements CommandExecutor
     }
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {

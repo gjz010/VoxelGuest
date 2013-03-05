@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * @deprecated This will be replaced with a new and safer system.
  */
-class StreamReader extends Thread
+final class StreamReader extends Thread
 {
 
     private final Socket socket;
-    private int status = -1;
     private final GreylistModule module;
+    private int status = -1;
 
     public StreamReader(final Socket socket, final GreylistModule module)
     {
@@ -58,7 +58,8 @@ class StreamReader extends Thread
                 this.module.greylist(name);
             }
 
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             //VoxelGuest.log(name, "Could not close client stream socket", 2);
             status = 222;
@@ -94,11 +95,13 @@ class StreamReader extends Thread
             out.close();
             socket.close();
             return list;
-        } catch (SocketException ex)
+        }
+        catch (SocketException ex)
         {
             //VoxelGuest.log(name, "Stream closed while reading stream", 1);
             return null;
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             return null;
         }

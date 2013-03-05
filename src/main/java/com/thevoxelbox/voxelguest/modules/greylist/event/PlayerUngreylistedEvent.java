@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 /**
  * @author Monofraps
  */
-public class PlayerUngreylistedEvent extends Event
+public final class PlayerUngreylistedEvent extends Event
 {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private String playerName;
@@ -22,17 +22,17 @@ public class PlayerUngreylistedEvent extends Event
     }
 
     @Override
-    public final HandlerList getHandlers()
+    public HandlerList getHandlers()
     {
         return HANDLER_LIST;
     }
 
-    public final String getPlayerName()
+    public String getPlayerName()
     {
         return playerName;
     }
 
-    public final void setPlayerName(final String playerName)
+    public void setPlayerName(final String playerName)
     {
         this.playerName = playerName;
     }

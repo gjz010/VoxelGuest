@@ -65,7 +65,7 @@ public enum CommandFlags
      *
      * @return A Map containing the flags chosen as the key and unparsed state of the flag as the value
      */
-    public static Map<CommandFlags, String> parseFlags(String[] args)
+    public static Map<CommandFlags, String> parseFlags(final String[] args)
     {
         Map<CommandFlags, String> parsedFlags = new HashMap<>();
         for (String arg : args)

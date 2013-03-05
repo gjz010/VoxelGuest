@@ -65,15 +65,18 @@ public final class Configuration
                         }
                     }
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 e.printStackTrace();
                 return false;
-            } catch (InvocationTargetException e)
+            }
+            catch (InvocationTargetException e)
             {
                 e.printStackTrace();
                 return false;
-            } catch (IllegalAccessException e)
+            }
+            catch (IllegalAccessException e)
             {
                 e.printStackTrace();
                 return false;
@@ -118,15 +121,18 @@ public final class Configuration
             }
 
             properties.store(fileWriter, null);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
             return false;
-        } catch (InvocationTargetException e)
+        }
+        catch (InvocationTargetException e)
         {
             e.printStackTrace();
             return false;
-        } catch (IllegalAccessException e)
+        }
+        catch (IllegalAccessException e)
         {
             e.printStackTrace();
             return false;

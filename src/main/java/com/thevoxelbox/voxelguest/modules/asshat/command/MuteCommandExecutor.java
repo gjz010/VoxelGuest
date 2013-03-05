@@ -123,7 +123,8 @@ public class MuteCommandExecutor implements TabExecutor
             {
                 Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getGagBroadcastMsg(), playerName, commandSender.getName(), muteReason));
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));

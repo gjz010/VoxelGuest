@@ -8,13 +8,14 @@ import org.bukkit.event.HandlerList;
  *
  * @author Monofraps
  */
-public class PlayerGreylistedEvent extends Event
+public final class PlayerGreylistedEvent extends Event
 {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private String playerName;
 
     /**
      * Creates a new greylisy event instance.
+     *
      * @param playerName The name of the player who has been greylisted.
      */
     public PlayerGreylistedEvent(final String playerName)
@@ -24,17 +25,26 @@ public class PlayerGreylistedEvent extends Event
     }
 
     @Override
-    public final HandlerList getHandlers()
+    public HandlerList getHandlers()
     {
         return HANDLER_LIST;
     }
 
-    public final String getPlayerName()
+    /**
+     * Returns the player name.
+     *
+     * @return Returns the player name.
+     */
+    public String getPlayerName()
     {
         return playerName;
     }
 
-    public final void setPlayerName(final String playerName)
+    /**
+     * Sets the player name.
+     * @param playerName The new player name.
+     */
+    public void setPlayerName(final String playerName)
     {
         this.playerName = playerName;
     }

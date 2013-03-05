@@ -111,7 +111,8 @@ public final class Persistence
             {
                 objectDao.commit(connection);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -147,7 +148,8 @@ public final class Persistence
             {
                 objectDao.commit(connection);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -179,7 +181,8 @@ public final class Persistence
                 objectDao.commit(connection);
             }
 
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -206,7 +209,8 @@ public final class Persistence
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(clazz);
             objects = objectDao.queryForFieldValues(restrictions);
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -236,7 +240,8 @@ public final class Persistence
             {
                 objectDao.commit(connection);
             }
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             e.printStackTrace();
         }

@@ -79,7 +79,8 @@ public class UnmuteCommandExecutor implements TabExecutor
             {
                 Bukkit.broadcastMessage(this.module.formatBroadcastMessage(configuration.getUngagBroadcastMsg(), playerName, commandSender.getName(), ""));
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             ex.printStackTrace();
             commandSender.sendMessage(String.format("Something went wrong: %s", ex.getMessage()));

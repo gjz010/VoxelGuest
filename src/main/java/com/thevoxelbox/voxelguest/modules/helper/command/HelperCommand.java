@@ -14,10 +14,14 @@ import java.util.List;
 /**
  * @author TheCryoknight
  */
-public class HelperCommand implements TabExecutor
+public final class HelperCommand implements TabExecutor
 {
     private final HelperModule module;
 
+    /**
+     * Creates a new helper command executor.
+     * @param module The owning module.
+     */
     public HelperCommand(final HelperModule module)
     {
         this.module = module;
@@ -33,7 +37,7 @@ public class HelperCommand implements TabExecutor
                 List<Player> matches = Bukkit.matchPlayer(args[1]);
                 if (matches.size() == 1)
                 {
-                    this.module.getManager().addHelper(matches.get(0));
+                    this.module.getManager().addHelper(matches.get(0).getName());
                     sender.sendMessage(ChatColor.GRAY + "Sucessfully added!");
                     return true;
                 }
@@ -46,7 +50,9 @@ public class HelperCommand implements TabExecutor
                     }
                     else
                     {
-                        sender.sendMessage(ChatColor.DARK_RED + "No matches found for \"" + args[1] + "\"");
+                        sender.sendMessage(ChatColor.DARK_RED + "No online matches found for \"" + args[1] + "\"");
+                        this.module.getManager().addHelper(args[1]);
+                        sender.sendMessage(ChatColor.GRAY + "Sucessfully added offline player!");
                         return true;
                     }
                 }
@@ -60,7 +66,7 @@ public class HelperCommand implements TabExecutor
                     if (oldHelper != null)
                     {
                         this.module.getManager().removeHelper(oldHelper);
-                        sender.sendMessage(ChatColor.GRAY + "Sucessfully added!");
+                        sender.sendMessage(ChatColor.GRAY + "Sucessfully removed!");
                         return true;
                     }
                     else
@@ -86,7 +92,7 @@ public class HelperCommand implements TabExecutor
         }
         else
         {
-            sender.sendMessage(ChatColor.DARK_RED + "Invalid Syntax!");
+            sender.sendMessage(ChatColor.RED + "Invalid Syntax!");
             return true;
         }
         return false;
