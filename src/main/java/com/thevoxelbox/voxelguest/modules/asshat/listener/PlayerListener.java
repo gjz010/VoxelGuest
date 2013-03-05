@@ -1,5 +1,6 @@
-package com.thevoxelbox.voxelguest.modules.asshat;
+package com.thevoxelbox.voxelguest.modules.asshat.listener;
 
+import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
