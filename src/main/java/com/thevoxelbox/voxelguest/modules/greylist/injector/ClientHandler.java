@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest.modules.greylist.injector;
 
+import com.thevoxelbox.voxelguest.modules.greylist.GreylistConfiguration;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 import org.bukkit.Bukkit;
 
@@ -10,28 +11,31 @@ import java.net.Socket;
 
 /**
  * @author Monofraps
+ * @deprecated
  */
 public class ClientHandler implements Runnable
 {
     private final Socket socket;
     private final GreylistModule module;
+    private final GreylistConfiguration greylistConfiguration;
 
     public ClientHandler(final Socket socket, final GreylistModule module)
     {
         this.socket = socket;
         this.module = module;
+        greylistConfiguration = (GreylistConfiguration)module.getConfiguration();
     }
 
     @Override
-    public void run()
+    public final void run()
     {
         try
         {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             final String authToken = reader.readLine();
             final String greylistee = reader.readLine();
 
-            if (authToken.equals(module.getAuthToken()))
+            if (authToken.equals(greylistConfiguration.getAuthToken()))
             {
                 if (!module.isOnPersistentGreylist(greylistee))
                 {

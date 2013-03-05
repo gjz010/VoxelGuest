@@ -15,21 +15,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Handles the who command.
+ */
 public class WhoCommandExecutor implements CommandExecutor
 {
-    private GeneralModule module;
-    private GeneralModuleConfiguration configuration;
+    private final GeneralModule module;
+    private final GeneralModuleConfiguration configuration;
 
+    /**
+     * Creates a new instance of the who command executor.
+     * @param generalModule The owning module.
+     */
     public WhoCommandExecutor(final GeneralModule generalModule)
     {
         this.module = generalModule;
-
-        Preconditions.checkState(generalModule.getConfiguration() instanceof GeneralModuleConfiguration);
         this.configuration = (GeneralModuleConfiguration) generalModule.getConfiguration();
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         final boolean admin = sender.hasPermission(GeneralModule.FAKEQUIT_PERM);
 

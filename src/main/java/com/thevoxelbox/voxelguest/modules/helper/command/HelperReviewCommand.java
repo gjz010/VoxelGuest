@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.helper.command;
 
-import java.util.List;
-
+import com.thevoxelbox.voxelguest.modules.helper.HelperModule;
+import com.thevoxelbox.voxelguest.modules.helper.ReviewRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,8 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.thevoxelbox.voxelguest.modules.helper.HelperModule;
-import com.thevoxelbox.voxelguest.modules.helper.ReviewRequest;
+import java.util.List;
 
 public class HelperReviewCommand implements TabExecutor
 {
@@ -112,7 +111,8 @@ public class HelperReviewCommand implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+    {
         return null;
     }
 }

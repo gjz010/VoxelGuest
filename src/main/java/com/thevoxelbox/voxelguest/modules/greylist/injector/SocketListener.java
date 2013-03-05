@@ -20,7 +20,7 @@ public class SocketListener implements Runnable
     private boolean run = true;
     private ServerSocket server;
 
-    public SocketListener(int port, final GreylistModule module)
+    public SocketListener(final int port, final GreylistModule module)
     {
         this.module = module;
         try

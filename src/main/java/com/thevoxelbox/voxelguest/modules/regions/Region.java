@@ -119,14 +119,15 @@ public class Region
 
     public Region()
     {
-        
+
     }
 
     public Region(final String worldName, final Location pointOne, final Location pointTwo, final String regionName)
     {
         this.worldName = worldName;
 
-        if(pointOne == null && pointTwo == null) {
+        if (pointOne == null && pointTwo == null)
+        {
             this.globalRegion = true;
         }
 
@@ -439,25 +440,29 @@ public class Region
         this.enchantingAllowed = enchantingAllowed;
     }
 
-    public boolean isPhysicsAllowed() {
+    public boolean isPhysicsAllowed()
+    {
         return physicsAllowed;
     }
 
-    public void setPhysicsAllowed(boolean physicsAllowed) {
+    public void setPhysicsAllowed(boolean physicsAllowed)
+    {
         this.physicsAllowed = physicsAllowed;
     }
 
     /**
      * @return the creatureSpawnAllowed
      */
-    public boolean isCreatureSpawnAllowed() {
+    public boolean isCreatureSpawnAllowed()
+    {
         return creatureSpawnAllowed;
     }
 
     /**
      * @param creatureSpawnAllowed the creatureSpawnAllowed to set
      */
-    public void setCreatureSpawnAllowed(boolean creatureSpawnAllowed) {
+    public void setCreatureSpawnAllowed(boolean creatureSpawnAllowed)
+    {
         this.creatureSpawnAllowed = creatureSpawnAllowed;
     }
 
@@ -674,7 +679,7 @@ public class Region
     {
         this.buildingRestricted = buildingRestricted;
     }
-    
+
     public String toColoredString()
     {
         StringBuilder builder = new StringBuilder();

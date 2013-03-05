@@ -1,16 +1,14 @@
 package com.thevoxelbox.voxelguest.modules.general;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.google.common.base.Preconditions;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- *
  * @author TheCryoknight
  */
 public class VanishFakequitHandler
@@ -18,13 +16,17 @@ public class VanishFakequitHandler
     private final GeneralModule module;
     private static final String VANISH_PERM = "voxelguest.general.vanish";
 
-    private final Set<Player> vanished = new HashSet<Player>();
-    private final Set<Player> fakeQuit = new HashSet<Player>();
+    private final Set<Player> vanished = new HashSet<>();
+    private final Set<Player> fakeQuit = new HashSet<>();
 
-    private final Set<String> offlineVanished = new HashSet<String>();
-    private final Set<String> offlineFakeQuit = new HashSet<String>();
+    private final Set<String> offlineVanished = new HashSet<>();
+    private final Set<String> offlineFakeQuit = new HashSet<>();
 
-    public VanishFakequitHandler(GeneralModule module)
+    /**
+     * Creates a new fakequit handler instance.
+     * @param module The owning module.
+     */
+    public VanishFakequitHandler(final GeneralModule module)
     {
         this.module = module;
     }
@@ -33,9 +35,10 @@ public class VanishFakequitHandler
      * Switches the vanished state of the specified player.
      *
      * @param player Player toggling their state
+     *
      * @return true if player is now vanished
      */
-    public boolean toggleVanish(final Player player)
+    public final boolean toggleVanish(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -64,9 +67,10 @@ public class VanishFakequitHandler
      * Switches the fakequit state of the specified player.
      *
      * @param player Player toggling their state
+     *
      * @return true if player is now vanished
      */
-    public boolean toggleFakeQuit(final Player player)
+    public final boolean toggleFakeQuit(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -96,7 +100,12 @@ public class VanishFakequitHandler
         }
     }
 
-    public boolean handleDisconnect(final Player player)
+    /**
+     * Handles disconnects.
+     * @param player The player who disconnects.
+     * @return Returns ?
+     */
+    public final boolean handleDisconnect(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -114,7 +123,11 @@ public class VanishFakequitHandler
         return false;
     }
 
-    public void handleConnect(final Player player)
+    /**
+     * Handles connects.
+     * @param player The player who attempts to connect.
+     */
+    public final void handleConnect(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -144,10 +157,11 @@ public class VanishFakequitHandler
     /**
      * Checks to see if the specified player is vanished.
      *
-     * @param player
-     * @return
+     * @param player The player to check.
+     *
+     * @return Returns a boolean indicating if the player is vanished (true) or not (false)
      */
-    public boolean isPlayerVanished(final Player player)
+    public final boolean isPlayerVanished(final Player player)
     {
         Preconditions.checkNotNull(player);
 
@@ -158,16 +172,21 @@ public class VanishFakequitHandler
      * Checks to see if the specified player has fakequit.
      *
      * @param player Player whose fakequit state to query
+     *
      * @return true if specified player is fakequit
      */
-    public boolean isPlayerFakequit(final Player player)
+    public final boolean isPlayerFakequit(final Player player)
     {
         Preconditions.checkNotNull(player);
 
         return this.fakeQuit.contains(player);
     }
 
-    public int getFakequitSize()
+    /**
+     *
+     * @return Returns the number of fakequit players.
+     */
+    public final int getFakequitSize()
     {
         return this.fakeQuit.size();
     }
@@ -192,8 +211,8 @@ public class VanishFakequitHandler
 
     /**
      * Shows the specified player to others.
-     * 
-     * @param player
+     *
+     * @param player The player to reveal.
      */
     private void revealPlayer(final Player player)
     {

@@ -20,19 +20,20 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Handles system commands.
  * @author Monofraps
  * @author TheCryoknight
  * @author Deamon
  */
 public class SystemCommandExecutor implements TabExecutor
 {
-    private static final String[] commandFlags = {"gc", "mem", "lag"};
+    private static final String[] COMMAND_FLAGS = {"gc", "mem", "lag"};
     private static final int TPS_PER_SECOND_THRESHOLD = 20;
     private static final int BAR_SEGMENTS = 20;
     private static final int BYTES_PER_MB = 1048576;
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         Preconditions.checkNotNull(sender);
         Preconditions.checkNotNull(command);
@@ -96,7 +97,6 @@ public class SystemCommandExecutor implements TabExecutor
                 }
             }
             sender.sendMessage("§8==============================");
-            return;
         }
         else
         {
@@ -126,7 +126,7 @@ public class SystemCommandExecutor implements TabExecutor
         }
     }
 
-    private void printSpecs(CommandSender sender)
+    private void printSpecs(final CommandSender sender)
     {
         sender.sendMessage("§8==============================");
         sender.sendMessage("§bServer Specs");
@@ -221,19 +221,19 @@ public class SystemCommandExecutor implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         if (sender.hasPermission("voxelguest.gereral.sys"))
         {
             if (args.length == 0)
             {
-                return Arrays.asList(SystemCommandExecutor.commandFlags);
+                return Arrays.asList(SystemCommandExecutor.COMMAND_FLAGS);
             }
             else
             {
                 final List<String> tmpList = new ArrayList<>();
                 final String completingParam = args[args.length - 1];
-                for (String flag : SystemCommandExecutor.commandFlags)
+                for (String flag : SystemCommandExecutor.COMMAND_FLAGS)
                 {
                     if (flag.toLowerCase().startsWith(completingParam.toLowerCase()))
                     {

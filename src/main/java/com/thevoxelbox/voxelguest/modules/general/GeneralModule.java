@@ -17,16 +17,13 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
 /**
- *
  * @author TheCryoknight
  * @author Deamon5550
  */
 public class GeneralModule extends GuestModule
 {
-
-    public static final String ENTITY_PURGE_PERM = "voxelguest.general.ep";
-    public static final String VANISH_PERM = "voxelguest.general.vanish";
     public static final String FAKEQUIT_PERM = "voxelguest.general.fakequit";
 
     private GeneralModuleConfiguration configuration;
@@ -52,15 +49,17 @@ public class GeneralModule extends GuestModule
     private int tpsTickerTaskId = -1;
 
     //Lag Meter thread and helper
-    private final LagMeterHelper Lagmeter = new LagMeterHelper();
+    private final LagMeterHelper lagmeter = new LagMeterHelper();
 
     //Handlers
     private final AfkManager afkManager;
     private final VanishFakequitHandler vanishFakequitHandler;
 
-    private PermGenMonitor permGenMonitor;
     private int permGenMonitorTaskId = -1;
 
+    /**
+     * Creates a new general module instance.
+     */
     public GeneralModule()
     {
         this.setName("General Module");
@@ -85,12 +84,12 @@ public class GeneralModule extends GuestModule
     @Override
     public final void onEnable()
     {
-        permGenMonitor = new PermGenMonitor(configuration);
+        final PermGenMonitor permGenMonitor = new PermGenMonitor(configuration);
 
-        tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.getPollInterval());
+        tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.getPOLL_INTERVAL());
         permGenMonitorTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), permGenMonitor, 20, 20 * 5);
-        this.Lagmeter.setDaemon(true);
-        this.Lagmeter.start();
+        this.lagmeter.setDaemon(true);
+        this.lagmeter.start();
 
         super.onEnable();
     }
@@ -98,17 +97,19 @@ public class GeneralModule extends GuestModule
     @Override
     public final void onDisable()
     {
-        this.Lagmeter.setStopped(true);
+        this.lagmeter.setStopped(true);
         Bukkit.getScheduler().cancelTask(tpsTickerTaskId);
         Bukkit.getScheduler().cancelTask(permGenMonitorTaskId);
 
         tpsTickerTaskId = -1;
         permGenMonitorTaskId = -1;
-        if (Lagmeter.isAlive())
+        if (lagmeter.isAlive())
         {
-            try {
-                Lagmeter.join();
-            } catch (InterruptedException e) {
+            try
+            {
+                lagmeter.join();
+            } catch (InterruptedException e)
+            {
                 e.printStackTrace();
             }
         }
@@ -127,7 +128,7 @@ public class GeneralModule extends GuestModule
     }
 
     @Override
-    public HashMap<String, CommandExecutor> getCommandMappings()
+    public final HashMap<String, CommandExecutor> getCommandMappings()
     {
         HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
         commandMappings.put("ep", this.entityPurgeCommandExecutor);
@@ -144,33 +145,54 @@ public class GeneralModule extends GuestModule
     }
 
     @Override
-    public Object getConfiguration()
+    public final Object getConfiguration()
     {
         return configuration;
     }
 
     @Override
-    public String getConfigFileName()
+    public final String getConfigFileName()
     {
         return "general";
     }
 
-    public AfkManager getAfkManager() {
+    /**
+     *
+     * @return Returns the AFK manager.
+     */
+    public final AfkManager getAfkManager()
+    {
         return afkManager;
     }
 
-    public VanishFakequitHandler getVanishFakequitHandler() {
+    /**
+     *
+     * @return Returns the fakequit handler.
+     */
+    public final VanishFakequitHandler getVanishFakequitHandler()
+    {
         return vanishFakequitHandler;
     }
 
-    public String formatJoinLeaveMessage(final String msg, final String playerName)
+    /**
+     * Replaces all occurrences of $no to the number of online players and replaces all $n with a given plazer name.
+     * @param msg The format string.
+     * @param playerName The player name to replace all occurrences of $n
+     * @return Returns the formatted and replaced string.
+     */
+    public final String formatJoinLeaveMessage(final String msg, final String playerName)
     {
         int onlinePlayers = Bukkit.getOnlinePlayers().length;
         onlinePlayers -= this.getVanishFakequitHandler().getFakequitSize();
         return msg.replace("$no", Integer.toString(onlinePlayers)).replace("$n", playerName);
     }
 
-    public LagMeterHelper getLagmeter() {
-        return Lagmeter;
+    /**
+     *
+     * @return Returns the lagmeter instance.
+     */
+    public final LagMeterHelper getLagmeter()
+    {
+        return lagmeter;
     }
 }

@@ -1,14 +1,14 @@
 package com.thevoxelbox.voxelguest.modules.regions;
 
+import com.thevoxelbox.voxelguest.persistence.Persistence;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
-import com.thevoxelbox.voxelguest.persistence.Persistence;
 /**
  * Handles the access, use, persistence, and management of all of the currently active regions.
  *
@@ -29,6 +29,7 @@ public class RegionManager
      * Adds a new region to the currently active list. Also, saves region to persistence.
      *
      * @param newRegion Region adding
+     *
      * @return True if successfully added to the active list.
      */
     public boolean addRegion(final Region newRegion)
@@ -41,6 +42,7 @@ public class RegionManager
      * removes a old region from the currently active list. Also, removes region from persistence.
      *
      * @param oldRegion Region removing
+     *
      * @return True if successfully removed from the active list.
      */
     public boolean removeRegion(final Region oldRegion)
@@ -53,6 +55,7 @@ public class RegionManager
      * Return region witch matches name provided, or null if no region match
      *
      * @param regionName
+     *
      * @return
      */
     public Region getRegion(final String regionName)
@@ -71,9 +74,11 @@ public class RegionManager
      * Returns the first region that the location is residing in.
      * This should not be used because it does not support nested regions.
      *
-     * @deprecated Use getRegionsAtLoc(final Location loc)
      * @param loc Location to find zone
+     *
      * @return The region that location is at
+     *
+     * @deprecated Use getRegionsAtLoc(final Location loc)
      */
     @Deprecated
     public Region getRegionAtLoc(final Location loc)
@@ -92,6 +97,7 @@ public class RegionManager
      * Returns a list of all of the regions at the specified location.
      *
      * @param loc Location to find regions from
+     *
      * @return A list of all of the regions at the specified location
      */
     public List<Region> getRegionsAtLoc(final Location loc)
@@ -114,7 +120,8 @@ public class RegionManager
      * Such as a player only needs to be able to build in one of the regions that that are in to return true.
      *
      * @param player Player to check for building access
-     * @param loc Location of the edit event
+     * @param loc    Location of the edit event
+     *
      * @return true if the player can edit the zone they are in
      */
     public boolean canPlayerModify(final Player player, final Location loc)
@@ -133,7 +140,7 @@ public class RegionManager
 
     /**
      * Creates a list of all the names of the currently active regions.
-     * 
+     *
      * @return list of region names
      */
     public List<String> getRegionNames()

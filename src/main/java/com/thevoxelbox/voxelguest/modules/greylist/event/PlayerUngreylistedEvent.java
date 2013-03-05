@@ -8,26 +8,31 @@ import org.bukkit.event.HandlerList;
  */
 public class PlayerUngreylistedEvent extends Event
 {
-    private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList HANDLER_LIST = new HandlerList();
     private String playerName;
 
-    public PlayerUngreylistedEvent(String playerName) {
+    /**
+     * Creates a new player ungreylisy event instance.
+     * @param playerName The player who has been ungreylisted.
+     */
+    public PlayerUngreylistedEvent(final String playerName)
+    {
 
         this.playerName = playerName;
     }
 
     @Override
-    public HandlerList getHandlers()
+    public final HandlerList getHandlers()
     {
-        return handlers;
+        return HANDLER_LIST;
     }
 
-    public String getPlayerName()
+    public final String getPlayerName()
     {
         return playerName;
     }
 
-    public void setPlayerName(final String playerName)
+    public final void setPlayerName(final String playerName)
     {
         this.playerName = playerName;
     }

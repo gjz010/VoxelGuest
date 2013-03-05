@@ -5,7 +5,6 @@ import com.thevoxelbox.voxelguest.VoxelGuest;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistConfiguration;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerGreylistedEvent;
-import com.thevoxelbox.voxelguest.modules.greylist.event.PlayerUngreylistedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,17 +17,21 @@ import org.bukkit.event.player.PlayerLoginEvent;
  */
 public class GreylistListener implements Listener
 {
-    GreylistModule greylistModule;
-    GreylistConfiguration moduleConfiguration;
+    private final GreylistModule greylistModule;
+    private final GreylistConfiguration moduleConfiguration;
 
+    /**
+     * Creates a new greylist listener instance.
+     * @param greylistModule The owning module.
+     */
     public GreylistListener(final GreylistModule greylistModule)
     {
         this.greylistModule = greylistModule;
-        this.moduleConfiguration = (GreylistConfiguration)greylistModule.getConfiguration();
+        this.moduleConfiguration = (GreylistConfiguration) greylistModule.getConfiguration();
     }
 
     @EventHandler
-    public void onPlayerLogin(final PlayerLoginEvent event)
+    public final void onPlayerLogin(final PlayerLoginEvent event)
     {
         Preconditions.checkNotNull(event);
 
@@ -45,7 +48,8 @@ public class GreylistListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerGreylisted(PlayerGreylistedEvent event) {
+    public final void onPlayerGreylisted(final PlayerGreylistedEvent event)
+    {
         if (moduleConfiguration.isSetGroupOnGraylist())
         {
             if (VoxelGuest.getPerms().playerAddGroup(Bukkit.getWorlds().get(0), event.getPlayerName(), moduleConfiguration.getGraylistGroupName()))
@@ -54,7 +58,8 @@ public class GreylistListener implements Listener
             }
         }
 
-        if(moduleConfiguration.isBroadcastGreylists()) {
+        if (moduleConfiguration.isBroadcastGreylists())
+        {
             Bukkit.broadcastMessage(ChatColor.GRAY + event.getPlayerName() + ChatColor.DARK_GRAY + " was added to the greylist.");
         }
     }

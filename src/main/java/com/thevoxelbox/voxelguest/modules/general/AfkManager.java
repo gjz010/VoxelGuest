@@ -13,15 +13,15 @@ import java.util.Set;
 public class AfkManager
 {
 
-    private final Set<String> playersAfk = new HashSet<String>();
+    private final Set<String> playersAfk = new HashSet<>();
 
     /**
      * Sets the players afk state
      *
      * @param player Player who gets their AFK state set.
-     * @param isAfk
+     * @param isAfk True to set the player AFK, false to set him as non-AFK
      */
-    public synchronized void setPlayerAfk(final Player player, final boolean isAfk)
+    public final synchronized void setPlayerAfk(final Player player, final boolean isAfk)
     {
         if (isAfk)
         {
@@ -34,9 +34,9 @@ public class AfkManager
     /**
      * Toggles the specified players afk state
      *
-     * @param player
+     * @param player The player who wants his AFK status to be toggled.
      */
-    public void toggleAfk(final Player player)
+    public final void toggleAfk(final Player player)
     {
         if (this.playersAfk.contains(player.getName()))
         {
@@ -54,7 +54,7 @@ public class AfkManager
      *
      * @return true if player is afk
      */
-    public boolean isPlayerAfk(final Player player)
+    public final boolean isPlayerAfk(final Player player)
     {
         return this.playersAfk.contains(player.getName());
     }

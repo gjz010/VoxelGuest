@@ -1,10 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.general.command;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -12,17 +7,23 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Executes entity purge commands.
+ */
 public class EntityPurgeCommandExecutor implements TabExecutor
 {
     @Override
-    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (args.length == 0)
         {
@@ -69,28 +70,19 @@ public class EntityPurgeCommandExecutor implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         if (sender.hasPermission("voxelguest.general.ep"))
         {
-            final List<String> worldNames = this.getWorldNames();
-            if (args.length == 0)
-            {
-                return worldNames;
-            }
-            for (String worldName : worldNames)
-            {
-                if (worldName.toLowerCase().startsWith(args[args.length - 1]));
-            }
+            return this.getWorldNames();
         }
         return Collections.emptyList();
     }
 
     /**
-     *
-     * @return
+     * @return Returns a list of names of all worlds currently loaded.
      */
-    public List<String> getWorldNames()
+    public final List<String> getWorldNames()
     {
         final List<String> worldNames = new ArrayList<>();
         for (World world : Bukkit.getWorlds())
@@ -106,7 +98,7 @@ public class EntityPurgeCommandExecutor implements TabExecutor
         private final CommandSender sender;
         private final boolean allEntities;
 
-        public EntityPurgeThread(final World world, final CommandSender sender, boolean allEntities)
+        public EntityPurgeThread(final World world, final CommandSender sender, final boolean allEntities)
         {
             this.world = world;
             this.sender = sender;

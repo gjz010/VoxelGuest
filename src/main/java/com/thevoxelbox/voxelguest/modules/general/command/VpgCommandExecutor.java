@@ -10,10 +10,13 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+/**
+ *
+ */
 public class VpgCommandExecutor implements CommandExecutor
 {
     @Override
-    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (args.length >= 2)
         {
@@ -45,7 +48,7 @@ public class VpgCommandExecutor implements CommandExecutor
             }
             else
             {
-                sender.sendMessage("No player matches found for \"" + args [0] + "\"");
+                sender.sendMessage("No player matches found for \"" + args[0] + "\"");
                 return true;
             }
         }

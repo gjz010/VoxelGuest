@@ -1,5 +1,10 @@
 package com.thevoxelbox.voxelguest.modules.helper;
 
+import com.thevoxelbox.voxelguest.persistence.Persistence;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -11,14 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import com.thevoxelbox.voxelguest.persistence.Persistence;
-
 /**
- *
  * @author TheCryoknight
  */
 public class HelperManager
@@ -59,6 +57,7 @@ public class HelperManager
      * Checks to see if a guest can make a new review.
      *
      * @param guest
+     *
      * @return
      */
     public boolean canMakeNewReview(Player guest)
@@ -102,7 +101,7 @@ public class HelperManager
     /**
      * Adds a comment to the last review performed by the specified helper
      *
-     * @param helper Helper adding a comment
+     * @param helper  Helper adding a comment
      * @param comment The comment being added
      */
     public void addComment(Player helper, String comment)
@@ -134,7 +133,7 @@ public class HelperManager
 
     /**
      * Removes a helper from the non-administrator list of helpers and deletes them to the database (administrator list is permission based).
-     * 
+     *
      * @param oldHelper
      */
     public boolean removeHelper(Helper oldHelper)
@@ -164,6 +163,7 @@ public class HelperManager
      * Gets the helper object corresponding with the player provided or returns null if no player on list.
      *
      * @param helper Player to find corresponding helper object
+     *
      * @return helper object corresponding with the player
      */
     public Helper getHelper(Player helper)
@@ -236,6 +236,7 @@ public class HelperManager
      * Searches through the database an finds all historical guest reviews for the name provided.
      *
      * @param playerName Name of the guest to search for history
+     *
      * @return List of all review history
      */
     public List<GuestHistoryEntry> getGuestHistory(String playerName)
@@ -248,12 +249,12 @@ public class HelperManager
     /**
      * Creates, formats, and sends a message to the specified helper, informing them of review history of a specified guest.
      *
-     * @param helper The helper requesting the history
-     * @param guestName The guest 
+     * @param helper    The helper requesting the history
+     * @param guestName The guest
      */
     public void sendHelperGuestHistory(Player helper, String guestName)
     {
-        final List<GuestHistoryEntry> history = this.getGuestHistory(guestName); 
+        final List<GuestHistoryEntry> history = this.getGuestHistory(guestName);
         if (history.isEmpty())
         {
             return;
@@ -285,6 +286,7 @@ public class HelperManager
 
         helper.sendMessage(stringBuilder.toString());
     }
+
     public boolean isHelper(Player player)
     {
         if (this.helpers.containsKey(player.getName()))

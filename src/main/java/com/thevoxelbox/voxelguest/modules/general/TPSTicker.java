@@ -7,9 +7,9 @@ package com.thevoxelbox.voxelguest.modules.general;
  */
 public class TPSTicker implements Runnable
 {
-    private static final long pollInterval = 60L;
-    private static long lastTimestamp = System.currentTimeMillis() - (pollInterval * 50);
-    private static long lastDifference = pollInterval;
+    private static final long POLL_INTERVAL = 60L;
+    private static long lastTimestamp = System.currentTimeMillis() - (POLL_INTERVAL * 50);
+    private static long lastDifference = POLL_INTERVAL;
 
     /**
      * Calculates the number of ticks in a second
@@ -23,21 +23,11 @@ public class TPSTicker implements Runnable
             lastDifference = 1;
         }
 
-        return (double) pollInterval / lastDifference;
-    }
-
-    /**
-     * Get the time (in ticks) between polls, for use in ticker initiation.
-     *
-     * @return time in ticks between polls
-     */
-    public static long getPollInterval()
-    {
-        return pollInterval;
+        return (double) POLL_INTERVAL / lastDifference;
     }
 
     @Override
-    public void run()
+    public final void run()
     {
         lastDifference = (System.currentTimeMillis() - lastTimestamp) / 1000;
         lastTimestamp = System.currentTimeMillis();

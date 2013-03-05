@@ -4,7 +4,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- *
  * @author TheCryoknight
  */
 @DatabaseTable(tableName = "helpers")
@@ -19,7 +18,9 @@ public class Helper
     @DatabaseField
     private long lastReview = 0;
 
-    public Helper() {}
+    public Helper()
+    {
+    }
 
     public Helper(final String name)
     {
@@ -49,7 +50,7 @@ public class Helper
     {
         return this.lastReview;
     }
-    
+
     @Override
     public boolean equals(final Object other)
     {

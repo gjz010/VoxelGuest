@@ -5,29 +5,36 @@ import org.bukkit.event.HandlerList;
 
 /**
  * This event gets called right after a player was successfully added to the greylist.
+ *
  * @author Monofraps
  */
 public class PlayerGreylistedEvent extends Event
 {
-    private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList HANDLER_LIST = new HandlerList();
     private String playerName;
-    public PlayerGreylistedEvent(String playerName) {
+
+    /**
+     * Creates a new greylisy event instance.
+     * @param playerName The name of the player who has been greylisted.
+     */
+    public PlayerGreylistedEvent(final String playerName)
+    {
 
         this.playerName = playerName;
     }
 
     @Override
-    public HandlerList getHandlers()
+    public final HandlerList getHandlers()
     {
-        return handlers;
+        return HANDLER_LIST;
     }
 
-    public String getPlayerName()
+    public final String getPlayerName()
     {
         return playerName;
     }
 
-    public void setPlayerName(final String playerName)
+    public final void setPlayerName(final String playerName)
     {
         this.playerName = playerName;
     }

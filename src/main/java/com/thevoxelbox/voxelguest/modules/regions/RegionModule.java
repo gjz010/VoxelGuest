@@ -75,7 +75,8 @@ public class RegionModule extends GuestModule
     /**
      * @return The region manager
      */
-    public RegionManager getRegionManager() {
+    public RegionManager getRegionManager()
+    {
         return this.regionManager;
     }
 

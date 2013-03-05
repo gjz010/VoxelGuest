@@ -9,25 +9,23 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-
 /**
  * @deprecated This will be replaced with a new and safer system.
  */
-class StreamReader extends Thread {
+class StreamReader extends Thread
+{
 
     private final Socket socket;
     private int status = -1;
     private final GreylistModule module;
 
-    public StreamReader(Socket socket, GreylistModule module)
+    public StreamReader(final Socket socket, final GreylistModule module)
     {
         this.module = module;
         this.socket = socket;
     }
 
-    public int getStatus()
+    public final int getStatus()
     {
         // -1 : Not yet called
         // 100: In process
@@ -40,15 +38,17 @@ class StreamReader extends Thread {
     }
 
     @Override
-    public void run()
+    public final void run()
     {
         status = 100;
-        try {
+        try
+        {
             //VoxelGuest.log(name, "Accepted client on port " + streamPort, 0);
             List<String> list = this.readSocket(socket);
             this.socket.close();
 
-            if (list == null || list.isEmpty()) {
+            if (list == null || list.isEmpty())
+            {
                 status = 201;
                 return;
             }
@@ -58,26 +58,31 @@ class StreamReader extends Thread {
                 this.module.greylist(name);
             }
 
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             //VoxelGuest.log(name, "Could not close client stream socket", 2);
             status = 222;
         }
     }
 
-    private synchronized List<String> readSocket(Socket socket)
+    private synchronized List<String> readSocket(final Socket socket)
     {
-        try {
+        try
+        {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
             List<String> list = new ArrayList<String>();
             String line = null;
 
-            while ((line = in.readLine()) != null) {
+            while ((line = in.readLine()) != null)
+            {
                 String toAdd = interpretStreamInput(line);
 
-                if (toAdd != null) {
-                    if (!list.contains(toAdd)) {
+                if (toAdd != null)
+                {
+                    if (!list.contains(toAdd))
+                    {
                         list.add(toAdd);
                     }
                 }
@@ -89,23 +94,27 @@ class StreamReader extends Thread {
             out.close();
             socket.close();
             return list;
-        } catch (SocketException ex) {
+        } catch (SocketException ex)
+        {
             //VoxelGuest.log(name, "Stream closed while reading stream", 1);
             return null;
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             return null;
         }
     }
 
-    private String interpretStreamInput(String input)
+    private final String interpretStreamInput(final String input)
     {
         String[] args = input.split("\\:");
 
-        if (args[0].equals(this.module.getConfig().getStreamPasswordHash())) {
+        if (args[0].equals(this.module.getConfig().getStreamPasswordHash()))
+        {
             String user = args[1];
             boolean accepted = Boolean.parseBoolean(args[2]);
 
-            if (accepted) {
+            if (accepted)
+            {
                 return user;
             }
         }

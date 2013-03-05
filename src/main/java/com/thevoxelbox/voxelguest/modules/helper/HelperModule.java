@@ -1,20 +1,18 @@
 package com.thevoxelbox.voxelguest.modules.helper;
 
+import com.thevoxelbox.voxelguest.modules.GuestModule;
+import com.thevoxelbox.voxelguest.modules.helper.command.HelperCommand;
+import com.thevoxelbox.voxelguest.modules.helper.command.HelperReviewCommand;
+import com.thevoxelbox.voxelguest.modules.helper.command.WLReviewCommand;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.Listener;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.event.Listener;
-
-import com.thevoxelbox.voxelguest.modules.GuestModule;
-import com.thevoxelbox.voxelguest.modules.helper.command.HelperCommand;
-import com.thevoxelbox.voxelguest.modules.helper.command.HelperReviewCommand;
-import com.thevoxelbox.voxelguest.modules.helper.command.WLReviewCommand;
-
 /**
- *
  * @author TheCryoknight
  */
 public class HelperModule extends GuestModule

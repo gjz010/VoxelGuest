@@ -11,19 +11,23 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
- * 
  * @author TheCryoknight
  */
 public class PlayerEventListener implements Listener
 {
     private final GeneralModule module;
+
+    /**
+     * Creates a new player event listener instance.
+     * @param generalModule The owning module.
+     */
     public PlayerEventListener(final GeneralModule generalModule)
     {
         this.module = generalModule;
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event)
+    public final void onPlayerMove(final PlayerMoveEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -35,7 +39,7 @@ public class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event)
+    public final void onPlayerChat(final AsyncPlayerChatEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -45,9 +49,9 @@ public class PlayerEventListener implements Listener
             }
         }
     }
-    
+
     @EventHandler
-    public void onPlayerTeleport(PlayerTeleportEvent event)
+    public final void onPlayerTeleport(final PlayerTeleportEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -57,8 +61,9 @@ public class PlayerEventListener implements Listener
             }
         }
     }
+
     @EventHandler
-    public void onPlayerCommand(PlayerCommandPreprocessEvent event)
+    public final void onPlayerCommand(final PlayerCommandPreprocessEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -68,9 +73,9 @@ public class PlayerEventListener implements Listener
             }
         }
     }
-    
+
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event)
+    public final void onPlayerInteract(final PlayerInteractEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -80,9 +85,9 @@ public class PlayerEventListener implements Listener
             }
         }
     }
-    
+
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event)
+    public final void onPlayerQuit(final PlayerQuitEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -92,8 +97,9 @@ public class PlayerEventListener implements Listener
             }
         }
     }
+
     @EventHandler
-    public void onPlayerKick(PlayerKickEvent event)
+    public final void onPlayerKick(final PlayerKickEvent event)
     {
         if (event.getPlayer() != null)
         {

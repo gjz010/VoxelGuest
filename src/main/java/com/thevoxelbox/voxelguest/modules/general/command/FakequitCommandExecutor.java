@@ -6,17 +6,24 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Handles fakequit commands.
+ */
 public class FakequitCommandExecutor implements CommandExecutor
 {
-    private GeneralModule module;
+    private final GeneralModule module;
 
+    /**
+     * Creates a new instance of the fakequit command executor.
+     * @param generalModule The owning module.
+     */
     public FakequitCommandExecutor(final GeneralModule generalModule)
     {
         this.module = generalModule;
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {

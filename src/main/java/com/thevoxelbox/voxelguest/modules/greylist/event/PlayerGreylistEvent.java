@@ -5,41 +5,47 @@ import org.bukkit.event.HandlerList;
 
 /**
  * This event is called before a player gets added to the greylist.
+ *
  * @author Monofraps
  */
 public class PlayerGreylistEvent extends Event
 {
-    private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList HANDLER_LIST = new HandlerList();
     private String playerName;
     private boolean cancelled = false;
 
-    public PlayerGreylistEvent(String playerName) {
+    /**
+     * Creates a new player (pre) greylist event instance.
+     * @param playerName The name of the player to greylist.
+     */
+    public PlayerGreylistEvent(final String playerName)
+    {
 
         this.playerName = playerName;
     }
 
     @Override
-    public HandlerList getHandlers()
+    public final HandlerList getHandlers()
     {
-        return handlers;
+        return HANDLER_LIST;
     }
 
-    public String getPlayerName()
+    public final String getPlayerName()
     {
         return playerName;
     }
 
-    public void setPlayerName(final String playerName)
+    public final void setPlayerName(final String playerName)
     {
         this.playerName = playerName;
     }
 
-    public boolean isCancelled()
+    public final boolean isCancelled()
     {
         return cancelled;
     }
 
-    public void setCancelled(final boolean cancelled)
+    public final void setCancelled(final boolean cancelled)
     {
         this.cancelled = cancelled;
     }

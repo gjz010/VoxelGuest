@@ -3,6 +3,9 @@ package com.thevoxelbox.voxelguest.modules.greylist;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationGetter;
 import com.thevoxelbox.voxelguest.configuration.annotations.ConfigurationSetter;
 
+/**
+ * Represents the greylist module configuration.
+ */
 public class GreylistConfiguration
 {
     private String streamPasswordHash = "changeme";
@@ -51,7 +54,7 @@ public class GreylistConfiguration
     {
         this.notGreylistedKickMessage = notGreylistedKickMessage;
     }
-    
+
     @ConfigurationGetter("stream-port")
     public int getStreamPort()
     {
@@ -101,22 +104,26 @@ public class GreylistConfiguration
     }
 
     @ConfigurationGetter("set-group-on-graylist")
-    public boolean isSetGroupOnGraylist() {
+    public boolean isSetGroupOnGraylist()
+    {
         return setGroupOnGraylist;
     }
 
     @ConfigurationSetter("set-group-on-graylist")
-    public void setSetGroupOnGraylist(boolean setGroupOnGraylist) {
+    public void setSetGroupOnGraylist(boolean setGroupOnGraylist)
+    {
         this.setGroupOnGraylist = setGroupOnGraylist;
     }
 
     @ConfigurationGetter("gl-group-name")
-    public String getGraylistGroupName() {
+    public String getGraylistGroupName()
+    {
         return graylistGroupName;
     }
 
     @ConfigurationSetter("gl-group-name")
-    public void setGraylistGroupName(String graylistGroupName) {
+    public void setGraylistGroupName(String graylistGroupName)
+    {
         this.graylistGroupName = graylistGroupName;
     }
 

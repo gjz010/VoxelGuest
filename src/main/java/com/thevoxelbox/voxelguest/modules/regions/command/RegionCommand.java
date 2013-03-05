@@ -1,12 +1,5 @@
 package com.thevoxelbox.voxelguest.modules.regions.command;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.thevoxelbox.voxelguest.modules.regions.Region;
 import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import org.bukkit.ChatColor;
@@ -16,6 +9,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Butters
@@ -121,8 +121,7 @@ public class RegionCommand implements TabExecutor
                         z1 = Integer.parseInt(args[3]);
                         x2 = Integer.parseInt(args[4]);
                         z2 = Integer.parseInt(args[5]);
-                    }
-                    catch(final NumberFormatException e)
+                    } catch (final NumberFormatException e)
                     {
                         sender.sendMessage("Error in  parsing arguments: invalid syntax");
                         sender.sendMessage(e.getMessage());
@@ -174,110 +173,111 @@ public class RegionCommand implements TabExecutor
         {
             switch (flag.getKey())
             {
-            case BLOCK_DROP_ALLOWED:
-                region.setBlockDropAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case BLOCK_GROWTH_ALLOWED:
-                region.setBlockGrowthAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case BLOCK_SPREAD_ALLOWED:
-                region.setBlockSpreadAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case CACTUS_DAMMAGE_ALLOWED:
-                region.setCactusDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case CREEPER_EXPLOSION_ALLOWED:
-                region.setCreeperExplosionAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case DRAGON_EGG_MOVEMENT_ALLOWED:
-                region.setDragonEggMovementAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case DROWNING_DAMMAGE_ALLOWED:
-                region.setDrowningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case ENCHANTING_ALLOWED:
-                region.setEnchantingAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case EXPLOSIVE_DAMMAGE_ALLOWED:
-                region.setExplosiveDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case FALL_DAMMAGE_ALLOWED:
-                region.setFallDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case FIRETICK_DAMMAGE_ALLOWED:
-                region.setFireTickDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case FIRE_DAMMAGE_ALLOWED:
-                region.setFireDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case FIRE_SPREAD_ALLOWED:
-                region.setFireSpreadAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case FOOD_CHANGE_ALLOWED:
-                region.setFoodChangeAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case HUNGER_DAMMAGE_ALLOWED:
-                region.setHungerDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case ICE_FORMATION_ALLOWED:
-                region.setIceFormationAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case ICE_MELTING_ALLOWED:
-                region.setIceMeltingAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case LAVA_DAMMAGE_ALLOWED:
-                region.setLavaDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case LAVA_FLOW_ALLOWED:
-                region.setLavaFlowAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case LEAF_DECAY_ALLOWED:
-                region.setLeafDecayAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case PHYSICS_ALLOWED:
-                region.setPhysicsAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case LIGHTNING_DAMMAGE_ALLOWED:
-                region.setLightningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case MAGIC_DAMMAGE_ALLOWED:
-                region.setMagicDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case POISON_DAMMAGE_ALLOWED:
-                region.setPoisonDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case PROJECTILE_DAMMAGE_ALLOWED:
-                region.setProjectileDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case PVP_DAMMAGE_ALLOWED:
-                region.setPvpDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case SNOW_FORMATION_ALLOWED:
-                region.setDrowningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case SNOW_MELTING_ALLOWED:
-                region.setSnowMeltingAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case SUFFOCATION_DAMMAGE_ALLOWED:
-                region.setSuffocationDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case TNT_BREAKING_PAINTINGS_ALLOWED:
-                region.setTntBreakingPaintingsAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case TNT_DAMMAGE_ALLOWED:
-                region.setTntDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case VOID_DAMMAGE_ALLOWED:
-                region.setVoidDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            case WATER_FLOW_ALLOWED:
-                region.setWaterFlowAllowed(RegionCommand.parseCommandBool(flag.getValue()));
-                break;
-            default:
-                break;
+                case BLOCK_DROP_ALLOWED:
+                    region.setBlockDropAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case BLOCK_GROWTH_ALLOWED:
+                    region.setBlockGrowthAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case BLOCK_SPREAD_ALLOWED:
+                    region.setBlockSpreadAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case CACTUS_DAMMAGE_ALLOWED:
+                    region.setCactusDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case CREEPER_EXPLOSION_ALLOWED:
+                    region.setCreeperExplosionAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case DRAGON_EGG_MOVEMENT_ALLOWED:
+                    region.setDragonEggMovementAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case DROWNING_DAMMAGE_ALLOWED:
+                    region.setDrowningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case ENCHANTING_ALLOWED:
+                    region.setEnchantingAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case EXPLOSIVE_DAMMAGE_ALLOWED:
+                    region.setExplosiveDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case FALL_DAMMAGE_ALLOWED:
+                    region.setFallDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case FIRETICK_DAMMAGE_ALLOWED:
+                    region.setFireTickDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case FIRE_DAMMAGE_ALLOWED:
+                    region.setFireDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case FIRE_SPREAD_ALLOWED:
+                    region.setFireSpreadAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case FOOD_CHANGE_ALLOWED:
+                    region.setFoodChangeAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case HUNGER_DAMMAGE_ALLOWED:
+                    region.setHungerDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case ICE_FORMATION_ALLOWED:
+                    region.setIceFormationAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case ICE_MELTING_ALLOWED:
+                    region.setIceMeltingAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case LAVA_DAMMAGE_ALLOWED:
+                    region.setLavaDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case LAVA_FLOW_ALLOWED:
+                    region.setLavaFlowAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case LEAF_DECAY_ALLOWED:
+                    region.setLeafDecayAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case PHYSICS_ALLOWED:
+                    region.setPhysicsAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case LIGHTNING_DAMMAGE_ALLOWED:
+                    region.setLightningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case MAGIC_DAMMAGE_ALLOWED:
+                    region.setMagicDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case POISON_DAMMAGE_ALLOWED:
+                    region.setPoisonDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case PROJECTILE_DAMMAGE_ALLOWED:
+                    region.setProjectileDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case PVP_DAMMAGE_ALLOWED:
+                    region.setPvpDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case SNOW_FORMATION_ALLOWED:
+                    region.setDrowningDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case SNOW_MELTING_ALLOWED:
+                    region.setSnowMeltingAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case SUFFOCATION_DAMMAGE_ALLOWED:
+                    region.setSuffocationDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case TNT_BREAKING_PAINTINGS_ALLOWED:
+                    region.setTntBreakingPaintingsAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case TNT_DAMMAGE_ALLOWED:
+                    region.setTntDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case VOID_DAMMAGE_ALLOWED:
+                    region.setVoidDamageAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                case WATER_FLOW_ALLOWED:
+                    region.setWaterFlowAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
+                default:
+                    break;
             }
         }
     }
+
     private static Integer[] processBlockList(final String list)
     {
         final String[] cleanList = list.replaceAll("[", "").replaceAll("]", "").split(",");
@@ -288,17 +288,16 @@ public class RegionCommand implements TabExecutor
             {
                 bannedIds[i] = Integer.parseInt(cleanList[i]);
             }
-        }
-        catch (final NumberFormatException e)
+        } catch (final NumberFormatException e)
         {
-            
+
         }
         return bannedIds;
     }
 
     /**
-     * 
      * @param str
+     *
      * @return
      */
     private static boolean parseCommandBool(final String str)
@@ -336,7 +335,7 @@ public class RegionCommand implements TabExecutor
         {
             if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit"))
             {
-                for(String regionName : this.regionModule.getRegionManager().getRegionNames())
+                for (String regionName : this.regionModule.getRegionManager().getRegionNames())
                 {
                     if (regionName.startsWith(args[1]))
                     {

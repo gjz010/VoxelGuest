@@ -7,19 +7,22 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ *
+ */
 public class ConnectionEventListener implements Listener
 {
-    private GeneralModule module;
-    private GeneralModuleConfiguration configuration;
+    private final GeneralModule module;
+    private final GeneralModuleConfiguration configuration;
 
     /**
-     *
+     * Creates a new ConnectionEventListener instance.
      * @param generalModule The parent module.
      */
     public ConnectionEventListener(final GeneralModule generalModule)
     {
         this.module = generalModule;
-        this.configuration = (GeneralModuleConfiguration)generalModule.getConfiguration();
+        this.configuration = (GeneralModuleConfiguration) generalModule.getConfiguration();
     }
 
     @EventHandler
@@ -51,7 +54,7 @@ public class ConnectionEventListener implements Listener
         }
 
         event.setQuitMessage(this.module.formatJoinLeaveMessage(configuration.getLeaveFormat(), player.getName()));
-        
+
         if (this.module.getVanishFakequitHandler().handleDisconnect(player))
         {
             event.setQuitMessage("");

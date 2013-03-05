@@ -1,18 +1,17 @@
 package com.thevoxelbox.voxelguest.modules.general.command;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author TheCryoknight
@@ -24,6 +23,7 @@ public class AfkCommandExecutor implements CommandExecutor
 
     /**
      * Creates a new /afk command executor
+     *
      * @param generalModule The owning parent module.
      */
     public AfkCommandExecutor(final GeneralModule generalModule)

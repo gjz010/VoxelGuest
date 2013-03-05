@@ -1,11 +1,10 @@
 package com.thevoxelbox.voxelguest.modules.helper.command;
 
+import com.thevoxelbox.voxelguest.modules.helper.HelperModule;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.thevoxelbox.voxelguest.modules.helper.HelperModule;
 
 public class WLReviewCommand implements CommandExecutor
 {
@@ -21,7 +20,7 @@ public class WLReviewCommand implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            if(!sender.hasPermission("voxelguest.helper.wloveride"))
+            if (!sender.hasPermission("voxelguest.helper.wloveride"))
             {
                 this.module.getManager().newReview((Player) sender);
             }

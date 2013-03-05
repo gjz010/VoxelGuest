@@ -1,9 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.greylist.command;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,24 +9,35 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.thevoxelbox.voxelguest.VoxelGuest;
-import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class WhitelistCommandExecutor implements TabExecutor {
+/**
+ *
+ */
+public class WhitelistCommandExecutor implements TabExecutor
+{
     private final GreylistModule module;
 
-    public WhitelistCommandExecutor(final GreylistModule module) {
+    /**
+     * Creats a new whitelist command executor instance.
+     * @param module The owning module.
+     */
+    public WhitelistCommandExecutor(final GreylistModule module)
+    {
         this.module = module;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
         if (args.length == 1)
         {
-            List<Player> matchPlayer = Bukkit.matchPlayer(args[0]);
+            final List<Player> matchPlayer = Bukkit.matchPlayer(args[0]);
             if (matchPlayer.size() == 1)
             {
-                Player match = matchPlayer.get(0);
+                final Player match = matchPlayer.get(0);
                 for (final String groupName : VoxelGuest.getPerms().getGroups())
                 {
                     if (groupName.equalsIgnoreCase(this.module.getConfig().getWhitelistGroupName()))
@@ -51,12 +60,12 @@ public class WhitelistCommandExecutor implements TabExecutor {
             }
             else
             {
-                sender.sendMessage("No player matches found for \"" + args [0] + "\"");
+                sender.sendMessage("No player matches found for \"" + args[0] + "\"");
                 return true;
             }
-            
+
             String header = "";
-            final HashMap<String, List<String>> groups = new HashMap<String, List<String>>();
+            final HashMap<String, List<String>> groups = new HashMap<>();
             for (Player player : Bukkit.getOnlinePlayers())
             {
                 final String group = VoxelGuest.getPerms().getPrimaryGroup(player);
@@ -71,7 +80,7 @@ public class WhitelistCommandExecutor implements TabExecutor {
                 groups.put(group, names);
 
             }
-            for (String groupName : groups.keySet())
+            for (final String groupName : groups.keySet())
             {
                 header += ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + groupName.substring(0, 1).toUpperCase() + ":" + groups.get(groupName).size() + ChatColor.DARK_GRAY + "] ";
             }
@@ -84,7 +93,8 @@ public class WhitelistCommandExecutor implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    {
         return null;
     }
 }

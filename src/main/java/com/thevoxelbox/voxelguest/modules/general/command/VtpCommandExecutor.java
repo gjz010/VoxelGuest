@@ -10,17 +10,13 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+/**
+ *
+ */
 public class VtpCommandExecutor implements CommandExecutor
 {
-
-    public VtpCommandExecutor()
-    {
-
-    }
-
     @Override
-
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {
@@ -64,17 +60,14 @@ public class VtpCommandExecutor implements CommandExecutor
                                 if (args[i].startsWith("x"))
                                 {
                                     loc.setX(loc.getX() + Double.parseDouble(args[i].replace("x", "")));
-                                    continue;
                                 }
                                 else if (args[i].startsWith("y"))
                                 {
                                     loc.setY(loc.getY() + Double.parseDouble(args[i].replace("y", "")));
-                                    continue;
                                 }
                                 else if (args[i].startsWith("z"))
                                 {
                                     loc.setZ(loc.getZ() + Double.parseDouble(args[i].replace("z", "")));
-                                    continue;
                                 }
                             } catch (NumberFormatException e)
                             {

@@ -4,7 +4,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- *
  * @author TheCryoknight
  */
 @DatabaseTable(tableName = "review-history")
@@ -21,7 +20,9 @@ public class GuestHistoryEntry implements Comparable<GuestHistoryEntry>
     @DatabaseField
     private String comment = "";
 
-    public GuestHistoryEntry() {}
+    public GuestHistoryEntry()
+    {
+    }
 
     public GuestHistoryEntry(final String guestName, final String reviewerName)
     {
@@ -65,7 +66,8 @@ public class GuestHistoryEntry implements Comparable<GuestHistoryEntry>
         return Long.compare(this.reviewTime, otherEntry.reviewTime);
     }
 
-    public String getComment() {
+    public String getComment()
+    {
         return this.comment;
     }
 }

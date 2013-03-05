@@ -14,13 +14,17 @@ public class GreylistCommandExecutor implements CommandExecutor
 {
     private GreylistModule greylistModule;
 
+    /**
+     * Creates a new greylist command executor instance.
+     * @param greylistModule The owning module.
+     */
     public GreylistCommandExecutor(final GreylistModule greylistModule)
     {
         this.greylistModule = greylistModule;
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         Preconditions.checkNotNull(sender);
         Preconditions.checkNotNull(command);
@@ -30,7 +34,7 @@ public class GreylistCommandExecutor implements CommandExecutor
         {
             if (args.length == 1)
             {
-                String greylistee = Strings.nullToEmpty(args[0]);
+                final String greylistee = Strings.nullToEmpty(args[0]);
                 if (greylistModule.isOnPersistentGreylist(greylistee))
                 {
                     sender.sendMessage(String.format("%s is already on the greylist.", greylistee));
