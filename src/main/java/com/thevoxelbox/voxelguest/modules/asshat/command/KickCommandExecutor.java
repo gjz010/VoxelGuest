@@ -142,7 +142,7 @@ public class KickCommandExecutor implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
+    public final List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] strings)
     {
         return null;
     }

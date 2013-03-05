@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Represents a list of muted players.
+ *
  * @author Monofraps
  */
 public class Mutelist
@@ -51,11 +52,11 @@ public class Mutelist
     }
 
     /**
-     * Generates a list of names containing all people currently muted
+     * Generates a list of names containing all people currently muted.
      *
-     * @return List of names of people muted
+     * @return Returns a list of names of people muted
      */
-    public List<String> getMutedNames()
+    public final List<String> getMutedNames()
     {
         final List<MutedPlayer> mutedPlayers = Persistence.getInstance().loadAll(MutedPlayer.class);
         final List<String> mutedNames = new ArrayList<>();

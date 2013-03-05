@@ -29,7 +29,6 @@ public class BannedPlayer
      */
     public BannedPlayer(final String playerName, final String banReason)
     {
-
         this.playerName = playerName;
         this.banReason = banReason;
     }

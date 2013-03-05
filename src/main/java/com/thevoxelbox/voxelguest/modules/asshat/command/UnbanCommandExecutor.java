@@ -1,15 +1,15 @@
 package com.thevoxelbox.voxelguest.modules.asshat.command;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModuleConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Executes /unban commands.
@@ -87,7 +87,7 @@ public class UnbanCommandExecutor implements TabExecutor
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+    public final List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         if (sender.hasPermission("voxelguest.asshat.unmute"))
         {
@@ -102,7 +102,8 @@ public class UnbanCommandExecutor implements TabExecutor
                 final String completingParam = args[args.length - 1];
                 for (String bannedName : bannedNamesList)
                 {
-                    if (bannedName.toLowerCase().startsWith(completingParam.toLowerCase())) {
+                    if (bannedName.toLowerCase().startsWith(completingParam.toLowerCase()))
+                    {
                         tmpMatchList.add(bannedName);
                     }
                 }

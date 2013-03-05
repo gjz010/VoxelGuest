@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Represents a list of banned players.
+ *
  * @author Monofraps
  */
 public class Banlist
@@ -50,7 +51,12 @@ public class Banlist
         return true;
     }
 
-    public List<String> getBannedNames()
+    /**
+     * Loads all banned players from database and returns a String list of the player names.
+     *
+     * @return Returns a list of the names of all banned players.
+     */
+    public final List<String> getBannedNames()
     {
         final List<BannedPlayer> bannedPlayers = Persistence.getInstance().loadAll(BannedPlayer.class);
         final List<String> bannedNames = new ArrayList<>();
