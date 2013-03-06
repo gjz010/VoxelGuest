@@ -29,6 +29,11 @@ public final class PlayerGreylistedEvent extends Event
     {
         return HANDLER_LIST;
     }
+    
+    public static HandlerList getHandlerList() {
+        
+        return HANDLER_LIST;
+    }
 
     /**
      * Returns the player name.
