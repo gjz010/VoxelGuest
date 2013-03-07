@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * @deprecated This will be replaced with a new and safer system.
  */
+@Deprecated
 final class StreamReader extends Thread
 {
 

@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 /**
  * @deprecated This will be replaced with a new and safer system.
  */
+@Deprecated
 final class StreamThread extends Thread
 {
 

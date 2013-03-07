@@ -23,7 +23,7 @@ public final class Persistence
 {
     private static Persistence instance = new Persistence();
     private ConnectionSource connectionSource;
-    private Map<Class, Dao> daoCache = new HashMap<>();
+    private Map<Class<?>, Dao> daoCache = new HashMap<>();
     private boolean initialized = false;
 
     private Persistence()
@@ -168,7 +168,7 @@ public final class Persistence
     {
         checkState();
 
-        List<V> objects = Collections.EMPTY_LIST;
+        List<V> objects = Collections.emptyList();
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(clazz);
@@ -204,7 +204,7 @@ public final class Persistence
     {
         checkState();
 
-        List<V> objects = Collections.EMPTY_LIST;
+        List<V> objects = Collections.emptyList();
         try
         {
             Dao<V, ID> objectDao = (Dao<V, ID>) getDao(clazz);

@@ -188,7 +188,7 @@ public final class SystemCommandExecutor implements TabExecutor
 
         public static String renderTPSBar(final double actualValue, final double maxValue)
         {
-            return renderBar(actualValue, maxValue, false, "TPS");
+            return renderBar(actualValue > TPS_PER_SECOND_THRESHOLD ? TPS_PER_SECOND_THRESHOLD : actualValue, maxValue, false, "TPS");
         }
 
         public static String renderBar(final double actualValue, final double maxValue)

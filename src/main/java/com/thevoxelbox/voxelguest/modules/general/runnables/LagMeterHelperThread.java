@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author TheCryoknight
  */
 public class LagMeterHelperThread extends Thread
@@ -30,8 +29,9 @@ public class LagMeterHelperThread extends Thread
 
     /**
      * Sets a players watch state.
+     *
      * @param player The name of the player.
-     * @param state A boolean to indicate whether or not zou want to set or unset the watch state.
+     * @param state A boolean to indicate whether or not you want to set or unset the watch state.
      */
     public final void setPlayerWatchState(final Player player, final boolean state)
     {
@@ -65,7 +65,8 @@ public class LagMeterHelperThread extends Thread
     }
 
     /**
-     * Checks if a player is on the tps watch list.
+     * Checks if a player is on the TPS watch list.
+     *
      * @param player The player name.
      * @return Returns a boolean indicating if the given player name is on the tps watch list.
      */

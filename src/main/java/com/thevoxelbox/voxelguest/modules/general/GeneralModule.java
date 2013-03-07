@@ -46,7 +46,7 @@ public class GeneralModule extends GuestModule
     private final VpgCommandExecutor vpgCommandExecutor;
     private final VtpCommandExecutor vtpCommandExecutor;
     private final AddAfkMessageCommandExecutor addAfkMessageCommandExecutor;
-    //Listener
+    //Listeners
     private final ConnectionEventListener connectionEventListener;
     private final PlayerEventListener playerEventListener;
     //TPS ticker
@@ -158,6 +158,8 @@ public class GeneralModule extends GuestModule
         commandMappings.put("vpg", this.vpgCommandExecutor);
         commandMappings.put("vtp", this.vtpCommandExecutor);
         commandMappings.put("watchtps", this.watchTPSCommadExecutor);
+        commandMappings.put("addafkmessage", this.addAfkMessageCommandExecutor);
+
 
         return commandMappings;
     }
@@ -179,7 +181,8 @@ public class GeneralModule extends GuestModule
     }
 
     /**
-     * Replaces all occurrences of $no to the number of online players and replaces all $n with a given plazer name.
+     * Replaces all occurrences of $no to the number of online players
+     * and replaces all $n with a given players name.
      *
      * @param msg        The format string.
      * @param playerName The player name to replace all occurrences of $n
