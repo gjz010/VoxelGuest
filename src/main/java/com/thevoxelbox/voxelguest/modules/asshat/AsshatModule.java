@@ -76,12 +76,6 @@ public class AsshatModule extends GuestModule
     }
 
     @Override
-    public final String getConfigFileName()
-    {
-        return "asshat";
-    }
-
-    @Override
     public final Object getConfiguration()
     {
         return config;
