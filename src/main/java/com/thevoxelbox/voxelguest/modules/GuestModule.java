@@ -57,7 +57,7 @@ public abstract class GuestModule implements Module
     @Override
     public String getConfigFileName()
     {
-        return getName().replace(" ", "").toLowerCase();
+        return getName().replace(" ", "");
     }
 
     @Override
