@@ -49,10 +49,7 @@ public final class Persistence
     public void initialize(final File dbFile) throws SQLException
     {
         Preconditions.checkState(!initialized, "Persistence system has already been initialized.");
-        if (!dbFile.getParentFile().mkdirs())
-        {
-            Bukkit.getLogger().severe("Failed to create VoxelGuest database file directory.");
-        }
+        dbFile.getParentFile().mkdirs();
         connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + dbFile.getPath());
 
         initialized = true;
