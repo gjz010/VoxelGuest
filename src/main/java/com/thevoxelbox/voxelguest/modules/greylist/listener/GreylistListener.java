@@ -22,6 +22,7 @@ public final class GreylistListener implements Listener
 
     /**
      * Creates a new greylist listener instance.
+     *
      * @param greylistModule The owning module.
      */
     public GreylistListener(final GreylistModule greylistModule)
@@ -31,11 +32,11 @@ public final class GreylistListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerLogin(final PlayerLoginEvent event)
+    public void onPlayerLogin(final PlayerLoginEvent event)
     {
         Preconditions.checkNotNull(event);
 
-        if (greylistModule.getConfig().isExplorationMode())
+        if (moduleConfiguration.isExplorationMode())
         {
             return;
         }
@@ -43,12 +44,12 @@ public final class GreylistListener implements Listener
         final Player player = event.getPlayer();
         if (!player.hasPermission("voxelguest.greylist.override") && !greylistModule.isOnPersistentGreylist(player.getName()))
         {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, greylistModule.getConfig().getNotGreylistedKickMessage());
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, moduleConfiguration.getNotGreylistedKickMessage());
         }
     }
 
     @EventHandler
-    public final void onPlayerGreylisted(final PlayerGreylistedEvent event)
+    public void onPlayerGreylisted(final PlayerGreylistedEvent event)
     {
         if (moduleConfiguration.isSetGroupOnGreylist())
         {

@@ -16,6 +16,7 @@ public final class GreylistCommandExecutor implements CommandExecutor
 
     /**
      * Creates a new greylist command executor instance.
+     *
      * @param greylistModule The owning module.
      */
     public GreylistCommandExecutor(final GreylistModule greylistModule)
@@ -46,7 +47,7 @@ public final class GreylistCommandExecutor implements CommandExecutor
             }
             else
             {
-                sender.sendMessage("Please supply a player name to be graylisted.");
+                sender.sendMessage("Please supply a player name to be greylisted.");
                 return true;
             }
         }

@@ -26,7 +26,7 @@ final class StreamReader extends Thread
         this.socket = socket;
     }
 
-    public final int getStatus()
+    public int getStatus()
     {
         // -1 : Not yet called
         // 100: In process
@@ -39,7 +39,7 @@ final class StreamReader extends Thread
     }
 
     @Override
-    public final void run()
+    public void run()
     {
         status = 100;
         try
@@ -74,8 +74,8 @@ final class StreamReader extends Thread
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            List<String> list = new ArrayList<String>();
-            String line = null;
+            List<String> list = new ArrayList<>();
+            String line;
 
             while ((line = in.readLine()) != null)
             {
@@ -108,11 +108,11 @@ final class StreamReader extends Thread
         }
     }
 
-    private final String interpretStreamInput(final String input)
+    private String interpretStreamInput(final String input)
     {
         String[] args = input.split("\\:");
 
-        if (args[0].equals(this.module.getConfig().getStreamPasswordHash()))
+        if (args[0].equals(((GreylistConfiguration) module.getConfiguration()).getStreamPasswordHash()))
         {
             String user = args[1];
             boolean accepted = Boolean.parseBoolean(args[2]);

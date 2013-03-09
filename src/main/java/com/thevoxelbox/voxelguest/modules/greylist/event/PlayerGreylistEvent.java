@@ -16,6 +16,7 @@ public final class PlayerGreylistEvent extends Event
 
     /**
      * Creates a new player (pre) greylist event instance.
+     *
      * @param playerName The name of the player to greylist.
      */
     public PlayerGreylistEvent(final String playerName)
@@ -26,6 +27,11 @@ public final class PlayerGreylistEvent extends Event
 
     @Override
     public HandlerList getHandlers()
+    {
+        return HANDLER_LIST;
+    }
+
+    public static HandlerList getHandlerList()
     {
         return HANDLER_LIST;
     }

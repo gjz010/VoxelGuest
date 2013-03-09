@@ -31,25 +31,25 @@ public final class GreylistConfiguration
     }
 
     @ConfigurationGetter("exploration-mode")
-    public final boolean isExplorationMode()
+    public boolean isExplorationMode()
     {
         return explorationMode;
     }
 
     @ConfigurationSetter("exploration-mode")
-    public final void setExplorationMode(final boolean explorationMode)
+    public void setExplorationMode(final boolean explorationMode)
     {
         this.explorationMode = explorationMode;
     }
 
     @ConfigurationGetter("not-greylisted-kick-message")
-    public final String getNotGreylistedKickMessage()
+    public String getNotGreylistedKickMessage()
     {
         return notGreylistedKickMessage;
     }
 
     @ConfigurationSetter("not-greylisted-kick-message")
-    public final void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
+    public void setNotGreylistedKickMessage(final String notGreylistedKickMessage)
     {
         this.notGreylistedKickMessage = notGreylistedKickMessage;
     }

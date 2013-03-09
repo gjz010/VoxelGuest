@@ -7,13 +7,16 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author MikeMatrix
  */
 @DatabaseTable(tableName = "greylist")
-public class Greylistee
+public final class Greylistee
 {
     @DatabaseField(generatedId = true)
     private long id;
     @DatabaseField
     private String name;
 
+    /**
+     * Default constructor used be ORM system.
+     */
     public Greylistee()
     {
     }

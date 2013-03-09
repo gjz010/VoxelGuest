@@ -19,7 +19,7 @@ final class StreamThread extends Thread
         this.module = module;
         try
         {
-            this.serverSocket = new ServerSocket(module.getConfig().getStreamPort());
+            this.serverSocket = new ServerSocket(((GreylistConfiguration) module.getConfiguration()).getStreamPort());
         }
         catch (IOException ex)
         {
@@ -28,7 +28,7 @@ final class StreamThread extends Thread
         }
     }
 
-    public final void killProcesses()
+    public void killProcesses()
     {
         if (reader != null && reader.getStatus() == 100)
         {
@@ -46,7 +46,7 @@ final class StreamThread extends Thread
     }
 
     @Override
-    public final void run()
+    public void run()
     {
         if (serverSocket == null)
         {

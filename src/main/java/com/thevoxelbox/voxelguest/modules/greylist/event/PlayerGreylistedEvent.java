@@ -14,7 +14,7 @@ public final class PlayerGreylistedEvent extends Event
     private String playerName;
 
     /**
-     * Creates a new greylisy event instance.
+     * Creates a new greylist event instance.
      *
      * @param playerName The name of the player who has been greylisted.
      */
@@ -24,14 +24,14 @@ public final class PlayerGreylistedEvent extends Event
         this.playerName = playerName;
     }
 
-    @Override
-    public HandlerList getHandlers()
+    public static HandlerList getHandlerList()
     {
         return HANDLER_LIST;
     }
-    
-    public static HandlerList getHandlerList() {
-        
+
+    @Override
+    public HandlerList getHandlers()
+    {
         return HANDLER_LIST;
     }
 
@@ -47,6 +47,7 @@ public final class PlayerGreylistedEvent extends Event
 
     /**
      * Sets the player name.
+     *
      * @param playerName The new player name.
      */
     public void setPlayerName(final String playerName)

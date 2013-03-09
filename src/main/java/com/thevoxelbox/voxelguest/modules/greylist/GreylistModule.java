@@ -91,6 +91,13 @@ public final class GreylistModule extends GuestModule
         return commandMapping;
     }
 
+    /**
+     * Checks if someone is on the greylist.
+     *
+     * @param name The name of the guest to check.
+     *
+     * @return Returns true of the given name is on the greylist.
+     */
     public boolean isOnPersistentGreylist(final String name)
     {
         final List<Greylistee> greylistees;
@@ -118,6 +125,11 @@ public final class GreylistModule extends GuestModule
         return false;
     }
 
+    /**
+     * Greylists a name.
+     *
+     * @param name The name to preylist.
+     */
     public void greylist(final String name)
     {
         try
@@ -158,6 +170,11 @@ public final class GreylistModule extends GuestModule
         }
     }
 
+    /**
+     * Removes a name from the greylist.
+     *
+     * @param name The name to remove.
+     */
     public void ungreylist(final String name)
     {
         HashMap<String, Object> selectRestrictions = new HashMap<>();
@@ -181,10 +198,5 @@ public final class GreylistModule extends GuestModule
         {
             ex.printStackTrace();
         }
-    }
-
-    public GreylistConfiguration getConfig()
-    {
-        return this.config;
     }
 }

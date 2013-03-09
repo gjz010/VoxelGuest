@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.greylist.command;
 
 import com.thevoxelbox.voxelguest.VoxelGuest;
+import com.thevoxelbox.voxelguest.modules.greylist.GreylistConfiguration;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,15 +19,16 @@ import java.util.List;
  */
 public final class WhitelistCommandExecutor implements TabExecutor
 {
-    private final GreylistModule module;
+    private final GreylistConfiguration moduleConfiguration;
 
     /**
      * Creats a new whitelist command executor instance.
+     *
      * @param module The owning module.
      */
     public WhitelistCommandExecutor(final GreylistModule module)
     {
-        this.module = module;
+        this.moduleConfiguration = (GreylistConfiguration) module.getConfiguration();
     }
 
     @Override
@@ -40,7 +42,7 @@ public final class WhitelistCommandExecutor implements TabExecutor
                 final Player match = matchPlayer.get(0);
                 for (final String groupName : VoxelGuest.getPerms().getGroups())
                 {
-                    if (groupName.equalsIgnoreCase(this.module.getConfig().getWhitelistGroupName()))
+                    if (groupName.equalsIgnoreCase(moduleConfiguration.getWhitelistGroupName()))
                     {
                         for (final String oldGroupName : VoxelGuest.getPerms().getPlayerGroups(match))
                         {
@@ -49,8 +51,8 @@ public final class WhitelistCommandExecutor implements TabExecutor
 
                         VoxelGuest.getPerms().playerAddGroup(match, groupName);
                         Bukkit.broadcastMessage("§aWhitelisted: §6" + match.getName());
+                        break;
                     }
-                    break;
                 }
             }
             else if (matchPlayer.size() > 1)

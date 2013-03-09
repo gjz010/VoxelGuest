@@ -16,6 +16,7 @@ public final class UngreylistCommandExecutor implements CommandExecutor
 
     /**
      * Creats a new ungreylist command executor instance.
+     *
      * @param greylistModule The owning module.
      */
     public UngreylistCommandExecutor(final GreylistModule greylistModule)
