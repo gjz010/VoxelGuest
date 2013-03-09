@@ -43,9 +43,24 @@ public interface Module
      */
     String getName();
 
+    /**
+     * Returns the instantiated configuration object.
+     *
+     * @return Returns the instantiated configuration object.
+     */
     Object getConfiguration();
 
+    /**
+     * Returns the configuration file name.
+     *
+     * @return Returns the configuration file name.
+     */
     String getConfigFileName();
 
+    /**
+     * Returns command executor mappings as [command] <--> [executor].
+     *
+     * @return Returns command executor mappings.
+     */
     Map<String, CommandExecutor> getCommandMappings();
 }
