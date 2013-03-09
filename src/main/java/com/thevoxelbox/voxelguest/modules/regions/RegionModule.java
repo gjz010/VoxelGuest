@@ -20,6 +20,9 @@ public final class RegionModule extends GuestModule
     private final RegionCommand regionCommand;
     private final RegionManager regionManager;
 
+    /**
+     * Creates a new RegionModule instance.
+     */
     public RegionModule()
     {
         this.setName("Region Module");
@@ -40,18 +43,6 @@ public final class RegionModule extends GuestModule
     public void onDisable()
     {
         super.onDisable();
-    }
-
-    @Override
-    public String getConfigFileName()
-    {
-        return "region";
-    }
-
-    @Override
-    public Object getConfiguration()
-    {
-        return null;
     }
 
     @Override

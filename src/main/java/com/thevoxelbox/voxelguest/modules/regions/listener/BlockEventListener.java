@@ -37,6 +37,11 @@ public final class BlockEventListener implements Listener
     private static final String CANT_BUILD_HERE = "§cYou cannot build here";
     private RegionModule regionModule;
 
+    /**
+     * Creates a new block event listener.
+     *
+     * @param regionModule The owning module.
+     */
     public BlockEventListener(final RegionModule regionModule)
     {
         this.regionModule = regionModule;
@@ -54,27 +59,19 @@ public final class BlockEventListener implements Listener
         }
     }
 
-    /**
-     * Prevents block drops.
-     *
-     * @param event
-     */
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockDrop(final BlockBreakEvent event)
     {
         Preconditions.checkNotNull(event);
         Block eventLoc = event.getBlock();
         final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc.getLocation());
-        if (regions.isEmpty())
-        {
-            event.setCancelled(true);
-        }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isBlockDropAllowed())
             {
                 event.setCancelled(true);
+                event.getBlock().setType(Material.AIR);
                 break;
             }
         }
@@ -117,7 +114,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
@@ -138,7 +135,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isBlockGrowthAllowed())
             {
@@ -159,7 +156,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
@@ -180,7 +177,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (event.getBlock().getType().equals(Material.SNOW))
             {
@@ -212,7 +209,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (event.getBlock().getType().equals(Material.SNOW))
             {
@@ -244,7 +241,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isFireSpreadAllowed())
             {
@@ -264,7 +261,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isBlockSpreadAllowed())
             {
@@ -371,7 +368,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isPhysicsAllowed())
             {
@@ -384,18 +381,15 @@ public final class BlockEventListener implements Listener
     @EventHandler
     public void onEnchant(final EnchantItemEvent event)
     {
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(event.getEnchantBlock().getLocation());
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(event.getEnchantBlock().getLocation());
 
-        if (region != null)
+        for (final Region region : regions)
         {
             if (!region.isEnchantingAllowed())
             {
                 event.setCancelled(true);
             }
-            return;
         }
-
-        event.setCancelled(true);
     }
 
     @EventHandler
@@ -408,7 +402,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isCreeperExplosionAllowed())
             {
@@ -428,7 +422,7 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
-        for (Region region : regions)
+        for (final Region region : regions)
         {
             if (!region.isCreatureSpawnAllowed())
             {
@@ -442,9 +436,9 @@ public final class BlockEventListener implements Listener
     public void onPaintingBreak(final HangingBreakByEntityEvent event)
     {
         final Location eventLoc = event.getEntity().getLocation();
-        final Region region = this.regionModule.getRegionManager().getRegionAtLoc(eventLoc);
+        final List<Region> regions = this.regionModule.getRegionManager().getRegionsAtLoc(eventLoc);
 
-        if (region != null)
+        for (final Region region : regions)
         {
             if (!region.isBuildingRestricted())
             {
@@ -456,9 +450,7 @@ public final class BlockEventListener implements Listener
                     }
                 }
             }
-            return;
         }
-        event.setCancelled(true);
     }
 
 }

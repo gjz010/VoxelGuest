@@ -165,7 +165,7 @@ public final class RegionCommand implements TabExecutor
 
     private static Integer[] processBlockList(final String list)
     {
-        final String[] cleanList = list.replaceAll("[", "").replaceAll("]", "").split(",");
+        final String[] cleanList = list.replace("[", "").replace("]", "").split(",");
         final Integer[] bannedIds = new Integer[cleanList.length];
         try
         {
@@ -281,9 +281,15 @@ public final class RegionCommand implements TabExecutor
 
     private void createRegion(final CommandSender sender, final String[] args)
     {
-        if (!(sender instanceof Player))
+        final Player player;
+        if ((sender instanceof Player))
+        {
+            player = (Player) sender;
+        }
+        else
         {
             sender.sendMessage("Command must be sent from a player");
+            return;
         }
 
         if (args.length >= 3)
@@ -292,7 +298,7 @@ public final class RegionCommand implements TabExecutor
             boolean isGlobal = false;
             Location pointOne = null;
             Location pointTwo = null;
-            final World regionWorld = ((Player) sender).getWorld();
+            final World regionWorld = player.getWorld();
             if (args[2].equalsIgnoreCase("global"))
             {
                 isGlobal = true;

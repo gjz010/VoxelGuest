@@ -17,9 +17,11 @@ import java.util.Set;
 public final class RegionManager
 {
     private static final String REGION_MODIFY_PERMISSION_PREFIX = "voxelguest.regions.modify.";
-
     private final Set<Region> activeRegions = new HashSet<>();
 
+    /**
+     * Creates a new RegionManage instance.
+     */
     public RegionManager()
     {
         this.initRegions();
@@ -52,40 +54,17 @@ public final class RegionManager
     }
 
     /**
-     * Return region witch matches name provided, or null if no region match
+     * Return region witch matches name provided, or null if no region match.
      *
-     * @param regionName
+     * @param regionName The name of the region.
      *
-     * @return
+     * @return Returns the region with name [regionName].
      */
     public Region getRegion(final String regionName)
     {
         for (Region region : this.activeRegions)
         {
             if (region.getRegionName().equalsIgnoreCase(regionName))
-            {
-                return region;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns the first region that the location is residing in.
-     * This should not be used because it does not support nested regions.
-     *
-     * @param loc Location to find zone
-     *
-     * @return The region that location is at
-     *
-     * @deprecated Use getRegionsAtLoc(final Location loc)
-     */
-    @Deprecated
-    public Region getRegionAtLoc(final Location loc)
-    {
-        for (Region region : this.activeRegions)
-        {
-            if (region.inBounds(loc))
             {
                 return region;
             }
@@ -108,6 +87,25 @@ public final class RegionManager
             if (region.inBounds(loc))
             {
                 regionsInBounds.add(region);
+            }
+        }
+
+        // check if region list is empty and add the global region in this case
+        if (regionsInBounds.isEmpty())
+        {
+            for (Region region : this.activeRegions)
+            {
+                if (region.inBounds(loc) || (region.getWorldName().equals(loc.getWorld().getName()) && region.isGlobal()))
+                {
+                    regionsInBounds.add(region);
+                }
+            }
+
+            if (regionsInBounds.isEmpty())
+            {
+                Region globalRegion = new Region(loc.getWorld().getName(), null, null, "global_" + loc.getWorld().getName().toLowerCase());
+                addRegion(globalRegion);
+                regionsInBounds.add(globalRegion);
             }
         }
         return regionsInBounds;
@@ -153,6 +151,9 @@ public final class RegionManager
         return nameList;
     }
 
+    /**
+     * Loads all region from the DB into internal cache.
+     */
     public void initRegions()
     {
         final List<Region> regionObjects = Persistence.getInstance().loadAll(Region.class);

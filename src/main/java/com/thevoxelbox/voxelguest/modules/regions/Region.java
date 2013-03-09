@@ -117,6 +117,9 @@ public final class Region
     @DatabaseField
     private boolean foodChangeAllowed = false;
 
+    /**
+     * Default constructor for ORM system.
+     */
     public Region()
     {
 
@@ -157,7 +160,7 @@ public final class Region
         //For open worlds that do not have specified points
         if (globalRegion)
         {
-            return true;
+            return false; // needs to return false to allow nested override
         }
 
         return locationToCheck.toVector().isInAABB(Vector.getMinimum(getPointOne().toVector(), getPointTwo().toVector()), Vector.getMaximum(getPointOne().toVector(), getPointTwo().toVector()));
