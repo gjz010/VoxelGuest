@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelguest;
 
 import com.thevoxelbox.voxelguest.commands.ModulesCommandExecutor;
-import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistModule;
@@ -10,8 +9,6 @@ import com.thevoxelbox.voxelguest.modules.regions.RegionModule;
 import com.thevoxelbox.voxelguest.persistence.Persistence;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +25,11 @@ public class VoxelGuest extends JavaPlugin
     private static ModuleManager moduleManagerInstance = null;
     private static Permission perms = null;
 
+    /**
+     * Returns the VoxelGuest plugin instance.
+     *
+     * @return Returns the VoxelGuest plugin class instance.
+     */
     public static VoxelGuest getPluginInstance()
     {
         return VoxelGuest.pluginInstance;
@@ -43,6 +45,11 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.pluginInstance = pluginInstance;
     }
 
+    /**
+     * Returns the module manager instance.
+     *
+     * @return Returns the module manager instance.
+     */
     public static ModuleManager getModuleManagerInstance()
     {
         return moduleManagerInstance;
@@ -79,7 +86,8 @@ public class VoxelGuest extends JavaPlugin
         try
         {
             Persistence.getInstance().shutdown();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             Bukkit.getLogger().severe("Failed to finalize persistence system.");
             e.printStackTrace();
@@ -96,7 +104,8 @@ public class VoxelGuest extends JavaPlugin
         try
         {
             Persistence.getInstance().initialize(new File(getDataFolder(), "persistence2.db"));
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             Bukkit.getLogger().severe("Failed to initialize persistence system.");
             e.printStackTrace();
@@ -129,6 +138,12 @@ public class VoxelGuest extends JavaPlugin
     private boolean setupPermissions()
     {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        if (rsp == null)
+        {
+            Bukkit.getLogger().severe("Cannot find permission service provider. Check that a permission system and Vault is installed.");
+            return false;
+        }
+
         setPerms(rsp.getProvider());
         return VoxelGuest.getPerms() != null;
     }
