@@ -1,8 +1,7 @@
 package com.thevoxelbox.voxelguest.modules.general.runnables;
 
-import org.bukkit.Bukkit;
-
 import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
+import org.bukkit.Bukkit;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
@@ -11,7 +10,7 @@ import java.lang.management.MemoryUsage;
 /**
  * @author Monofraps
  */
-public class PermGenMonitor implements Runnable
+public final class PermGenMonitor implements Runnable
 {
     private final GeneralModuleConfiguration configuration;
     private boolean sentBroadcastWarning = false;
@@ -25,7 +24,7 @@ public class PermGenMonitor implements Runnable
     }
 
     @Override
-    public final void run()
+    public void run()
     {
         for (final MemoryPoolMXBean item : ManagementFactory.getMemoryPoolMXBeans())
         {

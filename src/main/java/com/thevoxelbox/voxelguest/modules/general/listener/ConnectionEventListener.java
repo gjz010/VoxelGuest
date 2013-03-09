@@ -1,14 +1,13 @@
 package com.thevoxelbox.voxelguest.modules.general.listener;
 
+import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
+import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
-import com.thevoxelbox.voxelguest.modules.general.GeneralModuleConfiguration;
 
 /**
  * Handles messages on player join/quit/kick
@@ -20,6 +19,7 @@ public final class ConnectionEventListener implements Listener
 
     /**
      * Creates a new ConnectionEventListener instance.
+     *
      * @param generalModule The parent module.
      */
     public ConnectionEventListener(final GeneralModule generalModule)
@@ -57,7 +57,7 @@ public final class ConnectionEventListener implements Listener
         }
 
         event.setQuitMessage(this.module.formatJoinLeaveMessage(configuration.getLeaveFormat(), player.getName()));
-        
+
         if (this.module.getVanishFakequitHandler().handleDisconnect(player))
         {
             event.setQuitMessage("");

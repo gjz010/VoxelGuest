@@ -13,10 +13,10 @@ import java.util.List;
 /**
  *
  */
-public class VpgCommandExecutor implements CommandExecutor
+public final class VpgCommandExecutor implements CommandExecutor
 {
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (args.length >= 2)
         {

@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelguest.modules.general.command;
 
 import com.google.common.base.Joiner;
+import com.thevoxelbox.voxelguest.modules.general.AfkMessage;
+import com.thevoxelbox.voxelguest.persistence.Persistence;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import com.thevoxelbox.voxelguest.modules.general.AfkMessage;
-import com.thevoxelbox.voxelguest.persistence.Persistence;
 
 /**
  * @author TheCryoknight

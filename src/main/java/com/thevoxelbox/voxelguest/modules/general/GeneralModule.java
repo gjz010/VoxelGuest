@@ -20,6 +20,7 @@ import com.thevoxelbox.voxelguest.modules.general.runnables.TPSTicker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ import java.util.HashSet;
  * @author TheCryoknight
  * @author Deamon5550
  */
-public class GeneralModule extends GuestModule
+public final class GeneralModule extends GuestModule
 {
     public static final String FAKEQUIT_PERM = "voxelguest.general.fakequit";
     //CommandExecuters
@@ -53,6 +54,7 @@ public class GeneralModule extends GuestModule
     private final TPSTicker ticker = new TPSTicker();
     //Lag Meter thread and helper
     private final LagMeterHelperThread lagmeter = new LagMeterHelperThread();
+    private BukkitTask lagmeterTask;
     //Handlers
     private final AfkManager afkManager;
     private final VanishFakequitHandler vanishFakequitHandler;
@@ -87,22 +89,22 @@ public class GeneralModule extends GuestModule
     }
 
     @Override
-    public final void onEnable()
+    public void onEnable()
     {
         final PermGenMonitor permGenMonitor = new PermGenMonitor(configuration);
 
         tpsTickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), ticker, 0, TPSTicker.POLL_INTERVAL);
         permGenMonitorTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(VoxelGuest.getPluginInstance(), permGenMonitor, 20, 20 * 5);
-        this.lagmeter.setDaemon(true);
-        this.lagmeter.start();
+
+        lagmeterTask = Bukkit.getScheduler().runTaskTimer(VoxelGuest.getPluginInstance(), lagmeter, 20, 20 * 3);
 
         super.onEnable();
     }
 
     @Override
-    public final void onDisable()
+    public void onDisable()
     {
-        this.lagmeter.setStopped(true);
+        this.lagmeterTask.cancel();
         Bukkit.getScheduler().cancelTask(tpsTickerTaskId);
         Bukkit.getScheduler().cancelTask(permGenMonitorTaskId);
 
@@ -124,19 +126,13 @@ public class GeneralModule extends GuestModule
     }
 
     @Override
-    public final String getConfigFileName()
-    {
-        return "GeneralModule";
-    }
-
-    @Override
-    public final Object getConfiguration()
+    public Object getConfiguration()
     {
         return this.configuration;
     }
 
     @Override
-    public final HashSet<Listener> getListeners()
+    public HashSet<Listener> getListeners()
     {
         final HashSet<Listener> listeners = new HashSet<>();
         listeners.add(this.connectionEventListener);
@@ -146,7 +142,7 @@ public class GeneralModule extends GuestModule
     }
 
     @Override
-    public final HashMap<String, CommandExecutor> getCommandMappings()
+    public HashMap<String, CommandExecutor> getCommandMappings()
     {
         HashMap<String, CommandExecutor> commandMappings = new HashMap<>();
         commandMappings.put("ep", this.entityPurgeCommandExecutor);
@@ -167,7 +163,7 @@ public class GeneralModule extends GuestModule
     /**
      * @return Returns the AFK manager.
      */
-    public final AfkManager getAfkManager()
+    public AfkManager getAfkManager()
     {
         return afkManager;
     }
@@ -175,7 +171,7 @@ public class GeneralModule extends GuestModule
     /**
      * @return Returns the fakequit handler.
      */
-    public final VanishFakequitHandler getVanishFakequitHandler()
+    public VanishFakequitHandler getVanishFakequitHandler()
     {
         return vanishFakequitHandler;
     }
@@ -189,7 +185,7 @@ public class GeneralModule extends GuestModule
      *
      * @return Returns the formatted and replaced string.
      */
-    public final String formatJoinLeaveMessage(final String msg, final String playerName)
+    public String formatJoinLeaveMessage(final String msg, final String playerName)
     {
         int onlinePlayers = Bukkit.getOnlinePlayers().length;
         onlinePlayers -= this.getVanishFakequitHandler().getFakequitSize();
@@ -199,7 +195,7 @@ public class GeneralModule extends GuestModule
     /**
      * @return Returns the lagmeter instance.
      */
-    public final LagMeterHelperThread getLagmeter()
+    public LagMeterHelperThread getLagmeter()
     {
         return lagmeter;
     }

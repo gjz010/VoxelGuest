@@ -15,6 +15,7 @@ public final class WatchTPSCommadExecutor implements CommandExecutor
 
     /**
      * Creates a new watch tps command executor instance.
+     *
      * @param module The owning module.
      */
     public WatchTPSCommadExecutor(final GeneralModule module)
@@ -23,7 +24,7 @@ public final class WatchTPSCommadExecutor implements CommandExecutor
     }
 
     @Override
-    public final boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args)
     {
         if (sender instanceof Player)
         {

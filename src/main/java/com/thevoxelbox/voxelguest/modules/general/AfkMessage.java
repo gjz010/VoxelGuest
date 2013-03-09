@@ -23,6 +23,7 @@ public final class AfkMessage
 
     /**
      * Creates a new AFK message.
+     *
      * @param message The message
      */
     public AfkMessage(final String message)

@@ -5,7 +5,7 @@ package com.thevoxelbox.voxelguest.modules.general.runnables;
  *
  * @author TheCryoknight
  */
-public class TPSTicker implements Runnable
+public final class TPSTicker implements Runnable
 {
     public static final long POLL_INTERVAL = 60L;
     private static long lastTimestamp = System.currentTimeMillis() - (POLL_INTERVAL * 50);
@@ -27,7 +27,7 @@ public class TPSTicker implements Runnable
     }
 
     @Override
-    public final void run()
+    public void run()
     {
         lastDifference = (System.currentTimeMillis() - lastTimestamp) / 1000;
         lastTimestamp = System.currentTimeMillis();

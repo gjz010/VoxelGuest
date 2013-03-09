@@ -30,7 +30,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerMove(final PlayerMoveEvent event)
+    public void onPlayerMove(final PlayerMoveEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -43,7 +43,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerChat(final AsyncPlayerChatEvent event)
+    public void onPlayerChat(final AsyncPlayerChatEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -56,7 +56,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerTeleport(final PlayerTeleportEvent event)
+    public void onPlayerTeleport(final PlayerTeleportEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -69,7 +69,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerCommand(final PlayerCommandPreprocessEvent event)
+    public void onPlayerCommand(final PlayerCommandPreprocessEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -82,7 +82,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerInteract(final PlayerInteractEvent event)
+    public void onPlayerInteract(final PlayerInteractEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -95,7 +95,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerQuit(final PlayerQuitEvent event)
+    public void onPlayerQuit(final PlayerQuitEvent event)
     {
         if (event.getPlayer() != null)
         {
@@ -108,7 +108,7 @@ public final class PlayerEventListener implements Listener
     }
 
     @EventHandler
-    public final void onPlayerKick(final PlayerKickEvent event)
+    public void onPlayerKick(final PlayerKickEvent event)
     {
         if (event.getPlayer() != null)
         {

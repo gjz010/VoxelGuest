@@ -15,6 +15,7 @@ public final class FakequitCommandExecutor implements CommandExecutor
 
     /**
      * Creates a new instance of the fakequit command executor.
+     *
      * @param generalModule The owning module.
      */
     public FakequitCommandExecutor(final GeneralModule generalModule)

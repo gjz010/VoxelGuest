@@ -15,6 +15,7 @@ public final class VanishCommandExecutor implements CommandExecutor
 
     /**
      * Create a new vanish command executor instance.
+     *
      * @param generalModule The owning module.
      */
     public VanishCommandExecutor(final GeneralModule generalModule)

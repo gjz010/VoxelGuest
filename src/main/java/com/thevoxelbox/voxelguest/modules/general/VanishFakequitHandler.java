@@ -24,6 +24,7 @@ public final class VanishFakequitHandler
 
     /**
      * Creates a new fakequit handler instance.
+     *
      * @param module The owning module.
      */
     public VanishFakequitHandler(final GeneralModule module)
@@ -102,7 +103,9 @@ public final class VanishFakequitHandler
 
     /**
      * Handles disconnects.
+     *
      * @param player The player who disconnects.
+     *
      * @return Returns ?
      */
     public boolean handleDisconnect(final Player player)
@@ -125,6 +128,7 @@ public final class VanishFakequitHandler
 
     /**
      * Handles connects.
+     *
      * @param player The player who attempts to connect.
      */
     public void handleConnect(final Player player)
@@ -183,7 +187,6 @@ public final class VanishFakequitHandler
     }
 
     /**
-     *
      * @return Returns the number of fakequit players.
      */
     public int getFakequitSize()
