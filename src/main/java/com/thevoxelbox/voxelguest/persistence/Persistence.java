@@ -7,6 +7,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
+import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -43,12 +44,15 @@ public final class Persistence
      *
      * @param dbFile The file to use for persistence.
      *
-     * @throws SQLException
+     * @throws SQLException Thrown if the system fails to open the DB connection.
      */
     public void initialize(final File dbFile) throws SQLException
     {
         Preconditions.checkState(!initialized, "Persistence system has already been initialized.");
-        dbFile.getParentFile().mkdirs();
+        if (!dbFile.getParentFile().mkdirs())
+        {
+            Bukkit.getLogger().severe("Failed to create VoxelGuest database file directory.");
+        }
         connectionSource = new JdbcConnectionSource("jdbc:sqlite:" + dbFile.getPath());
 
         initialized = true;
