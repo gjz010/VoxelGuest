@@ -28,7 +28,7 @@ public final class ModulesCommandExecutor implements TabExecutor
     @Override
     public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args)
     {
-        if (args.length < 2)
+        if (args.length < 1)
         {
             commandSender.sendMessage("Not enough arguments.");
             return false;
@@ -41,6 +41,11 @@ public final class ModulesCommandExecutor implements TabExecutor
                 break;
 
             case "enable":
+                if (args.length < 2)
+                {
+                    commandSender.sendMessage("Not enough arguments.");
+                    return false;
+                }
                 if (enableModule(commandSender, args[1]))
                 {
                     return true;
@@ -48,6 +53,11 @@ public final class ModulesCommandExecutor implements TabExecutor
                 break;
 
             case "disable":
+                if (args.length < 2)
+                {
+                    commandSender.sendMessage("Not enough arguments.");
+                    return false;
+                }
                 if (disableModule(commandSender, args[1]))
                 {
                     return true;
@@ -77,7 +87,7 @@ public final class ModulesCommandExecutor implements TabExecutor
 
         for (Module module : registeredModules.keySet())
         {
-            if (module.getClass().getName().equalsIgnoreCase(moduleClassName))
+            if (module.getClass().getName().toLowerCase().endsWith(moduleClassName.toLowerCase()))
             {
                 if (module.isEnabled())
                 {
@@ -85,8 +95,11 @@ public final class ModulesCommandExecutor implements TabExecutor
                     return true;
                 }
                 VoxelGuest.getModuleManagerInstance().enableModuleByType(module.getClass());
+                return true;
             }
         }
+
+        commandSender.sendMessage("No such module.");
         return false;
     }
 
@@ -95,16 +108,19 @@ public final class ModulesCommandExecutor implements TabExecutor
         final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
         for (Module module : registeredModules.keySet())
         {
-            if (module.getClass().getName().equalsIgnoreCase(moduleClassName))
+            if (module.getClass().getName().toLowerCase().endsWith(moduleClassName.toLowerCase()))
             {
                 if (!module.isEnabled())
                 {
                     commandSender.sendMessage("Module is not enabled.");
                     return true;
                 }
-                VoxelGuest.getModuleManagerInstance().enableModuleByType(module.getClass());
+                VoxelGuest.getModuleManagerInstance().disableModuleByType(module.getClass());
+                return true;
             }
         }
+
+        commandSender.sendMessage("No such module.");
         return false;
     }
 
