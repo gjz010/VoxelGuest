@@ -20,11 +20,12 @@ public final class HelperModule extends GuestModule
     private final WLReviewCommand wLReviewCommand;
     private final HelperCommand helperCommand;
     private final HelperReviewCommand helperReviewCommand;
-
     private final HelperListener connectionListener;
-
     private final HelperManager manager;
 
+    /**
+     * Creates a new helper module instance.
+     */
     public HelperModule()
     {
         this.setName("Helper Module");
@@ -51,12 +52,6 @@ public final class HelperModule extends GuestModule
     }
 
     @Override
-    public Object getConfiguration()
-    {
-        return null;
-    }
-
-    @Override
     public Map<String, CommandExecutor> getCommandMappings()
     {
         final Map<String, CommandExecutor> command = new HashMap<>();
@@ -66,6 +61,11 @@ public final class HelperModule extends GuestModule
         return command;
     }
 
+    /**
+     * Returns the helper manager.
+     *
+     * @return Returns the helper manager.
+     */
     public HelperManager getManager()
     {
         return manager;

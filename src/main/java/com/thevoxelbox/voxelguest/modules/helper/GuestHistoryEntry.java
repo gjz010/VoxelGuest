@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
+ * Represents a guest review history entry.
  *
  * @author TheCryoknight
  */
@@ -21,6 +22,9 @@ public final class GuestHistoryEntry implements Comparable<GuestHistoryEntry>
     @DatabaseField
     private String comment = "";
 
+    /**
+     * Default constructor used by ORM system.
+     */
     public GuestHistoryEntry()
     {
     }

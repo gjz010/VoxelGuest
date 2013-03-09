@@ -7,25 +7,40 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
- *
  * @author TheCryoknight
  */
 public final class HelperListener implements Listener
 {
-    private final HelperModule module;
+    private final HelperManager manager;
 
+    /**
+     * Creates a new helper listener instance.
+     *
+     * @param module The owning module.
+     */
     public HelperListener(final HelperModule module)
     {
-        this.module = module;
+        manager = module.getManager();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        Player newPlayer = event.getPlayer();
-        if (newPlayer != null)
+        Player player = event.getPlayer();
+        if (player != null)
         {
-            this.module.getManager().handleLogin(newPlayer);
+            if (manager.isHelper(player))
+            {
+                final String msg = manager.getActiveRequests();
+                if (msg != null)
+                {
+                    player.sendMessage(msg);
+                }
+            }
+            if (manager.isNonAdminHelper(player))
+            {
+                player.setMetadata("isHelper", manager.getHelper(player));
+            }
         }
     }
 }

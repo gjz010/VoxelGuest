@@ -20,6 +20,7 @@ public final class HelperCommand implements TabExecutor
 
     /**
      * Creates a new helper command executor.
+     *
      * @param module The owning module.
      */
     public HelperCommand(final HelperModule module)

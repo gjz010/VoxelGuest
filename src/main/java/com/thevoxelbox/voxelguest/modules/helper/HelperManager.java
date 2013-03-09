@@ -18,6 +18,7 @@ import java.util.Set;
 
 /**
  * Represents a class to manage helpers.
+ *
  * @author TheCryoknight
  */
 public final class HelperManager
@@ -25,7 +26,7 @@ public final class HelperManager
     private final Set<ReviewRequest> activeReviews = new HashSet<>();
     private final Map<String, Helper> helpers = new HashMap<>();
     private final Map<Player, GuestHistoryEntry> lastReview = new HashMap<>();
-    private static final long minTimeBetween = 1200000;
+    private static final long MIN_TIME_BETWEEN = 1200000;
 
     /**
      * Opens up a new review request for the player provided.
@@ -52,6 +53,7 @@ public final class HelperManager
      * or null if no match exists.
      *
      * @param guest Player to query a review for
+     *
      * @return Review for the specified guest
      */
     public ReviewRequest getReview(final Player guest)
@@ -70,6 +72,7 @@ public final class HelperManager
      * Checks to see if a guest can make a new review.
      *
      * @param guest Player to check if they can create a new review
+     *
      * @return true if player can create a review
      */
     public boolean canMakeNewReview(final Player guest)
@@ -90,7 +93,7 @@ public final class HelperManager
                 Collections.sort(tmpList);
                 final long lastReview = tmpList.get(tmpList.size() - 1).getReviewTime();
                 final long timeSinceLastReview = System.currentTimeMillis() - lastReview;
-                if (timeSinceLastReview >= HelperManager.minTimeBetween)
+                if (timeSinceLastReview >= HelperManager.MIN_TIME_BETWEEN)
                 {
                     return true;
                 }
@@ -139,11 +142,11 @@ public final class HelperManager
             Persistence.getInstance().delete(historyEntry);
             historyEntry.setComment(comment);
             Persistence.getInstance().save(historyEntry);
-            helper.sendMessage(ChatColor.GRAY + "Comment successfuly added");
+            helper.sendMessage(ChatColor.GRAY + "Comment successfully added");
         }
         else
         {
-            helper.sendMessage(ChatColor.RED + "You havent reviewed anyone yet!");
+            helper.sendMessage(ChatColor.RED + "You haven't reviewed anyone yet!");
         }
     }
 
@@ -165,6 +168,7 @@ public final class HelperManager
      * them to the database (administrator list is permission based).
      *
      * @param oldHelper Helper to remove
+     *
      * @return True if successfully removed region
      */
     public boolean removeHelper(final Helper oldHelper)
@@ -226,11 +230,7 @@ public final class HelperManager
             {
                 stringBuilder.append(ChatColor.STRIKETHROUGH);
             }
-            stringBuilder.append(ChatColor.DARK_AQUA + "Name" + ChatColor.WHITE + ": "
-                    + ChatColor.DARK_AQUA + request.getGuest().getName()
-                    + ChatColor.DARK_GRAY + "(" + ChatColor.GOLD
-                    + this.getGuestHistory(request.getGuest().getName()).size()
-                    + ChatColor.DARK_GRAY + ")\n");
+            stringBuilder.append(ChatColor.DARK_AQUA + "Name" + ChatColor.WHITE + ": " + ChatColor.DARK_AQUA).append(request.getGuest().getName()).append(ChatColor.DARK_GRAY).append("(").append(ChatColor.GOLD).append(this.getGuestHistory(request.getGuest().getName()).size()).append(ChatColor.DARK_GRAY).append(")\n");
         }
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
         return stringBuilder.toString();
@@ -239,14 +239,14 @@ public final class HelperManager
     /**
      * Notifies all of the currently online helpers that there is a new whitelist review.
      *
-     * @param review
+     * @param review The review request.
      */
     public void notifyForNewReview(final ReviewRequest review)
     {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
         stringBuilder.append(ChatColor.DARK_AQUA + "New Whitelist Review\n");
-        stringBuilder.append(ChatColor.DARK_AQUA + "Name" + ChatColor.GRAY + ": " + ChatColor.GOLD + review.getGuest().getName() + "\n");
+        stringBuilder.append(ChatColor.DARK_AQUA + "Name" + ChatColor.GRAY + ": " + ChatColor.GOLD).append(review.getGuest().getName()).append("\n");
         stringBuilder.append(ChatColor.DARK_GRAY + "========================\n");
 
         this.notifyHelpers(stringBuilder.toString());
@@ -287,12 +287,12 @@ public final class HelperManager
      * Creates, formats, and sends a message to the specified helper,
      * informing them of review history of a specified guest.
      *
-     * @param helper The helper requesting the history
+     * @param helper    The helper requesting the history
      * @param guestName The guest
      */
     public void sendHelperGuestHistory(final Player helper, final String guestName)
     {
-        final List<GuestHistoryEntry> history = this.getGuestHistory(guestName); 
+        final List<GuestHistoryEntry> history = this.getGuestHistory(guestName);
         if (history.isEmpty())
         {
             helper.sendMessage("Player has not yet been reviewed");
@@ -301,7 +301,7 @@ public final class HelperManager
         Collections.sort(history);
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(ChatColor.DARK_GRAY + "=====================================\n");
-        stringBuilder.append(ChatColor.DARK_AQUA + "Whitelist Review History for" + ChatColor.DARK_GRAY + ": " + ChatColor.GOLD + guestName + "\n");
+        stringBuilder.append(ChatColor.DARK_AQUA + "Whitelist Review History for" + ChatColor.DARK_GRAY + ": " + ChatColor.GOLD).append(guestName).append("\n");
         stringBuilder.append(ChatColor.DARK_GRAY + "=====================================\n");
 
         final ListIterator<GuestHistoryEntry> reviewListItr = history.listIterator();
@@ -316,13 +316,11 @@ public final class HelperManager
                     + date.get(Calendar.DAY_OF_MONTH) + ", " + date.get(Calendar.YEAR) + " at "
                     + date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE);
 
-            stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD + (reviewListItr.previousIndex() + 1) + ChatColor.DARK_AQUA + ")"
-                    + ChatColor.GRAY + " by " + ChatColor.GOLD + entry.getReviewerName() + ChatColor.GRAY + " on "
-                    + ChatColor.DARK_AQUA + dateStr);
+            stringBuilder.append(ChatColor.DARK_AQUA + "(" + ChatColor.GOLD).append(reviewListItr.previousIndex() + 1).append(ChatColor.DARK_AQUA).append(")").append(ChatColor.GRAY).append(" by ").append(ChatColor.GOLD).append(entry.getReviewerName()).append(ChatColor.GRAY).append(" on ").append(ChatColor.DARK_AQUA).append(dateStr);
 
             if (!entry.getComment().equals(""))
             {
-                stringBuilder.append(ChatColor.GRAY.toString() + ChatColor.ITALIC + " - " + entry.getComment() + "\n");
+                stringBuilder.append(ChatColor.GRAY.toString()).append(ChatColor.ITALIC).append(" - ").append(entry.getComment()).append("\n");
             }
             else
             {
@@ -338,43 +336,23 @@ public final class HelperManager
      * Checks to see if a player is a helper.
      *
      * @param player player to check
+     *
      * @return true if player is a helper
      */
     public boolean isHelper(final Player player)
     {
-        if (this.helpers.containsKey(player.getName()))
-        {
-            return true;
-        }
-        if (player.hasPermission("voxelguest.helper.adminhelper"))
-        {
-            return true;
-        }
-        return false;
+        return this.helpers.containsKey(player.getName()) || player.hasPermission("voxelguest.helper.adminhelper");
     }
 
+    /**
+     * Checks if the player is a non admin helper.
+     *
+     * @param player The player to check.
+     *
+     * @return Returns true of the player is no admin helper.
+     */
     public boolean isNonAdminHelper(final Player player)
     {
-        if (this.helpers.containsKey(player.getName()))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public void handleLogin(final Player player)
-    {
-        if (this.isHelper(player))
-        {
-            final String msg = this.getActiveRequests();
-            if (msg != null)
-            {
-                player.sendMessage(msg);
-            }
-        }
-        if (this.isNonAdminHelper(player))
-        {
-            player.setMetadata("isHelper", this.getHelper(player));
-        }
+        return this.helpers.containsKey(player.getName());
     }
 }

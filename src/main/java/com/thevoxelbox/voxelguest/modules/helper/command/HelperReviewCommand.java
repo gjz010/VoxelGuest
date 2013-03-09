@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Handles /review commands.
+ *
+ * @author TheCryoknight
  */
 public final class HelperReviewCommand implements TabExecutor
 {
@@ -20,6 +22,7 @@ public final class HelperReviewCommand implements TabExecutor
 
     /**
      * Create a new review command executor.
+     *
      * @param module The owning module.
      */
     public HelperReviewCommand(final HelperModule module)
@@ -90,7 +93,7 @@ public final class HelperReviewCommand implements TabExecutor
                             {
                                 if (args[1].equalsIgnoreCase("-f"))
                                 {
-                                    player.teleport(review.getLoc());
+                                    player.teleport(review.getLocation());
                                     if (guest.isOnline())
                                     {
                                         guest.teleport(player);
@@ -102,7 +105,7 @@ public final class HelperReviewCommand implements TabExecutor
                             }
                             if (guest.isOnline())
                             {
-                                player.teleport(review.getLoc());
+                                player.teleport(review.getLocation());
                                 guest.teleport(player);
                                 this.module.getManager().closeReview(player, review);
                                 this.module.getManager().sendHelperGuestHistory(player, guest.getName());

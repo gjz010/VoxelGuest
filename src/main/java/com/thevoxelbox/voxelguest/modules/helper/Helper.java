@@ -1,13 +1,14 @@
 package com.thevoxelbox.voxelguest.modules.helper;
 
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.thevoxelbox.voxelguest.VoxelGuest;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 
 /**
+ * Represents a helper.
+ *
  * @author TheCryoknight
  */
 @DatabaseTable(tableName = "helpers")
@@ -22,6 +23,9 @@ public final class Helper implements MetadataValue
     @DatabaseField
     private long lastReview = 0;
 
+    /**
+     * Default constructor for ORM system.
+     */
     public Helper()
     {
     }
