@@ -65,6 +65,11 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
+
+        <repository>
+            <id>metrics-repo</id>
+            <url>http://repo.mcstats.org/content/repositories/public</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -115,6 +120,11 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mcstats</groupId>
+            <artifactId>metrics</artifactId>
+            <version>R6</version>
         </dependency>
     </dependencies>
 
