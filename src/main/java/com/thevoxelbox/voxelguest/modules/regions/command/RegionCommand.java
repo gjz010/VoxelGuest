@@ -157,6 +157,10 @@ public final class RegionCommand implements TabExecutor
                 case WATER_FLOW_ALLOWED:
                     region.setWaterFlowAllowed(RegionCommand.parseCommandBool(flag.getValue()));
                     break;
+
+                case SOIL_DEHYDRATION_ALLOWED:
+                    region.setSoilDehydrationAllowed(RegionCommand.parseCommandBool(flag.getValue()));
+                    break;
                 default:
                     break;
             }

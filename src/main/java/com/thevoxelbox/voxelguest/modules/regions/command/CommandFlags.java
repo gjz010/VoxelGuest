@@ -29,6 +29,7 @@ public enum CommandFlags
     PHYSICS_ALLOWED("-phy", "block Physics"),
     BANNED_BLOCKS("-bb", "Banned blocks"),
     BANNED_ITEMS("-bi", "Banned items"),
+    SOIL_DEHYDRATION_ALLOWED("-sd", "Soil dehydration"),
 
     //Player
     PVP_DAMMAGE_ALLOWED("-pvp", "Player vs. Player dammage"),

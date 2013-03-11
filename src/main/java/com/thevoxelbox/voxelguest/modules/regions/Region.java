@@ -116,6 +116,8 @@ public final class Region
     private boolean suffocationDamageAllowed = false;
     @DatabaseField
     private boolean foodChangeAllowed = false;
+    @DatabaseField
+    private boolean soilDehydrationAllowed = false;
 
     /**
      * Default constructor for ORM system.
@@ -681,6 +683,16 @@ public final class Region
     public void setBuildingRestricted(final boolean buildingRestricted)
     {
         this.buildingRestricted = buildingRestricted;
+    }
+
+    public boolean isSoilDehydrationAllowed()
+    {
+        return soilDehydrationAllowed;
+    }
+
+    public void setSoilDehydrationAllowed(final boolean soilDehydrationAllowed)
+    {
+        this.soilDehydrationAllowed = soilDehydrationAllowed;
     }
 
     public String toColoredString()

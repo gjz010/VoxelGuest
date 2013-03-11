@@ -368,12 +368,19 @@ public final class BlockEventListener implements Listener
             event.setCancelled(true);
         }
 
+        final Block block = event.getBlock();
+
         for (final Region region : regions)
         {
             if (!region.isPhysicsAllowed())
             {
                 event.setCancelled(true);
                 break;
+            }
+
+            if (block.getType().equals(Material.SOIL) && !region.isSoilDehydrationAllowed() && (block.getData() != 0))
+            {
+                event.getBlock().setData((byte) 7);
             }
         }
     }
