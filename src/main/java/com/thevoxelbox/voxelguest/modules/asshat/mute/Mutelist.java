@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Monofraps
  */
-public class Mutelist
+public final class Mutelist
 {
     /**
      * Mutes a player and stores the reason he was muted for.
@@ -22,7 +22,7 @@ public class Mutelist
      *
      * @return Returns true if the mute operation was successful. False indicates that the player is already muted.
      */
-    public final boolean mute(final String playerName, final String muteReason)
+    public boolean mute(final String playerName, final String muteReason)
     {
         if (isPlayerMuted(playerName))
         {
@@ -40,7 +40,7 @@ public class Mutelist
      *
      * @return Returns true if the unmute operation was successful. False indicates that the player is not muted.
      */
-    public final boolean unmute(final String playerName)
+    public boolean unmute(final String playerName)
     {
         if (!isPlayerMuted(playerName))
         {
@@ -56,7 +56,7 @@ public class Mutelist
      *
      * @return Returns a list of names of people muted
      */
-    public final List<String> getMutedNames()
+    public List<String> getMutedNames()
     {
         final List<MutedPlayer> mutedPlayers = Persistence.getInstance().loadAll(MutedPlayer.class);
         final List<String> mutedNames = new ArrayList<>();
@@ -92,7 +92,7 @@ public class Mutelist
      *
      * @return Returns true if the player is muted, otherwise false.
      */
-    public final boolean isPlayerMuted(final String playerName)
+    public boolean isPlayerMuted(final String playerName)
     {
         return getMutedPlayer(playerName) != null;
     }
@@ -104,9 +104,18 @@ public class Mutelist
      *
      * @return Returns the reason a player is banned for.
      */
-    public final String whyIsPlayerMuted(final String playerName)
+    public String whyIsPlayerMuted(final String playerName)
     {
         Preconditions.checkState(isPlayerMuted(playerName), "Player %s must be muted in order to get the mute reason.", playerName);
         return getMutedPlayer(playerName).getMuteReason();
+    }
+
+    /**
+     * Returns the number of muted players.
+     * @return Returns the number of muted players.
+     */
+    public int getMuteCount()
+    {
+        return getMutedNames().size();
     }
 }

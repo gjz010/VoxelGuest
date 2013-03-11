@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Monofraps
  */
-public class Banlist
+public final class Banlist
 {
     /**
      * Bans the player named playerName and stores the ban reason.
@@ -22,7 +22,7 @@ public class Banlist
      *
      * @return Returns true if the ban operation was successful. False indicates that the player is already banned.
      */
-    public final boolean ban(final String playerName, final String banReason)
+    public boolean ban(final String playerName, final String banReason)
     {
         if (isPlayerBanned(playerName))
         {
@@ -40,7 +40,7 @@ public class Banlist
      *
      * @return Returns true if the unban operation was successful. False indicates that the player is not banned.
      */
-    public final boolean unban(final String playerName)
+    public boolean unban(final String playerName)
     {
         if (!isPlayerBanned(playerName))
         {
@@ -56,7 +56,7 @@ public class Banlist
      *
      * @return Returns a list of the names of all banned players.
      */
-    public final List<String> getBannedNames()
+    public List<String> getBannedNames()
     {
         final List<BannedPlayer> bannedPlayers = Persistence.getInstance().loadAll(BannedPlayer.class);
         final List<String> bannedNames = new ArrayList<>();
@@ -65,6 +65,16 @@ public class Banlist
             bannedNames.add(bannedPlayer.getPlayerName());
         }
         return bannedNames;
+    }
+
+    /**
+     * Returns the number of banned players.
+     *
+     * @return Returns the number of banned players.
+     */
+    public int getBanCount()
+    {
+        return getBannedNames().size();
     }
 
     private BannedPlayer getBannedPlayer(final String playerName)
@@ -92,7 +102,7 @@ public class Banlist
      *
      * @return Returns true if the player is banned, otherwise false.
      */
-    public final boolean isPlayerBanned(final String playerName)
+    public boolean isPlayerBanned(final String playerName)
     {
         return getBannedPlayer(playerName) != null;
     }
@@ -104,7 +114,7 @@ public class Banlist
      *
      * @return Returns the reason the player is banned for.
      */
-    public final String whyIsPlayerBanned(final String playerName)
+    public String whyIsPlayerBanned(final String playerName)
     {
         Preconditions.checkState(isPlayerBanned(playerName), "Player %s must be banned in order to get the ban reason.", playerName);
         return getBannedPlayer(playerName).getBanReason();
