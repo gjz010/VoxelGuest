@@ -8,7 +8,7 @@ description: ${project.description}
 commands:
   vmodules:
     aliases: [vgmodules]
-    permission: voxelguest.mannagemodules
+    permission: voxelguest.manage.modules
     description: Handles all module management
   greylist:
     aliases: [graylist, gl]
@@ -107,4 +107,7 @@ commands:
   helperreview:
     aliases: [helperreview, hreview]
     permission: voxelguest.helper.review
-    description: Reviews a Whitelist review ticket    
+    description: Reviews a Whitelist review ticket
+  vgimport:
+    alias: [voxelguestimport, guestimport, import]
+    permissions: voxelguest.manage.import

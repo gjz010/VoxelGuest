@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest;
 
+import com.thevoxelbox.voxelguest.commands.ImportCommandExecutor;
 import com.thevoxelbox.voxelguest.commands.ModulesCommandExecutor;
 import com.thevoxelbox.voxelguest.modules.asshat.AsshatModule;
 import com.thevoxelbox.voxelguest.modules.general.GeneralModule;
@@ -94,6 +95,7 @@ public class VoxelGuest extends JavaPlugin
         }
 
         getCommand("vmodules").setExecutor(null);
+        getCommand("vgimport").setExecutor(null);
         VoxelGuest.getModuleManagerInstance().shutdown();
 
     }
@@ -125,8 +127,8 @@ public class VoxelGuest extends JavaPlugin
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new GeneralModule(), false);
         VoxelGuest.getModuleManagerInstance().registerGuestModule(new HelperModule(), false);
 
-        final ModulesCommandExecutor modulesCommandExecutor = new ModulesCommandExecutor();
-        getCommand("vmodules").setExecutor(modulesCommandExecutor);
+        getCommand("vmodules").setExecutor(new ModulesCommandExecutor());
+        getCommand("vgimport").setExecutor(new ImportCommandExecutor());
 
         VoxelGuest.getModuleManagerInstance().enableModuleByType(RegionModule.class);
         VoxelGuest.getModuleManagerInstance().enableModuleByType(AsshatModule.class);
@@ -140,7 +142,7 @@ public class VoxelGuest extends JavaPlugin
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         if (rsp == null)
         {
-            Bukkit.getLogger().severe("Cannot find permission service provider. Check that a permission system and Vault is installed.");
+            Bukkit.getLogger().severe("Cannot find permission service provider. Check that a permission system and Vault are installed.");
             return false;
         }
 
