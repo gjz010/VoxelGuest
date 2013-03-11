@@ -140,6 +140,7 @@ public final class SystemCommandExecutor implements TabExecutor
         sender.sendMessage("§bCPU Specs");
         sender.sendMessage("§7CPU Usage§f: " + DisplayUtils.renderBar(operatingSystemBean.getSystemCpuLoad(), 1));
         sender.sendMessage("§7Available cores§f: §a" + Runtime.getRuntime().availableProcessors());
+        sender.sendMessage("§7Current Threads§f: §a" + Thread.activeCount());
 
         printMemInfo(sender, false);
 
