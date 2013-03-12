@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +17,7 @@ import java.util.Set;
 public final class AfkManager
 {
     private final GeneralModule module;
-    private final Set<String> playersAfk = new HashSet<>();
+    private final Set<String> playersAfk = Collections.synchronizedSet(new HashSet<String>());
 
     /**
      * Creates a new instance of the AfkManager.
@@ -34,7 +35,7 @@ public final class AfkManager
      * @param player Player who gets their AFK state set.
      * @param isAfk  the state to set the afk state of the player provided
      */
-    public synchronized void setPlayerAfk(final Player player, final boolean isAfk)
+    public void setPlayerAfk(final Player player, final boolean isAfk)
     {
         if (isAfk)
         {
