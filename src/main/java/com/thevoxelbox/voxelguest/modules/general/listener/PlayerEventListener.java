@@ -34,11 +34,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 
@@ -47,11 +43,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 
@@ -60,11 +52,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 
@@ -73,11 +61,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 
@@ -86,11 +70,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 
@@ -99,11 +79,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 
@@ -112,11 +88,7 @@ public final class PlayerEventListener implements Listener
     {
         if (event.getPlayer() != null)
         {
-            if (this.module.getAfkManager().isPlayerAfk(event.getPlayer()))
-            {
-                this.module.getAfkManager().setPlayerAfk(event.getPlayer(), false);
-                this.module.getAfkManager().broadcastAfk(event.getPlayer().getName(), "", false);
-            }
+            this.module.getAfkManager().processPotentialReturnEvent(event.getPlayer());
         }
     }
 }

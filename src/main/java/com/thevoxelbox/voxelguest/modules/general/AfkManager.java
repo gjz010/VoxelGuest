@@ -6,18 +6,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * @author TheCryoknight
  */
 public final class AfkManager
 {
+    private static final long MAX_AFK_THRESHOLD = 2500;
     private final GeneralModule module;
-    private final Set<String> playersAfk = Collections.synchronizedSet(new HashSet<String>());
+    private final Map<String, Long> playersAfk = Collections.synchronizedMap(new HashMap<String, Long>());
 
     /**
      * Creates a new instance of the AfkManager.
@@ -33,13 +34,13 @@ public final class AfkManager
      * Sets the players afk state.
      *
      * @param player Player who gets their AFK state set.
-     * @param isAfk  the state to set the afk state of the player provided
+     * @param isAfk  The state to set the afk state of the player provided
      */
     public void setPlayerAfk(final Player player, final boolean isAfk)
     {
         if (isAfk)
         {
-            this.playersAfk.add(player.getName());
+            this.playersAfk.put(player.getName(), System.currentTimeMillis());
             return;
         }
         this.playersAfk.remove(player.getName());
@@ -49,11 +50,11 @@ public final class AfkManager
      * Toggles the specified players afk state.
      *
      * @param player  Player toggleing their state
-     * @param message the message to provide if player is going afk
+     * @param message The message to provide if player is going afk
      */
     public void toggleAfk(final Player player, final String message)
     {
-        if (this.playersAfk.contains(player.getName()))
+        if (this.playersAfk.containsKey(player.getName()))
         {
             this.setPlayerAfk(player, false);
             this.broadcastAfk(player.getName(), "", false);
@@ -72,7 +73,24 @@ public final class AfkManager
      */
     public boolean isPlayerAfk(final Player player)
     {
-        return this.playersAfk.contains(player.getName());
+        return this.playersAfk.containsKey(player.getName());
+    }
+
+    /**
+     * Handles all events used to signify that the player has returned.
+     *
+     * @param player The player involved in the event
+     */
+    public void processPotentialReturnEvent(final Player player)
+    {
+        if (this.isPlayerAfk(player))
+        {
+            final long timeDiff = System.currentTimeMillis() - this.playersAfk.get(player.getName());
+            if (timeDiff > MAX_AFK_THRESHOLD)
+            {
+                this.toggleAfk(player, "");
+            }
+        }
     }
 
     /**
@@ -93,7 +111,7 @@ public final class AfkManager
             }
             if (((GeneralModuleConfiguration) this.module.getConfiguration()).isRandomAfkMsgs())
             {
-                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + pName + ChatColor.DARK_GRAY + " " + this.getAfkMsg());
+                Bukkit.broadcastMessage(ChatColor.DARK_AQUA + pName + ChatColor.DARK_GRAY + " " + this.getRandAfkMsg());
             }
             else
             {
@@ -106,7 +124,13 @@ public final class AfkManager
         }
     }
 
-    private String getAfkMsg()
+    /**
+     * Generates a new random afk message based on afk messages stored in the database.
+     * If there are no afk messages in the database it returns: "<code>has gone AFK</code>"
+     *
+     * @return Random afk message
+     */
+    private String getRandAfkMsg()
     {
         final Random rand = new Random();
         final List<AfkMessage> afkMessages = Persistence.getInstance().loadAll(AfkMessage.class);
