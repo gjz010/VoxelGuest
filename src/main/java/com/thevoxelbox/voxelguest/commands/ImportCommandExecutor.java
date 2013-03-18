@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelguest.commands;
 
+import com.google.common.base.Preconditions;
 import com.thevoxelbox.voxelguest.modules.asshat.ban.Banlist;
 import com.thevoxelbox.voxelguest.modules.general.AfkMessage;
 import com.thevoxelbox.voxelguest.modules.greylist.GreylistHelper;
@@ -144,14 +145,14 @@ public final class ImportCommandExecutor implements TabExecutor
         }
         for (Entry<Object, Object> ban : properties.entrySet())
         {
-            if ((ban.getKey() instanceof String) && (ban.getValue() instanceof String))
+            Preconditions.checkState(ban.getKey() instanceof String);
+            Preconditions.checkState(ban.getValue() instanceof String);
+
+            final String bannedName = (String) ban.getKey();
+            final String banReason = (String) ban.getValue();
+            if (!banlist.isPlayerBanned(bannedName))
             {
-                final String bannedName = (String) ban.getKey();
-                final String banReason = (String) ban.getValue();
-                if (!banlist.isPlayerBanned(bannedName))
-                {
-                    banlist.ban(bannedName, banReason);
-                }
+                banlist.ban(bannedName, banReason);
             }
         }
         return true;
