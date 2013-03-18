@@ -23,7 +23,7 @@ import java.util.List;
  */
 public final class ModulesCommandExecutor implements TabExecutor
 {
-    private static final String[] subcommands = {"enable", "disable", "list"};
+    private static final String[] SUBCOMMANDS = {"enable", "disable", "list"};
 
     @Override
     public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
@@ -35,7 +35,7 @@ public final class ModulesCommandExecutor implements TabExecutor
             {
                 if (args.length == 1)
                 {
-                    for (String subcommand : subcommands)
+                    for (String subcommand : SUBCOMMANDS)
                     {
                         if (subcommand.startsWith(args[0].toLowerCase()))
                         {
@@ -48,7 +48,7 @@ public final class ModulesCommandExecutor implements TabExecutor
                     final HashMap<Module, HashSet<Listener>> registeredModules = VoxelGuest.getModuleManagerInstance().getRegisteredModules();
                     for (Module module : registeredModules.keySet())
                     {
-                        final String className = module.getClass().getName();
+                        final String className = module.getClass().getName().replaceFirst(module.getClass().getPackage().getName().concat("."), "");
                         if (className.toLowerCase().startsWith(args[1].toLowerCase()))
                         {
                             matches.add(className);
@@ -58,7 +58,7 @@ public final class ModulesCommandExecutor implements TabExecutor
             }
             else
             {
-                matches.addAll(Arrays.asList(subcommands));
+                matches.addAll(Arrays.asList(SUBCOMMANDS));
             }
             Collections.sort(matches);
             return matches;
@@ -106,7 +106,27 @@ public final class ModulesCommandExecutor implements TabExecutor
                 break;
 
             default:
-                commandSender.sendMessage("Unknown Subcommand. Available: list, enable, and disable");
+            {
+                final StringBuilder builder = new StringBuilder();
+                builder.append(ChatColor.GRAY + "Unknown Subcommand. Available: " + ChatColor.GREEN);
+                for (int i = 0; i < SUBCOMMANDS.length; i++)
+                {
+                    builder.append(SUBCOMMANDS[i]);
+                    if (i == (SUBCOMMANDS.length - 1))
+                    {
+                        break;
+                    }
+                    else if (i == (SUBCOMMANDS.length - 2))
+                    {
+                        builder.append(ChatColor.GRAY + ", and " + ChatColor.GREEN);
+                    }
+                    else
+                    {
+                        builder.append(ChatColor.GRAY + ", " + ChatColor.GREEN);
+                    }
+                }
+                commandSender.sendMessage(builder.toString());
+            }
         }
 
 
@@ -122,7 +142,8 @@ public final class ModulesCommandExecutor implements TabExecutor
 
         for (Module module : registeredModules.keySet())
         {
-            sender.sendMessage((module.isEnabled() ? ChatColor.GREEN : ChatColor.RED) + module.getClass().getName());
+            final String className = module.getClass().getName().replaceFirst(module.getClass().getPackage().getName().concat("."), "");
+            sender.sendMessage((module.isEnabled() ? ChatColor.GREEN : ChatColor.RED) + className + ChatColor.GRAY + " (" + ChatColor.WHITE + module.getName() + ChatColor.GRAY + ")");
         }
     }
 
@@ -132,7 +153,8 @@ public final class ModulesCommandExecutor implements TabExecutor
 
         for (Module module : registeredModules.keySet())
         {
-            if (module.getClass().getName().toLowerCase().endsWith(moduleClassName.toLowerCase()))
+            final String className = module.getClass().getName().replaceFirst(module.getClass().getPackage().getName().concat("."), "");
+            if (className.equalsIgnoreCase(moduleClassName))
             {
                 if (module.isEnabled())
                 {

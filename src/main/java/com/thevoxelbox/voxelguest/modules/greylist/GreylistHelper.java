@@ -13,6 +13,7 @@ import com.thevoxelbox.voxelguest.persistence.Persistence;
 
 /**
  * @author MikeMatrix
+ * @author TheCryoknight
  */
 public class GreylistHelper
 {
@@ -54,7 +55,7 @@ public class GreylistHelper
     /**
      * Greylists a name.
      *
-     * @param name The name to preylist.
+     * @param name The name to greylist.
      */
     public void greylist(final String name)
     {
@@ -71,17 +72,9 @@ public class GreylistHelper
         {
             ex.printStackTrace();
         }
-
-        final HashMap<String, Object> selectRestrictions = new HashMap<>();
-        selectRestrictions.put("name", name.toLowerCase());
-        final List<Greylistee> greylistees = Persistence.getInstance().loadAll(Greylistee.class, selectRestrictions);
-
-        for (final Greylistee greylistee : greylistees)
+        if (this.isOnPersistentGreylist(name))
         {
-            if (greylistee.getName().equalsIgnoreCase(name))
-            {
-                return;
-            }
+            return;
         }
         Persistence.getInstance().save(new Greylistee(name.toLowerCase()));
 

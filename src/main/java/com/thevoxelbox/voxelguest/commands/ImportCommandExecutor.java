@@ -28,10 +28,10 @@ import java.util.Scanner;
  */
 public final class ImportCommandExecutor implements TabExecutor
 {
-    private static final String[] options = {"bans", "greylist", "afkmessages"};
+    private static final String[] OPTIONS = {"bans", "greylist", "afkmessages"};
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args)
+    public boolean onCommand(final CommandSender sender, final Command command, final String alias, final String[] args)
     {
         if (args.length != 1)
         {
@@ -44,30 +44,57 @@ public final class ImportCommandExecutor implements TabExecutor
             case "bans":
             {
                 // Import bans from VG3 and VG4
+                boolean fail = false;
                 final Banlist banlist = new Banlist();
-                this.importVG3Bans(banlist, sender);
-                this.importVG4Bans(banlist, sender);
-                sender.sendMessage(ChatColor.GRAY + "Banlist import compleated!");
+                if (!this.importVG3Bans(banlist, sender))
+                {
+                    fail = true;
+                }
+                if (!this.importVG4Bans(banlist, sender))
+                {
+                    fail = true;
+                }
+
+                if (fail)
+                {
+                    sender.sendMessage(ChatColor.RED + "Banlist import failed!");
+                }
+                else
+                {
+                    sender.sendMessage(ChatColor.GRAY + "Banlist import completed!");
+                }
                 return true;
             }
 
             case "afkmessages":
             {
                 // Import Afk messages from VG3
-                this.importAfkMessages(sender);
-                sender.sendMessage(ChatColor.GRAY + "Afk message import compleated!");
+                if (this.importAfkMessages(sender))
+                {
+                    sender.sendMessage(ChatColor.GRAY + "Afk message import completed!");
+                }
+                else
+                {
+                    sender.sendMessage(ChatColor.RED + "Afk message import failed!");
+                }
                 return true;
             }
 
             case "greylist":
             {
-                this.importGreylist(sender);
-                sender.sendMessage(ChatColor.GRAY + "greylist import compleated!");
+                if (this.importGreylist(sender))
+                {
+                    sender.sendMessage(ChatColor.GRAY + "greylist import completed!");
+                }
+                else
+                {
+                    sender.sendMessage(ChatColor.RED + "greylist import failed!");
+                }
             }
 
             default:
             {
-                sender.sendMessage("Unknown import statement.");
+                sender.sendMessage(ChatColor.RED + "Unknown import statement.");
                 return false;
             }
         }
@@ -79,7 +106,7 @@ public final class ImportCommandExecutor implements TabExecutor
         List<String> matches = new ArrayList<>();
         if (args.length >= 1)
         {
-            for (String opt : options)
+            for (String opt : OPTIONS)
             {
                 if (opt.startsWith(args[0].toLowerCase()))
                 {
@@ -89,7 +116,7 @@ public final class ImportCommandExecutor implements TabExecutor
         }
         else
         {
-            matches.addAll(Arrays.asList(options));
+            matches.addAll(Arrays.asList(OPTIONS));
         }
         return matches;
     }
@@ -102,7 +129,7 @@ public final class ImportCommandExecutor implements TabExecutor
      * @param banlist Banlist helper from the asshat module
      * @param sender User running the command
      */
-    public void importVG4Bans(final Banlist banlist, final CommandSender sender)
+    public boolean importVG4Bans(final Banlist banlist, final CommandSender sender)
     {
         final Properties properties = new Properties();
         final File banfileVG4 = new File("plugins" + File.separator + "VoxelGuest" + File.separator + "asshatmitigation" + File.separator + "banned.properties");
@@ -113,7 +140,7 @@ public final class ImportCommandExecutor implements TabExecutor
         catch (IOException e)
         {
             e.printStackTrace();
-            return;
+            return false;
         }
         for (Entry<Object, Object> ban : properties.entrySet())
         {
@@ -127,6 +154,7 @@ public final class ImportCommandExecutor implements TabExecutor
                 }
             }
         }
+        return true;
     }
 
     /**
@@ -137,7 +165,7 @@ public final class ImportCommandExecutor implements TabExecutor
      * @param banlist Banlist helper from the asshat module
      * @param sender User running the command
      */
-    public void importVG3Bans(final Banlist banlist, final CommandSender sender)
+    public boolean importVG3Bans(final Banlist banlist, final CommandSender sender)
     {
         final File banfileVG3 = new File("plugins" + File.separator + "VoxelGuest" + File.separator + "banned.txt");
         final Scanner scanner;
@@ -149,7 +177,7 @@ public final class ImportCommandExecutor implements TabExecutor
         {
             e.printStackTrace();
             sender.sendMessage("Could not find banned.txt file.");
-            return;
+            return false;
         }
 
         try
@@ -168,11 +196,13 @@ public final class ImportCommandExecutor implements TabExecutor
         catch (Exception e)
         {
             e.printStackTrace();
+            return false;
         }
         finally
         {
             scanner.close();
         }
+        return true;
     }
 
     /**
@@ -180,7 +210,7 @@ public final class ImportCommandExecutor implements TabExecutor
      *
      * @param sender Sender to inform of imports.
      */
-    public void importAfkMessages(final CommandSender sender)
+    public boolean importAfkMessages(final CommandSender sender)
     {
         final File msgFile = new File("plugins" + File.separator + "VoxelGuest" + File.separator + "afkmsg.txt");
         final Scanner scan;
@@ -192,7 +222,7 @@ public final class ImportCommandExecutor implements TabExecutor
         {
             e.printStackTrace();
             sender.sendMessage("Could not find afkmsg.txt file.");
-            return;
+            return false;
         }
 
         try
@@ -207,12 +237,13 @@ public final class ImportCommandExecutor implements TabExecutor
         catch (Exception e)
         {
             e.printStackTrace();
+            return false;
         }
         finally
         {
             scan.close();
         }
-        return;
+        return true;
     }
 
     /**
@@ -220,20 +251,20 @@ public final class ImportCommandExecutor implements TabExecutor
      *
      * @param sender Sender to inform of imports.
      */
-    public void importGreylist(final CommandSender sender)
+    public boolean importGreylist(final CommandSender sender)
     {
         final GreylistHelper greylistHelper = new GreylistHelper();
-        final File msgFile = new File("plugins" + File.separator + "VoxelGuest" + File.separator + "greylist.txt");
+        final File afkMsgFile = new File("plugins" + File.separator + "VoxelGuest" + File.separator + "greylist.txt");
         final Scanner scan;
         try
         {
-            scan = new Scanner(new FileInputStream(msgFile));
+            scan = new Scanner(new FileInputStream(afkMsgFile));
         }
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
             sender.sendMessage("Could not find greylist.txt file.");
-            return;
+            return false;
         }
 
         try
@@ -251,11 +282,12 @@ public final class ImportCommandExecutor implements TabExecutor
         catch (Exception e)
         {
             e.printStackTrace();
+            return false;
         }
         finally
         {
             scan.close();
         }
-        return;
+        return true;
     }
 }
