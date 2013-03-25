@@ -39,7 +39,7 @@ public enum CommandFlags
     DROWNING_DAMMAGE_ALLOWED("-dd", "Drowning damage"),
     EXPLOSIVE_DAMMAGE_ALLOWED("-exd", "Explosives player damage"),
     FALL_DAMMAGE_ALLOWED("-fad", "Fall damage"),
-    FIRE_DAMMAGE_ALLOWED("fid", "Fire damage"),
+    FIRE_DAMMAGE_ALLOWED("-fid", "Fire damage"),
     POISON_DAMMAGE_ALLOWED("-poid", "Poison damage"),
     MAGIC_DAMMAGE_ALLOWED("-mad", "Magic damage"),
     PROJECTILE_DAMMAGE_ALLOWED("-prod", "Projectile damage"),
