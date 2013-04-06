@@ -48,7 +48,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-@MetaData(name = "AFK", description = "Handles all AFK players and whatnot")
+@MetaData(name = "AFK", description = "操纵AFK玩家等类")
 public class AFKModule extends Module {
 
     protected HashMap<Player, Long> timeMap = new HashMap<Player, Long>();
@@ -118,7 +118,7 @@ public class AFKModule extends Module {
     @Override
     public String getLoadMessage()
     {
-        return "AFK module enabled - Auto-AFK timeout is " + (VoxelGuest.getConfigData().getBoolean("afk-timeout-enabled") ? "enabled" : "disabled");
+        return "AFK模块开启-自动AFK时间是" + (VoxelGuest.getConfigData().getBoolean("afk-timeout-enabled") ? "enabled" : "disabled");
     }
 
     public boolean isAFK(Player player)
@@ -137,7 +137,7 @@ public class AFKModule extends Module {
 
     @Command(aliases = {"afk", "vafk"},
         bounds = {0, -1},
-        help = "To go AFK, type §c/afk (message)",
+        help = "进入AFK状态，打入§c/afk (message)",
         playerOnly = true)
     @CommandPermission("voxelguest.afk.afk")
     public void afk(CommandSender cs, String[] args)
@@ -232,9 +232,9 @@ public class AFKModule extends Module {
     private void broadcastAFKMessage(Player player, String message)
     {
         if (message == null) {
-            Bukkit.getServer().broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + ((isAFK(player)) ? " has gone AFK" : " has returned"));
+            Bukkit.getServer().broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + ((isAFK(player)) ? "离开了键盘" : "回来了"));
         } else {
-            Bukkit.getServer().broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + ((isAFK(player)) ? " " + message : " has returned"));
+            Bukkit.getServer().broadcastMessage(ChatColor.DARK_AQUA + player.getName() + ChatColor.DARK_GRAY + ((isAFK(player)) ? " " + message : "回来了"));
         }
     }
 }
