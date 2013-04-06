@@ -57,7 +57,7 @@ import java.util.List;
  * @author Razorcane
  * @author Monofraps (cleanup and fixes)
  */
-@MetaData(name = "Asshat Mitigator", description = "Major asshat handling.")
+@MetaData(name = "Asshat Mitigator", description = "主禁言操控。")
 public class AsshatMitigationModule extends Module
 {
 
@@ -105,7 +105,7 @@ public class AsshatMitigationModule extends Module
 	@Override
 	public final String getLoadMessage()
 	{
-		return "Asshat Mitigator has been loaded.";
+		return "禁言系统读取完毕。";
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class AsshatMitigationModule extends Module
 	 * Handles the banning of both online and offline players. However, exact
 	 * player names must be given when banning offline players.
 	 */
-	@Command(aliases = {"ban", "vban", "vbano", "bano"}, bounds = {1, -1}, help = "To ban someone, simply type\n" + "§c/ban [player] (reason)")
+	@Command(aliases = {"ban", "vban", "vbano", "bano"}, bounds = {1, -1}, help = "想封禁某个人，只需要输入：\n" + "§c/ban [玩家] (原因)")
 	@CommandPermission("voxelguest.asshat.ban")
 	public final void ban(final CommandSender cs, final String[] args)
 	{
@@ -154,7 +154,7 @@ public class AsshatMitigationModule extends Module
 
 		if (players.size() > 1)
 		{
-			cs.sendMessage(ChatColor.RED + "Partial match:");
+			cs.sendMessage(ChatColor.RED + "部分匹配：");
 			String nameList = "";
 			for (final String name : players)
 			{
@@ -175,12 +175,12 @@ public class AsshatMitigationModule extends Module
 
 		if (silent)
 		{
-			Bukkit.getLogger().info(String.format("Player %s has been banned by %s for: %s", playerName, cs.getName(), reason));
+			Bukkit.getLogger().info(String.format("玩家%s被%s以以下理由封禁：%s", playerName, cs.getName(), reason));
 		}
 		else
 		{
-			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " has been banned by "
-					+ ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + " for:");
+			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "玩家" + ChatColor.RED + playerName + ChatColor.DARK_GRAY + "被"
+					+ ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + "以以下理由封禁：");
 			Bukkit.broadcastMessage(ChatColor.BLUE + reason);
 		}
 	}
@@ -191,7 +191,7 @@ public class AsshatMitigationModule extends Module
 	 * Controls the unbanning of banned players. Name must be exact, and player
 	 * must be banned, in order to be unbanned.
 	 */
-	@Command(aliases = {"unban", "vunban"}, bounds = {1, -1}, help = "To unban someone, simply type\n" + "§c/unban [player]")
+	@Command(aliases = {"unban", "vunban"}, bounds = {1, -1}, help = "解封某个人，只需要输入：\n" + "§c/unban [玩家]")
 	@CommandPermission("voxelguest.asshat.unban")
 	public final void unban(final CommandSender cs, final String[] args)
 	{
@@ -212,17 +212,17 @@ public class AsshatMitigationModule extends Module
 
 			if (silent)
 			{
-				Bukkit.getLogger().info(String.format("Player %s has been unbanned by %s", playerName, cs.getName()));
+				Bukkit.getLogger().info(String.format("玩家%s被这个玩家解封：%s。", playerName, cs.getName()));
 			}
 			else
 			{
-				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " has been unbanned by "
+				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "玩家" + ChatColor.RED + playerName + ChatColor.DARK_GRAY + "被这个玩家解封："
 						+ ChatColor.RED + cs.getName());
 			}
 		}
 		else
 		{
-			cs.sendMessage(ChatColor.RED + "Player isn't banned.");
+			cs.sendMessage(ChatColor.RED + "玩家没有被封禁。");
 		}
 	}
 
@@ -233,7 +233,7 @@ public class AsshatMitigationModule extends Module
 	 * there is a server restart, or they type the designated phrase.
 	 */
 
-	@Command(aliases = {"gag", "vgag"}, bounds = {1, -1}, help = "To gag someone, simply type\n" + "§c/gag [player] (reason)", playerOnly = false)
+	@Command(aliases = {"gag", "vgag"}, bounds = {1, -1}, help = "禁言某人，只需要输入：\n" + "§c/gag [玩家] (原因)", playerOnly = false)
 	@CommandPermission("voxelguest.asshat.gag")
 	public final void gag(final CommandSender cs, final String[] args)
 	{
@@ -246,13 +246,13 @@ public class AsshatMitigationModule extends Module
 
 		if (players.isEmpty())
 		{
-			cs.sendMessage(ChatColor.RED + "No player with the name " + playerName + " found.");
+			cs.sendMessage(ChatColor.RED + "没有找到指定玩家：" + playerName + "。");
 			return;
 		}
 
 		if (players.size() > 1)
 		{
-			cs.sendMessage(ChatColor.RED + "Partial match:");
+			cs.sendMessage(ChatColor.RED + "部分匹配：");
 			String nameList = "";
 			for (final String name : players)
 			{
@@ -289,19 +289,19 @@ public class AsshatMitigationModule extends Module
 		if (gagged.contains(playerName))
 		{
 			gagged.remove(playerName);
-			cs.sendMessage(ChatColor.RED + playerName + ChatColor.WHITE + " has been ungagged.");
+			cs.sendMessage(ChatColor.RED + playerName + ChatColor.WHITE + "被解除禁言。");
 		}
 		else
 		{
 			gagged.add(playerName);
 			if (silent)
 			{
-				Bukkit.getLogger().info(String.format("Player %s has been gagged by %s for: %s", playerName, cs.getName(), reason));
+				Bukkit.getLogger().info(String.format("玩家%s被%s以以下理由禁言：%s", playerName, cs.getName(), reason));
 			}
 			else
 			{
-				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " has been gagged by "
-						+ ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + " for:");
+				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "玩家" + ChatColor.RED + playerName + ChatColor.DARK_GRAY + "被"
+						+ ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + "以以下理由禁言：");
 				Bukkit.broadcastMessage(ChatColor.BLUE + reason);
 			}
 		}
@@ -314,8 +314,8 @@ public class AsshatMitigationModule extends Module
 	 * @param cs   The command sender
 	 * @param args The command arguments
 	 */
-	@Command(aliases = {"freeze", "fr"}, bounds = {1, 1}, help = "Freezes the defined player in\n"
-			+ "§c/freeze [player]§f or freeze all players (except those with \"voxelguest.asshat.freeze.bypass\") with\n" + "§c/freeze --all§f or §c/freeze -a")
+	@Command(aliases = {"freeze", "fr"}, bounds = {1, 1}, help = "用以下方式冻住指定玩家：\n"
+			+ "§c/freeze [玩家]§f或者用以下方式冻住所有玩家(除了拥有\"voxelguest.asshat.freeze.bypass\"权限的)：\n" + "§c/freeze --all§f或者§c/freeze -a")
 	@CommandPermission("voxelguest.asshat.freeze.freeze")
 	public final void freeze(final CommandSender cs, final String[] args)
 	{
@@ -333,12 +333,12 @@ public class AsshatMitigationModule extends Module
 					}
 				}
 
-				cs.sendMessage("§aEveryone §7has been §bfrozen.");
+				cs.sendMessage("§a所有人§7都被§b冻住了。");
 			}
 			else
 			{
 				frozen.clear();
-				cs.sendMessage("§aEveryone §7has been §cthawed.");
+				cs.sendMessage("§a所有人§7都被§c解冻了。");
 			}
 
 			return;
@@ -349,11 +349,11 @@ public class AsshatMitigationModule extends Module
 
 		if (players.isEmpty())
 		{
-			cs.sendMessage(ChatColor.RED + "No player found with that name.");
+			cs.sendMessage(ChatColor.RED + "没有找到指定玩家。");
 		}
 		else if (players.size() > 1)
 		{
-			cs.sendMessage(ChatColor.RED + "Partial match:");
+			cs.sendMessage(ChatColor.RED + "部分匹配：");
 			String nameList = "";
 			for (final Player p : players)
 			{
@@ -366,12 +366,12 @@ public class AsshatMitigationModule extends Module
 			if (frozen.contains(playerName))
 			{
 				frozen.remove(playerName);
-				cs.sendMessage("§a" + playerName + " §7has been §cthawed.");
+				cs.sendMessage("§a" + playerName + " §7被§c解冻了。");
 			}
 			else
 			{
 				frozen.add(playerName);
-				cs.sendMessage("§a" + playerName + " §7has been §bfrozen.");
+				cs.sendMessage("§a" + playerName + " §7被§b冻住了。");
 			}
 		}
 	}
