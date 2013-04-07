@@ -383,7 +383,7 @@ public class AsshatMitigationModule extends Module
 	 * default asshat reason, which is "Asshat".
 	 */
 
-	@Command(aliases = {"kick", "vkick"}, bounds = {1, -1}, help = "To kick someone, simply type\n" + "§c/kick [player] (reason)", playerOnly = false)
+	@Command(aliases = {"kick", "vkick"}, bounds = {1, -1}, help = "从服务器踢出某人，只需要输入：\n" + "§c/kick [玩家] (原因)", playerOnly = false)
 	@CommandPermission("voxelguest.asshat.kick")
 	public final void kick(final CommandSender cs, final String[] args)
 	{
@@ -395,13 +395,13 @@ public class AsshatMitigationModule extends Module
 
 		if (players.isEmpty())
 		{
-			cs.sendMessage(ChatColor.RED + "No player with the name " + playerName + " found.");
+			cs.sendMessage(ChatColor.RED + "没有找到指定玩家：" + playerName + "。");
 			return;
 		}
 
 		if (players.size() > 1)
 		{
-			cs.sendMessage(ChatColor.RED + "Partial match:");
+			cs.sendMessage(ChatColor.RED + "部分匹配：");
 			String nameList = "";
 			for (final String name : players)
 			{
@@ -438,12 +438,12 @@ public class AsshatMitigationModule extends Module
 		Bukkit.getPlayerExact(playerName).kickPlayer(reason);
 		if (silent)
 		{
-			Bukkit.getLogger().info(String.format("Player %s has been kicked by %s for: %s", playerName, cs.getName(), reason));
+			Bukkit.getLogger().info(String.format("玩家%s被%s以以下理由踢出：%s", playerName, cs.getName(), reason));
 		}
 		else
 		{
-			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY
-					+ " has been kicked by " + ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + " for:");
+			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "玩家" + ChatColor.RED + playerName + ChatColor.DARK_GRAY
+					+ "被" + ChatColor.RED + cs.getName() + ChatColor.DARK_GRAY + "以以下理由踢出：");
 			Bukkit.broadcastMessage(ChatColor.BLUE + reason);
 		}
 
