@@ -455,20 +455,20 @@ public class AsshatMitigationModule extends Module
 	 * @param cs   The command sender
 	 * @param args The command arguments
 	 */
-	@Command(aliases = {"soapbox", "silence"}, bounds = {0, 0}, help = "Toggle the silence")
+	@Command(aliases = {"soapbox", "silence"}, bounds = {0, 0}, help = "调整安静模式")
 	@CommandPermission("voxelguest.admin.silence")
 	public final void silence(final CommandSender cs, final String[] args)
 	{
 		silenceMode = !silenceMode;
 		getConfiguration().setBoolean("silence-mode", silenceMode);
-		cs.sendMessage(ChatColor.GOLD + "Silent mode has been " + ((silenceMode) ? "enabled" : "disabled"));
+		cs.sendMessage(ChatColor.GOLD + "安静模式已经" + ((silenceMode) ? "打开" : "关闭"));
 	}
 
 	/**
 	 * @param cs   The command sender.
 	 * @param args The command arguments.
 	 */
-	@Command(aliases = {"banreason", "br"}, bounds = {1, 1}, help = "Display ban reason for player")
+	@Command(aliases = {"banreason", "br"}, bounds = {1, 1}, help = "显示某个玩家被封禁的原因")
 	@CommandPermission("voxelguest.asshat.ban")
 	public final void banreason(final CommandSender cs, final String[] args)
 	{
@@ -476,11 +476,11 @@ public class AsshatMitigationModule extends Module
 
 		if (!isPlayerBanned(playerName))
 		{
-			cs.sendMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " is not even banned.");
+			cs.sendMessage(ChatColor.DARK_GRAY + "玩家" + ChatColor.RED + playerName + ChatColor.DARK_GRAY + "没有被封禁。");
 			return;
 		}
 
-		cs.sendMessage(ChatColor.DARK_GRAY + "Player " + ChatColor.RED + playerName + ChatColor.DARK_GRAY + " is banned for ");
+		cs.sendMessage(ChatColor.DARK_GRAY + "玩家" + ChatColor.RED + playerName + ChatColor.DARK_GRAY + "因为以下理由被封禁：");
 		cs.sendMessage(ChatColor.BLUE + getBanReason(playerName));
 	}
 
@@ -498,7 +498,7 @@ public class AsshatMitigationModule extends Module
 		if (isPlayerBanned(playerName))
 		{
 			event.setResult(PlayerPreLoginEvent.Result.KICK_FULL);
-			event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned for: " + getBanReason(playerName));
+			event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "你被以下原因封禁：" + getBanReason(playerName));
 		}
 	}
 
@@ -668,15 +668,15 @@ public class AsshatMitigationModule extends Module
 	{
 
 		@Setting("default-asshat-reason")
-		public String defaultAsshatReason = "&cAsshat";
+		public String defaultAsshatReason = "&c你被服务器封禁了。";
 		@Setting("save-banlist-on-ban")
 		public boolean saveBanlistOnBan = false;
 		@Setting("unrestrict-chat-message")
-		public String unrestrictChatMessage = "I agree. Allow me to chat.";
+		public String unrestrictChatMessage = "饶了我吧";
 		@Setting("gag-message-format")
-		public String gagMessageFormat = "&cYou have been gagged. You cannot chat until you say\n" + "&6the ungag key phrase.";
+		public String gagMessageFormat = "&c你被禁言了。想要解除封禁，大喊一声：\n" + "&6“饶了我吧”。";
 		@Setting("ungag-message-format")
-		public String ungagMessageFormat = "&aYou have been ungagged.";
+		public String ungagMessageFormat = "&a你被解除禁言了。";
 
 		public AsshatMitigationConfiguration(AsshatMitigationModule parent)
 		{
