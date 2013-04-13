@@ -19,7 +19,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
  *
  * Handles: Mob Spawning Mob Events
  */
-@MetaData(name = "Creature Protection", description = "Various creature protection methods.")
+@MetaData(name = "Creature Protection", description = "生物保护模块。")
 public class CreatureProtectionModule extends Module {
 
     Server s = Bukkit.getServer();
@@ -78,7 +78,7 @@ public class CreatureProtectionModule extends Module {
     @Override
     public String getLoadMessage()
     {
-        return "Creature Protection has been loaded.";
+        return "生物保护模块读取完毕。";
     }
 
     @Override
