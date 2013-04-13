@@ -63,7 +63,7 @@ import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-@MetaData(name = "Greylist", description = "Allows for the setup of a greylist system!")
+@MetaData(name = "Greylist", description = "允许灰名单设置！")
 public class GreylistModule extends Module {
 
     private static final List<String> greylist = new ArrayList<String>();
@@ -105,8 +105,8 @@ public class GreylistModule extends Module {
         @Setting("exploration-mode") public boolean explorationMode = false;
         @Setting("announce-visitor-logins") public boolean announceVisitorLogins = false;
         @Setting("greylist-online-limit") public int onlineLimit = 10;
-        @Setting("greylist-not-greylisted-kick-message") public String notGreylistedKickMessage = "You are not greylisted on this server.";
-        @Setting("greylist-over-capacity-kick-message") public String overCapacityKickMessage = "The server is temporarily over guest capacity. Check back later.";
+        @Setting("greylist-not-greylisted-kick-message") public String notGreylistedKickMessage = "你没有被列入灰名单！";
+        @Setting("greylist-over-capacity-kick-message") public String overCapacityKickMessage = "服务器的游客太多了，一会来试试吧。";
         @Setting("save-on-player-greylist") public boolean saveOnPlayerGreylist = false;
         @Setting("backup-greylist-entries") public boolean backupGreylistEntries = false;
         @Setting("enable-gatekeeper") public boolean enableGatekeeper = false;
@@ -125,9 +125,9 @@ public class GreylistModule extends Module {
         String[] list = FlatFileManager.load("greylist", "/VoxelGuest");
 
         if (list == null) {
-            throw new ModuleException("Empty greylist");
+            throw new ModuleException("空的灰名单");
         } else if (!getConfiguration().getBoolean("enable-greylist")) {
-            throw new ModuleException("Greylist is disabled in config");
+            throw new ModuleException("灰名单被禁止。");
         }
 
         injectGreylist(list);
@@ -298,10 +298,10 @@ public class GreylistModule extends Module {
                 int newLimit = Integer.parseInt(args[1]);
                 onlineGreylistLimit = newLimit;
                 getConfiguration().setInt("greylist-online-limit", onlineGreylistLimit);
-                cs.sendMessage(ChatColor.GREEN + "Reset the online greylist limit to " + onlineGreylistLimit);
+                cs.sendMessage(ChatColor.GREEN + "设置灰名单在线人数上限：" + onlineGreylistLimit);
                 return;
             } catch (NumberFormatException ex) {
-                cs.sendMessage("Incorrect format. Try /gl limit [number]");
+                cs.sendMessage("格式错误。格式：/gl limit [数目]");
                 return;
             }
         } else if (args[0].equalsIgnoreCase("password")) {
@@ -319,10 +319,10 @@ public class GreylistModule extends Module {
 
             try {
                 setPassword(name, reverse);
-                cs.sendMessage(ChatColor.GREEN + "Set the greylist stream password to \"" + concat + "\"");
+                cs.sendMessage(ChatColor.GREEN + "设置灰名单流密码为：\"" + concat + "\"");
                 return;
             } catch (CouldNotStoreEncryptedPasswordException ex) {
-                cs.sendMessage(ChatColor.RED + "Could not store the greylist stream password");
+                cs.sendMessage(ChatColor.RED + "不能存储灰名单流密码。");
             }
         }
 
@@ -341,17 +341,17 @@ public class GreylistModule extends Module {
 
     @Command(aliases = {"whitelist", "wl"},
         bounds = {1, 1},
-        help = "Whitelist someone to your server\n"
-        + "by typing §c/whitelist [player]")
+        help = "把某人加入白名单。\n"
+        + "输入：§c/whitelist [玩家]")
     @CommandPermission("voxelguest.greylist.whitelist")
     public void whitelist(CommandSender cs, String[] args)
     {
         List<Player> l = Bukkit.matchPlayer(args[0]);
 
         if (l.isEmpty()) {
-            cs.sendMessage("§cNo player found with that name.");
+            cs.sendMessage("§c找不到玩家。");
         } else if (l.size() > 1) {
-            cs.sendMessage("§cMultiple players found with that name.");
+            cs.sendMessage("§c有好几个像这种名字的玩家。");
         } else {
             Player p = l.get(0);
 
