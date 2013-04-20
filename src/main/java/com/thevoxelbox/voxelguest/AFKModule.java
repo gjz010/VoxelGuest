@@ -137,7 +137,7 @@ public class AFKModule extends Module {
 
     @Command(aliases = {"afk", "vafk"},
         bounds = {0, -1},
-        help = "进入AFK状态，打入§c/afk (message)",
+        help = "进入AFK状态，打入§c/afk (信息)",
         playerOnly = true)
     @CommandPermission("voxelguest.afk.afk")
     public void afk(CommandSender cs, String[] args)
