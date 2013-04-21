@@ -384,21 +384,21 @@ public class GreylistModule extends Module {
     
     @Command(aliases= {"whitelistreview", "wlreview"},
             bounds={0,2},
-            help="§c/whitelistreview §fwill open a new whitelist review request for a greylistee\n"
-            + "§c/whitelistreview <player> §fwill close a review request by a helper/whitelisting figure\n"
-            + "and will teleport the reviewer to the requesting party\n"
-            + "§c/whitelistreview [history, -h] <player> §f will show the review request count\n"
-            + "to the command sender. <player> must be spelled completely.\n"
-            + "§c/whitelistreview [flag, -f] <player> §f will blacklist a greylistee\n"
-            + "in case the greylistee spams the Gatekeeper service.\n"
-            + "<player> must be spelled completely. The flag will only last\n"
-            + "until a stop or reload.",
+            help="§c/whitelistreview §f将会为一个灰名单内的玩家提交白名单复核\n"
+            + "§c/whitelistreview <玩家> §f将会由帮手/白名单复核员关闭白名单复核\n"
+            + "并且把复核员瞬移到申请员当中\n"
+            + "§c/whitelistreview [history, -h] <玩家> §f将会对命令发送者\n"
+            + "发送复核申请的数目。<玩家> 必须被完整拼写。\n"
+            + "§c/whitelistreview [flag, -f] <玩家> §f 将会将一个灰名单中的人拉入黑名单\n"
+            + "防止灰名单上的人对看门服务发布垃圾信息。\n"
+            + "<玩家> 必须被完整拼写。 这个标志只会持续到\n"
+            + "关服或重载。",
             playerOnly=true)
     @CommandPermission("voxelguest.greylist.whitelistreview.whitelistreview")
     public void whitelistReview(CommandSender cs, String[] args)
     {
         if (!gatekeeperIsEnabled) {
-            cs.sendMessage("§cGatekeeper is not enabled.");
+            cs.sendMessage("§c看门服务没有开启。");
             return;
         }
         
@@ -407,15 +407,15 @@ public class GreylistModule extends Module {
         if ((args == null || args.length == 0) && !PermissionsManager.getHandler().hasPermission(p.getName(), "voxelguest.greylist.bypass")) {
             
             if (reviewBlacklist.contains(p.getName())) {
-                p.sendMessage("§cYou cannot open a whitelist review request at this time.");
+                p.sendMessage("§c你现在不能提交白名单复核。");
                 return;
             }
             
             if (openReview(p.getName())) {
-                p.sendMessage("§6You have opened a whitelist review request.");
-                p.sendMessage("§6A helper or whitelisting figure will be with you shortly.");
+                p.sendMessage("§6你已经提交了一个白名单复核申请。");
+                p.sendMessage("§6一个助手或白名单复核员将不久来到你身边。");
             } else {
-                p.sendMessage("§cYou cannot open multiple requests.");
+                p.sendMessage("§c你不能开启多个申请。");
             }
             
             return;
@@ -429,7 +429,7 @@ public class GreylistModule extends Module {
                 if (openReviewTickets.containsKey(greylistee))
                     closeReviewNoUpdate(greylistee);
                 
-                p.sendMessage("§aFlagged §7greylistee \"§a" + greylistee + "§7\" for Gatekeeper blacklist");
+                p.sendMessage("§a标志§7灰名单中的人 \"§a" + greylistee + "§7\"为开门者黑名单。");
                 return;
             }
             
@@ -441,14 +441,14 @@ public class GreylistModule extends Module {
             List<Player> l = Bukkit.matchPlayer(args[0]);
 
             if (l.isEmpty()) {
-                p.sendMessage("§cNo player found with that name.");
+                p.sendMessage("§c找不到玩家。");
             } else if (l.size() > 1) {
-                p.sendMessage("§cMultiple players found with that name.");
+                p.sendMessage("§c有好几个像这种名字的玩家。");
             } else {
                 Player greylistee = l.get(0);
                 
                 if (!openReviewTickets.containsKey(greylistee.getName())) {
-                    p.sendMessage("§cNo opened ticket found with that name.");
+                    p.sendMessage("§c现在没有开放的名单。");
                     return;
                 }
                 
@@ -467,7 +467,7 @@ public class GreylistModule extends Module {
             return;
         }
         
-        p.sendMessage("§cIncorrect format. See /whitelistreview help");
+        p.sendMessage("§c格式错误。输入/whitelistreview help 获取帮助。");
     }
     
     @Command(aliases = {"helper"},
